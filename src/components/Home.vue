@@ -3,9 +3,9 @@
       <div id="box">
         <div class="h-block">
           <div class="hb-box">
-            <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Blockchain</span></div>
+            <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Block Height</span></div>
             <div class="hb-num"><span>{{height}}</span></div>
-            <div class="hb-data"><span>Forbole</span></div>
+            <div class="hb-data"><span>{{nodeName}}</span></div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Price</span></div>
@@ -13,7 +13,7 @@
             <div class="hb-data"><span>{{INTPTime}}</span></div>
           </div>
           <div class="hb-box">
-            <div class="hb-t"><img src="../assets/BlackTime.png" class="hb-icon"/><span>Avg Black Time</span></div>
+            <div class="hb-t"><img src="../assets/BlackTime.png" class="hb-icon"/><span>Avg Block Time</span></div>
             <div class="hb-num"><span>{{avgTime}} s</span></div>
             <div class="hb-data"><span>Last 100 Blocks</span></div>
           </div>
@@ -58,7 +58,7 @@
               <ul class="hl-ul">
                 <li class="hl-li" v-for="item in blockList" :key="item.id">
                   <div class="hl-i">
-                    <div class="bl-height"><span>{{item.number}}</span></div>
+                    <router-link tag="div" :to="item.url" class="bl-height"><span>{{item.number}}</span></router-link>
                     <div class="bl-time"><span>> {{item.passTime}}</span></div>
                   </div>
                   <div class="hl-ii">
@@ -78,7 +78,7 @@
               <ul class="hl-ul">
                 <li class="hl-li" v-for="item in transList" :key="item.id">
                   <div class="hl-i">
-                    <div class="tl-tx"><span style="color: #333;">TX#</span>&nbsp;<span>{{item.transactionHash}}</span></div>
+                    <router-link tag="div" :to="item.url" class="tl-tx"><span style="color: #333;">TX#</span>&nbsp;<span>{{item.transactionHash}}</span></router-link>
                     <div class="tl-time"><span>> {{item.passTime}}</span></div>
                   </div>
                   <div class="hl-ii">
@@ -110,6 +110,7 @@
         tokens: '0',
         blockList: [],
         transList: [],
+        nodeName: '',
         option: {
           title: {
             // text: 'transaction',
@@ -205,7 +206,7 @@
           // },
           tooltip : {
             trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
+            formatter: "{b} <br/>Voting Power: {d}%"
           },
           legend: {
             orient: 'vertical',
@@ -214,18 +215,17 @@
           },
           series : [
             {
-              name: '访问来源',
               type: 'pie',
               radius : '55%',
-              center: ['50%', '60%'],
+              // center: ['50%', '60%'],
               data:[],
-              /*itemStyle: {
+              itemStyle: {
                 emphasis: {
                   shadowBlur: 10,
                   shadowOffsetX: 0,
                   shadowColor: 'rgba(0, 0, 0, 0.5)'
                 }
-              }*/
+              }
             }
           ]
         }
@@ -249,7 +249,8 @@
       },
       getHeight() { //获取当前区块高度
         this.$axios.get('/api/block/height').then(res => {
-          this.height = res.data;
+          this.height = res.data.number;
+          this.nodeName = res.data.nodeName ? res.data.nodeName : res.data.miner;
         }).catch(err => {
           console.log(err);
         })
@@ -286,7 +287,8 @@
         this.$axios.get('/api/node/list').then(res => {
           console.log(res.data);
           res.data.forEach(item => {
-            item.name = item.name ? item.name: 1;
+            item.addr = item.address.slice(0,5) + '...' + item.address.slice(-3);
+            item.name = item.name ? item.name: item.addr;
             item.power = item.voting_power / this.voteStake;
             item.param = {
               value: item.power,
@@ -307,6 +309,7 @@
           this.blockList.forEach(item => {
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
             item.passTime = formatPassTime(item.timestamp,Date.now())
+            item.url = '/blockchain/blockdetail/' + item.number;
           });
         }).catch(err => {
           console.log(err);
@@ -318,7 +321,7 @@
           this.transList.forEach(item => {
             item.passTime = formatPassTime(item.timestamp,Date.now());
             item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber();
-            // item.fee = toDecimal4NoZero(item.fee)
+            item.url = '/transfer/transferdetail/'+ item.transactionHash;
           })
         }).catch(err => {
           console.log(err);
@@ -392,8 +395,12 @@
   }
   
   .h-block .hb-box .hb-data {
+    width: 150px;
     font-size: 12px;
     color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .home .h-chart,
@@ -546,6 +553,10 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    cursor: pointer;
   }
-  
+
+  .hl-li .hl-i .tl-tx:hover {
+    text-decoration: underline;
+  }
 </style>
