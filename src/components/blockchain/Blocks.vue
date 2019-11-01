@@ -27,8 +27,12 @@
             </template>
           </el-table-column>
           <el-table-column prop="txns" label="Transactions" align="left"></el-table-column>
-          <el-table-column prop="" label="Validators" align="left"></el-table-column>
-          <el-table-column prop="" label="Voting_Power" align="left"></el-table-column>
+          <el-table-column label="Validators" align="left">
+            <template slot-scope="scope">
+              <span>{{scope.row.validators}}</span>/<span>{{scope.row.totalValidators}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="voteP" label="Voting_Power" align="left"></el-table-column>
           <el-table-column prop="createTime" label="Timestamp" align="left"></el-table-column>
           <el-table-column prop="passTime" label="Age" align="right"></el-table-column>
         </el-table>
@@ -83,6 +87,7 @@
             item.url = '/blockchain/blockdetail/' + item.number;
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
             item.passTime = '> ' + formatPassTime(item.timestamp,Date.now())
+            item.voteP = toDecimal4NoZero(item.votingPower/item.totalVotingPower) * 100 + '%';
           });
         })
       },
@@ -96,7 +101,7 @@
       },
       getHeight() { //获取当前区块高度
         this.$axios.get('/api/block/height').then(res => {
-          this.height = res.data;
+          this.height = res.data.number;
         }).catch(err => {
           console.log(err);
         })

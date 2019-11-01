@@ -19,8 +19,8 @@
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/VotingPower.png" class="hb-icon"/><span>Voting Power</span></div>
-            <div class="hb-num"><span>100.00%</span></div>
-            <div class="hb-data"><span>98/98 Validators</span></div>
+            <div class="hb-num"><span>{{votingPower}}</span></div>
+            <div class="hb-data"><span>{{validators}}/{{totalValidators}} Validators</span></div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Bonded Tokens</span></div>
@@ -32,7 +32,7 @@
           <div class="h-l">
             <div class="h-up">
               <div class="h-t"><i class="h-logo hl-top"></i><span>Validators Top 10</span></div>
-              <div class="h-view"><span>View All</span></div>
+<!--              <div class="h-view"><span>View All</span></div>-->
             </div>
             <div class="hc-down">
               <div ref="top10" class="echarts"></div>
@@ -41,7 +41,7 @@
           <div class="h-r">
             <div class="h-up">
               <div class="h-t"><i class="h-logo hl-history"></i><span>14 days Transaction History</span></div>
-              <div class="h-view"><span>View All</span></div>
+<!--              <div class="h-view"><span>View All</span></div>-->
             </div>
             <div class="hc-down">
               <div ref="history" class="echarts"></div>
@@ -111,6 +111,9 @@
         blockList: [],
         transList: [],
         nodeName: '',
+        votingPower: '',
+        validators: '',
+        totalValidators: '',
         option: {
           title: {
             // text: 'transaction',
@@ -306,9 +309,12 @@
       getBlockList() { //获取出块列表
         this.$axios.get('/api/block/list').then(res => {
           this.blockList = res.data.list;
+          this.votingPower = toDecimal4NoZero(this.blockList[0].votingPower/this.blockList[0].totalVotingPower) * 100 + '%';
+          this.validators = this.blockList[0].validators;
+          this.totalValidators = this.blockList[0].totalValidators;
           this.blockList.forEach(item => {
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
-            item.passTime = formatPassTime(item.timestamp,Date.now())
+            item.passTime = formatPassTime(item.timestamp,Date.now());
             item.url = '/blockchain/blockdetail/' + item.number;
           });
         }).catch(err => {
@@ -320,7 +326,8 @@
           this.transList = res.data.list;
           this.transList.forEach(item => {
             item.passTime = formatPassTime(item.timestamp,Date.now());
-            item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber();
+            item.fee = item.gasUsed * item.gasPrice;
+            item.fee = new BigNumber(item.fee).dividedBy(Math.pow(10, 18)).toNumber();
             item.url = '/transfer/transferdetail/'+ item.transactionHash;
           })
         }).catch(err => {

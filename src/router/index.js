@@ -6,7 +6,7 @@ import Blocks from '@/components/blockchain/Blocks'
 import BlocksDetail from '@/components/blockchain/BlockDetail'
 import Asset1 from '@/components/asset/Asset1'
 import Staking1 from '@/components/staking/Staking1'
-import Stats1 from '@/components/stats/Stats1'
+import StatsList from '@/components/stats/StatsList'
 import TransferList from '@/components/transfer/TransferList'
 import TransferDetail from '@/components/transfer/TransferDetail'
 import Result from '@/components/Oops'
@@ -46,9 +46,9 @@ export default new Router({
           component: Staking1
         },
         {
-          path: '/stats/stats1',
-          name: 'Stats1',
-          component: Stats1
+          path: '/stats/statslist',
+          name: 'StatsList',
+          component: StatsList
         },
         {
           path: '/transfer/transferlist/:page',

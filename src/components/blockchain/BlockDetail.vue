@@ -16,11 +16,11 @@
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Validators :</span></div>
-              <div class="bg-ii"><span></span></div>
+              <div class="bg-ii"><span>{{block.validators}}/{{block.totalValidators}}</span></div>
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Voting Power :</span></div>
-              <div class="bg-ii"><span></span></div>
+              <div class="bg-ii"><span>{{voteP}}</span></div>
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Transactions :</span></div>
@@ -75,7 +75,8 @@
         isTxLoading: false,
         isInfoLoading: false,
         isTxShow: true,
-        over:true
+        over:true,
+        voteP: ''
       }
     },
     created() {
@@ -91,6 +92,7 @@
         this.isInfoLoading = true;
         this.$axios.get('/api/block/detail',{params:{height:this.height}}).then(res=> {
           this.block = res.data;
+          this.voteP = toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower) * 100 + '%';
           this.block.createTime = this.$moment(this.block.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           this.isInfoLoading = false;
         }).catch(err => {

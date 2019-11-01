@@ -1,5 +1,7 @@
 <template>
-    
+    <div class="aList">
+
+    </div>
 </template>
 
 <script>

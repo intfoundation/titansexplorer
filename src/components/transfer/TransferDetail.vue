@@ -22,9 +22,19 @@
               <div class="tg-i">Fee :</div>
               <div class="tg-ii"><span>{{txDetail.fee}}</span></div>
             </div>
-            <div class="tc-group">
+            <div class="tc-group tc-gas">
               <div class="tg-i">Gas Used :</div>
-              <div class="tg-ii"><span>{{txDetail.gasUsed}}</span></div>
+              <div class="tg-ii">
+                <div><span>{{txDetail.gasUsed}}</span></div>
+                <div class="tg-tip">
+                  <div class="tgt-icon"></div>
+                  <div class="tgt-tx">
+                    <div><span>Gas Limit: </span><span>{{txDetail.gas}}</span></div>
+                    <div><span>Gas Price: </span><span>{{txDetail.gasPrice}} INT</span></div>
+                    <div><span>Gas Used: </span><span>{{txDetail.gasUsed}}</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="tc-group">
               <div class="tg-i">Signer :</div>
@@ -87,10 +97,8 @@
           console.log(res);
           this.txDetail = res.data;
           this.txDetail.status = statusType(this.txDetail.status);
-          this.txDetail.fee = this.txDetail.gasUsed * this.txDetail.gasPrice;
-          this.txDetail.fee = new BigNumber(this.txDetail.fee).dividedBy(Math.pow(10, 18)).toNumber() + ' INT';
-          this.txDetail.amount = new BigNumber(this.txDetail.value).dividedBy(Math.pow(10, 18)).toNumber() + ' INT';
-          this.txDetail.gasPrice = new BigNumber(this.txDetail.gasPrice).dividedBy(Math.pow(10, 18)).toNumber() + ' INT';
+          this.txDetail.fee = new BigNumber(this.txDetail.gasPrice).times(this.txDetail.gasUsed) + ' INT';
+          this.txDetail.amount = transAmount(this.txDetail.amount) + ' INT';
           this.txDetail.createTime = this.$moment(this.txDetail.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
           this.blockUrl = '/blockchain/blockdetail/' + this.txDetail.blockNumber;
@@ -149,6 +157,54 @@
   .tc-c .tc-group .tg-i {
     width: 150px;
     font-weight: 500;
+  }
+
+  .tc-c .tc-gas .tg-ii > div {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .tc-gas .tg-tip {
+    position: relative;
+    margin-left: 10px;
+    width: 300px;
+    height: auto;
+  }
+
+  .tc-gas .tg-tip .tgt-icon {
+    width: 18px;
+    height: 18px;
+    background: url("../../assets/gasTip.png") no-repeat center/contain;
+    cursor: pointer;
+  }
+
+  .tc-gas .tg-tip .tgt-tx {
+    position: absolute;
+    line-height: 20px;
+    top: -36px;
+    left: 35px;
+    padding: 15px 20px;
+    background-color: #333;
+    border-radius: 5px;
+    color: #fff;
+    opacity: 0;
+    filter: Alpha(opacity = 0);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .tc-gas .tg-tip .tgt-tx:before {
+    content: '';
+    position: absolute;
+    top: 35px;
+    left: -19px;
+    border: 10px solid transparent;
+    border-right-color: #333;
+    z-index: 100;
+  }
+
+  .tc-gas .tg-tip .tgt-icon:hover+.tgt-tx{
+    opacity: 1;
+    filter: Alpha(opacity = 100);
   }
 
   .txDetail .text-url span {

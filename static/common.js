@@ -49,3 +49,14 @@ const statusType = (code) => {
   }
   return status;
 };
+
+//数字转化千分位
+const transAmount = (num) => {
+  num+='';
+  let arr = num.split('.');
+  if (arr.length > 1) {
+    return arr[0].replace(/\d{1,3}(?=(\d{3})+$)/g,'$&,') + '.' + arr[1];
+  } else {
+    return arr[0].replace(/\d{1,3}(?=(\d{3})+$)/g,'$&,');
+  }
+};

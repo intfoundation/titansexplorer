@@ -31,13 +31,13 @@
                 <router-link tag="span" to="" type="text" class="tl-url">{{scope.row.fromAddress}}</router-link>
               </template>
             </el-table-column>
-            <el-table-column prop="amount" label="Amount" align="right" width="120"></el-table-column>
+            <el-table-column prop="amount" label="Amount" align="right" width="120" :show-overflow-tooltip="over"></el-table-column>
             <el-table-column label="To" align="left" :show-overflow-tooltip="over">
               <template slot-scope="scope">
                 <router-link tag="span" to="" type="text" class="tl-url">{{scope.row.toAddress}}</router-link>
               </template>
             </el-table-column>
-            <el-table-column prop="type" label="TxType" align="left" width="120"></el-table-column>
+            <el-table-column prop="type" label="TxType" align="left":show-overflow-tooltip="over"  width="120"></el-table-column>
             <el-table-column prop="fromAddress" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
             <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
             <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
@@ -90,8 +90,9 @@
           this.txList.forEach(item => {
             item.time = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
             item.status = statusType(item.status);
-            item.amount = new BigNumber(item.value).dividedBy(Math.pow(10, 18)).toNumber();
-            item.amount = toDecimal4NoZero(item.value) + " INT";
+            item.amount = new BigNumber(item.value).dividedBy(Math.pow(10, 18)).toString();
+            item.amount = toDecimal4NoZero(item.value);
+            item.amount = transAmount(item.amount);
             item.txUrl = '/transfer/transferdetail/' + item.hash;
             item.blockUrl = '/blockchain/blockdetail/' + item.blockNumber;
           });

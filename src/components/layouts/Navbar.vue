@@ -15,24 +15,24 @@
               <router-link v-for="(item,index) in blockNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
-          <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/staking/g).test($route.path)}"><span>Staking</span><i class="nav-icon"></i></div>
-            <div class="nav-block">
-              <router-link v-for="(item,index) in stakingNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
-            </div>
-          </li>
+<!--          <li class="m-li">-->
+<!--            <div class="nav-item-f" :class="{'nav-active-f': (/staking/g).test($route.path)}"><span>Staking</span><i class="nav-icon"></i></div>-->
+<!--            <div class="nav-block">-->
+<!--              <router-link v-for="(item,index) in stakingNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
+<!--            </div>-->
+<!--          </li>-->
           <li class="m-li">
             <div class="nav-item-f" :class="{'nav-active-f': (/transfer/g).test($route.path)}"><span>Transfer</span><i class="nav-icon"></i></div>
             <div class="nav-block">
               <router-link v-for="(item,index) in transferNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
-          <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/asset/g).test($route.path)}"><span>Asset</span><i class="nav-icon"></i></div>
-            <div class="nav-block">
-              <router-link v-for="(item,index) in assetNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
-            </div>
-          </li>
+<!--          <li class="m-li">-->
+<!--            <div class="nav-item-f" :class="{'nav-active-f': (/asset/g).test($route.path)}"><span>Asset</span><i class="nav-icon"></i></div>-->
+<!--            <div class="nav-block">-->
+<!--              <router-link v-for="(item,index) in assetNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
+<!--            </div>-->
+<!--          </li>-->
           <li class="m-li">
             <div class="nav-item-f" :class="{'nav-active-f': (/stats/g).test($route.path)}"><span>Stats</span><i class="nav-icon"></i></div>
             <div class="nav-block">
@@ -61,110 +61,110 @@
               name: 'Blocks',
               url: '/blockchain/blocks/1'
             },
-            {
-              name: 'Transactions',
-              url: '/transfer/transferlist/1'
-            },
-            {
-              name: 'Tokens',
-              url: '/blockchain/blocks/1'
-            },
-            {
-              name: 'Accounts',
-              url: '/blockchain/blocks/1'
-            },
-            {
-              name: 'Referendum',
-              url: '/blockchain/blocks/1'
-            },
+            // {
+            //   name: 'Transactions',
+            //   url: '/transfer/transferlist/1'
+            // },
+            // {
+            //   name: 'Tokens',
+            //   url: '/blockchain/blocks/1'
+            // },
+            // {
+            //   name: 'Accounts',
+            //   url: '/blockchain/blocks/1'
+            // },
+            // {
+            //   name: 'Referendum',
+            //   url: '/blockchain/blocks/1'
+            // },
           ],
-          stakingNavList: [
-            {
-              name: 'Staking1',
-              url: '/staking/staking1'
-            },
-            {
-              name: 'Staking2',
-              url: '/staking/staking1'
-            },
-            {
-              name: 'Staking3',
-              url: '/staking/staking1'
-            },
-            {
-              name: 'Staking4',
-              url: '/staking/staking1'
-            },
-            {
-              name: 'Staking5',
-              url: '/staking/staking1'
-            },
-          ],
+          // stakingNavList: [
+          //   {
+          //     name: 'Staking1',
+          //     url: '/staking/staking1'
+          //   },
+          //   {
+          //     name: 'Staking2',
+          //     url: '/staking/staking1'
+          //   },
+          //   {
+          //     name: 'Staking3',
+          //     url: '/staking/staking1'
+          //   },
+          //   {
+          //     name: 'Staking4',
+          //     url: '/staking/staking1'
+          //   },
+          //   {
+          //     name: 'Staking5',
+          //     url: '/staking/staking1'
+          //   },
+          // ],
           transferNavList: [
             {
-              name: 'Transfer1',
-              url: '/transfer/transfer1'
+              name: 'Transaction',
+              url: '/transfer/transferlist/1'
             },
-            {
-              name: 'Transfer2',
-              url: '/transfer/transfer1'
-            },
-            {
-              name: 'Transfer3',
-              url: '/transfer/transfer1'
-            },
-            {
-              name: 'Transfer4',
-              url: '/transfer/transfer1'
-            },
-            {
-              name: 'Transfer5',
-              url: '/transfer/transfer1'
-            }
+            // {
+            //   name: 'Transfer2',
+            //   url: '/transfer/transfer1'
+            // },
+            // {
+            //   name: 'Transfer3',
+            //   url: '/transfer/transfer1'
+            // },
+            // {
+            //   name: 'Transfer4',
+            //   url: '/transfer/transfer1'
+            // },
+            // {
+            //   name: 'Transfer5',
+            //   url: '/transfer/transfer1'
+            // }
           ],
-          assetNavList: [
-            {
-              name: 'Asset1',
-              url: '/asset/asset1'
-            },
-            {
-              name: 'Asset2',
-              url: '/asset/asset1'
-            },
-            {
-              name: 'Asset3',
-              url: '/asset/asset1'
-            },
-            {
-              name: 'Asset4',
-              url: '/asset/asset1'
-            },
-            {
-              name: 'Asset5',
-              url: '/asset/asset1'
-            }
-          ],
+          // assetNavList: [
+          //   {
+          //     name: 'Asset1',
+          //     url: '/asset/asset1'
+          //   },
+          //   {
+          //     name: 'Asset2',
+          //     url: '/asset/asset1'
+          //   },
+          //   {
+          //     name: 'Asset3',
+          //     url: '/asset/asset1'
+          //   },
+          //   {
+          //     name: 'Asset4',
+          //     url: '/asset/asset1'
+          //   },
+          //   {
+          //     name: 'Asset5',
+          //     url: '/asset/asset1'
+          //   }
+          // ],
           statsNavList: [
             {
-              name: 'Stats1',
-              url: '/stats/stats1'
+              name: 'Accounts',
+              url: '/stats/statslist'
             },
-            {
-              name: 'Stats2',
-              url: '/stats/stats1'
-            },
-            {
-              name: 'Stats3',
-              url: '/stats/stats1'
-            },
-            {
-              name: 'Stats4',
-              url: '/stats/stats1'
-            },
-            {
-              name: 'Stats5',
-              url: '/stats/stats1'
-            }
+            // {
+            //   name: 'Stats2',
+            //   url: '/stats/stats1'
+            // },
+            // {
+            //   name: 'Stats3',
+            //   url: '/stats/stats1'
+            // },
+            // {
+            //   name: 'Stats4',
+            //   url: '/stats/stats1'
+            // },
+            // {
+            //   name: 'Stats5',
+            //   url: '/stats/stats1'
+            // }
           ],
           keyword: ''
         };
@@ -283,7 +283,7 @@
     position: absolute;
     top: 60px;
     left: -20px;
-    width: 150%;
+    width: 150px;
     height: 0;
     overflow: hidden;
     border-radius: 3px;
