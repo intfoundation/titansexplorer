@@ -173,10 +173,11 @@
       },
       methods: {
         search() {
-          let txRex = /^tx/;
+          console.log(+this.keyword);
+          let txRex = /^0x/;
           let addrRex = /^INT3/;
           if (this.keyword.trim()) {
-            if (+this.keyword && +this.keyword % 1 === 0) { //搜索关键字为整数
+            if (+this.keyword && !this.keyword.match(txRex) && +this.keyword % 1 === 0) { //搜索关键字为整数
               this.$axios.get('/api/block/detail',{params:{height:this.keyword}}).then(res => {
                 if (res.data) {
                   this.$router.push('/blockchain/blockdetail/' + this.keyword)
@@ -186,7 +187,7 @@
                 this.keyword = '';
               })
             } else if (this.keyword.match(txRex)) {
-              this.$axios.get('/api/tx/detail',{params:{height:this.keyword}}).then(res => {
+              this.$axios.get('/api/tx/detail',{params:{hash:this.keyword}}).then(res => {
                 if (res.data) {
                   this.$router.push('/transfer/transferdetail/' + this.keyword)
                 } else {
@@ -195,7 +196,7 @@
                 this.keyword = '';
               })
             } else if (this.keyword.match(addrRex)) {
-              this.$axios.get('/api/account/detail', {params: {height: this.keyword}}).then(res => {
+              this.$axios.get('/api/account/detail', {params: {address: this.keyword}}).then(res => {
                 if (res.data) {
                   this.$router.push('/transfer/transferdetail/' + this.keyword)
                 } else {
@@ -206,6 +207,8 @@
             } else {
               this.$router.push('/result/' + this.keyword)
             }
+          } else {
+            this.keyword = '';
           }
         }
       }
@@ -351,7 +354,7 @@
 
   .search .s-btn {
     width: 56px;
-    height: 36px;
+    height: 38px;
     border-radius: 0 4px 4px 0;
     background-color: #ed303b;
     text-align: center;

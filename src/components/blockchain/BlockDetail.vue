@@ -12,7 +12,12 @@
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Proposer :</span></div>
-              <div class="bg-ii" style="color: #ed303b"><span></span></div>
+              <router-link v-if="block.url" tag="div" :to="block.url" class="bg-ii bg-link">{{block.miner}}<span></span></router-link>
+              <span v-if="!block.url" class="bg-ii bg-link">{{block.miner}}</span>
+            </div>
+            <div class="bi-group">
+              <div class="bg-i"><span>Block Size :</span></div>
+              <div class="bg-ii"><span>{{block.size ? block.size : 0}} Byte</span></div>
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Validators :</span></div>
@@ -24,7 +29,20 @@
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Transactions :</span></div>
-              <div class="bg-ii"><span>{{block.txns}}</span></div>
+              <router-link tag="div" to="" class="bg-ii bg-link"><span>{{block.txns}}</span></router-link>
+            </div>
+            <div class="bi-group bi-gas">
+              <div class="bg-i">Gas Used :</div>
+              <div class="bg-ii">
+                <div><span>{{block.gasUsed}}</span></div>
+                <div class="bg-tip">
+                  <div class="bgt-icon"></div>
+                  <div class="bgt-tx">
+                    <div><span>Gas Limit: </span><span>{{block.gasLimit}}</span></div>
+                    <div><span>Gas Used: </span><span>{{block.gasUsed}}</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Block reward :</span></div>
@@ -37,7 +55,7 @@
           </div>
         </div>
       </div>
-      <div class="bd-trans">
+      <!--<div class="bd-trans" v-if="isTxShow">
         <div class="bd-t">
           <div class="bt-i"><span>Transactions</span></div>
         </div>
@@ -52,11 +70,28 @@
             <el-table-column prop="time" label="Timestamp" align="right"></el-table-column>
           </el-table>
         </div>
-      </div>
-      <div class="bd-validator" v-if="isVaShow">
+      </div>-->
+      <div class="bd-validator">
         <div class="bd-t">
           <div class="bt-i"><span>Validator Set</span></div></div>
-        <div class="bd-c"></div>
+        <div class="bd-c">
+          <el-table :data="vdList" max-height="600" v-loading="isVdLoading">
+            <el-table-column prop="i" label="#" align="left" width="80"></el-table-column>
+            <el-table-column prop="" label="Moniker" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+            <el-table-column label="Operator" align="left">
+              <template slot-scope="scope">
+                <router-link tag="span" :to="scope.row.addrUrl" class="bv-link">{{scope.row.address}}</router-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="" label="Proposer Priority" align="left"></el-table-column>
+            <el-table-column prop="voting_power" label="Voting Power" align="left"></el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <div class="bd-extra">
+        <div class="bd-t">
+          <div class="bt-i"><span>Extra Data</span></div></div>
+        <div class="bd-c"><span>{{block.unlockExtraData}}</span></div>
       </div>
     </div>
   </div>
@@ -70,22 +105,23 @@
       return {
         height: this.$route.params.height,
         block: {},
-        isVaShow: false,
         txList: [],
         isTxLoading: false,
         isInfoLoading: false,
         isTxShow: true,
         over:true,
-        voteP: ''
+        voteP: '',
+        vdList: [],
+        isVdLoading: false
       }
     },
     created() {
-      this.getBlockDetail();
-      this.getTxList();
-      // console.log(this.height);
+
     },
     mounted() {
-
+      this.getBlockDetail();
+      // this.getTxList();
+      this.getValidatorList();
     },
     methods:{
       getBlockDetail() {
@@ -94,27 +130,42 @@
           this.block = res.data;
           this.voteP = toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower) * 100 + '%';
           this.block.createTime = this.$moment(this.block.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+          this.block.url = '/stats/statsdetail/' + this.block.miner;
           this.isInfoLoading = false;
         }).catch(err => {
           console.log(err);
         })
       },
-      getTxList() {
-        this.isTxLoading = true;
-        this.$axios.get('/api/tx/blocktx',{params:{height:this.height}}).then(res => {
-          this.txList = res.data;
-          if (this.txList.length) {
-            this.txList.forEach((item,index) => {
-              item.i = index + 1;
-              item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
-              item.time = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
-              item.status = statusType(item.status);
-            });
-            console.log(this.txList);
-          } else {
-            // this.isTxShow = false;
-          }
-          this.isTxLoading = false
+      // getTxList() {
+      //   this.isTxLoading = true;
+      //   this.$axios.get('/api/tx/blocktx',{params:{height:this.height}}).then(res => {
+      //     this.txList = res.data;
+      //     this.isTxShow = this.txList.length;
+      //     if (this.txList.length) {
+      //       this.txList.forEach((item,index) => {
+      //         item.i = index + 1;
+      //         item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
+      //         item.time = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
+      //         item.status = statusType(item.status);
+      //       });
+      //       console.log(this.txList);
+      //     } else {
+      //     }
+      //     this.isTxLoading = false
+      //   }).catch(err => {
+      //     console.log(err);
+      //   })
+      // },
+      getValidatorList() {
+        this.isVdLoading = true;
+        this.$axios.get('/api/block/validators',{params:{height:this.height}}).then(res => {
+          this.vdList = res.data;
+          this.vdList.forEach((item,index)=> {
+            item.i = index + 1;
+            item.voting_power = toDecimal4NoZero(item.voting_power);
+            item.addrUrl = '/stats/statsdetail/' + item.address;
+          });
+          this.isVdLoading = false;
         }).catch(err => {
           console.log(err);
         })
@@ -155,14 +206,15 @@
   }
 
   .bd-info .bd-c .bi-c {
-    padding-left: 25px;
+    padding-left: 15px;
   }
 
   .bd-c .bi-c .bi-group {
     display: flex;
     align-items: center;
-    height: 55px;
-    line-height: 55px;
+    height: 45px;
+    line-height: 45px;
+    padding-left: 10px;
     border-bottom: 1px solid #e6e6e6;
     font-size: 14px;
   }
@@ -172,12 +224,89 @@
     font-weight: 500;
   }
 
-  .blockDetail .bd-trans {
+  .bi-group .bg-link {
+    color: #ed303b;
+    cursor: pointer;
+  }
+
+  .bi-group .bg-link:hover {
+    text-decoration: underline;
+  }
+
+  .bi-c .bi-gas .bg-ii > div {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .bi-gas .bg-tip {
+    position: relative;
+    margin-left: 10px;
+    width: 300px;
+    height: auto;
+  }
+
+  .bi-gas .bg-tip .bgt-icon {
+    width: 18px;
+    height: 18px;
+    background: url("../../assets/gasTip.png") no-repeat center/contain;
+    cursor: pointer;
+  }
+
+  .bi-gas .bg-tip .bgt-tx {
+    position: absolute;
+    line-height: 20px;
+    top: -26px;
+    left: 35px;
+    padding: 15px 20px;
+    background-color: #333;
+    border-radius: 5px;
+    color: #fff;
+    opacity: 0;
+    filter: Alpha(opacity = 0);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .bi-gas .bg-tip .bgt-tx:before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: -19px;
+    border: 10px solid transparent;
+    border-right-color: #333;
+    z-index: 100;
+  }
+
+  .bi-gas .bg-tip .bgt-icon:hover+.bgt-tx{
+    opacity: 1;
+    filter: Alpha(opacity = 100);
+  }
+
+  .blockDetail .bd-validator {
     margin-bottom: 30px;
   }
 
-  .bd-trans .bd-c {
+  .bd-validator .bd-c {
     padding: 0 15px;
+  }
+
+  .bd-validator .bd-c .bv-link {
+    color: #ed303b;
+    cursor: pointer;
+  }
+
+  .bd-validator .bd-c .bv-link:hover {
+    text-decoration: underline;
+  }
+
+  .bd-extra .bd-c {
+    padding: 30px 25px;
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 #e6e6e6;
+    font-size: 14px;
+    line-height: 30px;
+    word-break: break-word;
   }
 
 </style>

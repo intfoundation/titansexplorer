@@ -28,16 +28,16 @@
             </el-table-column>
             <el-table-column label="From" align="left" :show-overflow-tooltip="over">
               <template slot-scope="scope">
-                <router-link tag="span" to="" type="text" class="tl-url">{{scope.row.fromAddress}}</router-link>
+                <router-link tag="span" :to="scope.row.fromUrl" type="text" class="tl-url">{{scope.row.fromAddress}}</router-link>
               </template>
             </el-table-column>
             <el-table-column prop="amount" label="Amount" align="right" width="120" :show-overflow-tooltip="over"></el-table-column>
             <el-table-column label="To" align="left" :show-overflow-tooltip="over">
               <template slot-scope="scope">
-                <router-link tag="span" to="" type="text" class="tl-url">{{scope.row.toAddress}}</router-link>
+                <router-link tag="span" :to="scope.row.toUrl" type="text" class="tl-url">{{scope.row.toAddress}}</router-link>
               </template>
             </el-table-column>
-            <el-table-column prop="type" label="TxType" align="left":show-overflow-tooltip="over"  width="120"></el-table-column>
+            <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
             <el-table-column prop="fromAddress" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
             <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
             <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
@@ -95,6 +95,8 @@
             item.amount = transAmount(item.amount);
             item.txUrl = '/transfer/transferdetail/' + item.hash;
             item.blockUrl = '/blockchain/blockdetail/' + item.blockNumber;
+            item.toUrl = '/stats/statsdetail/' + item.toAddress;
+            item.fromUrl = '/stats/statsdetail/' + item.fromAddress;
           });
           console.log(this.txList);
         }).catch(err => {

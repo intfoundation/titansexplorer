@@ -18,23 +18,23 @@
         <el-table :data="blockList" height="800" v-loading="isLoading">
           <el-table-column label="Block" width="100" align="left">
             <template slot-scope="scope">
-              <router-link tag="span" :to="scope.row.url" @click="" type="text" class="bl-num">{{scope.row.number}}</router-link>
+              <router-link tag="span" :to="scope.row.url" type="text" class="bl-num">{{scope.row.number}}</router-link>
             </template>
           </el-table-column>
           <el-table-column label="Proposer" align="left">
             <template slot-scope="scope">
-              <span @click="" type="text" class=""></span>
+              <router-link tag="span" :to="scope.row.addrUrl" type="text" class="bl-num">{{scope.row.miner}}</router-link>
             </template>
           </el-table-column>
-          <el-table-column prop="txns" label="Transactions" align="left"></el-table-column>
-          <el-table-column label="Validators" align="left">
+          <el-table-column prop="txns" label="Transactions" align="left" width="120"></el-table-column>
+          <el-table-column label="Validators" align="left" width="120">
             <template slot-scope="scope">
               <span>{{scope.row.validators}}</span>/<span>{{scope.row.totalValidators}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="voteP" label="Voting_Power" align="left"></el-table-column>
-          <el-table-column prop="createTime" label="Timestamp" align="left"></el-table-column>
-          <el-table-column prop="passTime" label="Age" align="right"></el-table-column>
+          <el-table-column prop="voteP" label="Voting_Power" align="left" width="120"></el-table-column>
+          <el-table-column prop="createTime" label="Timestamp" align="left" width="260"></el-table-column>
+          <el-table-column prop="passTime" label="Age" align="right" width="180"></el-table-column>
         </el-table>
         <div class="b-f">
           <div class="b-page">
@@ -85,8 +85,9 @@
           this.blockList = res.data.list;
           this.blockList.forEach(item => {
             item.url = '/blockchain/blockdetail/' + item.number;
+            item.addrUrl = '/stats/statsdetail/' + item.miner;
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
-            item.passTime = '> ' + formatPassTime(item.timestamp,Date.now())
+            item.passTime = '> ' + formatPassTime(item.timestamp,Date.now());
             item.voteP = toDecimal4NoZero(item.votingPower/item.totalVotingPower) * 100 + '%';
           });
         })

@@ -70,6 +70,10 @@
           </div>
         </div>
       </div>
+      <div class="tx-input" v-if="isTxInputShow">
+        <div class="td-t">Transaction Input</div>
+        <div class="td-c"><span>{{txDetail.unlockInput}}</span></div>
+      </div>
     </div>
   </div>
 </template>
@@ -82,7 +86,8 @@
       return {
         hash: this.$route.params.hash,
         txDetail: {},
-        blockUrl: ''
+        blockUrl: '',
+        isTxInputShow: false
       }
     },
     created() {
@@ -98,10 +103,11 @@
           this.txDetail = res.data;
           this.txDetail.status = statusType(this.txDetail.status);
           this.txDetail.fee = new BigNumber(this.txDetail.gasPrice).times(this.txDetail.gasUsed) + ' INT';
-          this.txDetail.amount = transAmount(this.txDetail.amount) + ' INT';
+          this.txDetail.amount = transAmount(this.txDetail.value) + ' INT';
           this.txDetail.createTime = this.$moment(this.txDetail.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
           this.blockUrl = '/blockchain/blockdetail/' + this.txDetail.blockNumber;
+          this.isTxInputShow = this.txDetail.type !== 'Transfer';
         }).catch(err => {
           console.log(err);
         })
@@ -144,8 +150,8 @@
   .td-c .tc-c .tc-group {
     display: flex;
     align-items: center;
-    height: 55px;
-    line-height: 55px;
+    height: 45px;
+    line-height: 45px;
     border-bottom: 1px solid #e6e6e6;
     font-size: 14px;
   }
@@ -218,5 +224,24 @@
 
   .txDetail .tx-info {
     margin-bottom: 30px;
+  }
+
+  .txDetail .tx-msg {
+    margin-bottom: 30px;
+  }
+
+  .txDetail .tx-input {
+    margin-bottom: 30px;
+  }
+
+  .txDetail .tx-input .tc-c {
+    padding: 30px 25px;
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 #e6e6e6;
+    font-size: 14px;
+    line-height: 30px;
+    word-break: break-word;
   }
 </style>

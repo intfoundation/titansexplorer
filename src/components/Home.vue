@@ -2,10 +2,15 @@
     <div class="home">
       <div id="box">
         <div class="h-block">
-          <div class="hb-box">
+          <div class="hb-box hb-height">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Block Height</span></div>
-            <div class="hb-num"><span>{{height}}</span></div>
-            <div class="hb-data"><span>{{nodeName}}</span></div>
+            <div class="hb-num"><span>{{blockInfo.number}}</span></div>
+            <router-link tag="div" :to="blockInfo.url" class="hb-data"><span>{{blockInfo.miner}}</span></router-link>
+          </div>
+          <div class="hb-box">
+            <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Current TPS</span></div>
+            <div class="hb-num"><span>{{current}}</span></div>
+            <div class="hb-data"><span>Max TPS: </span> <span>{{max}}</span></div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Price</span></div>
@@ -23,7 +28,7 @@
             <div class="hb-data"><span>{{validators}}/{{totalValidators}} Validators</span></div>
           </div>
           <div class="hb-box">
-            <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Bonded Tokens</span></div>
+            <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Bonded INT</span></div>
             <div class="hb-num"><span>29.47%</span></div>
             <div class="hb-data"><span>592.47M / 2010.50M</span></div>
           </div>
@@ -101,7 +106,8 @@
     name: "Home",
     data() {
       return {
-        height: '0',
+        blockInfo: {},
+        current: '0',
         INTPrice: '0.0000',
         INTPTime: '',
         avgTime: '0',
@@ -110,10 +116,11 @@
         tokens: '0',
         blockList: [],
         transList: [],
-        nodeName: '',
+        max: '0',
         votingPower: '',
         validators: '',
         totalValidators: '',
+        timer: '',
         option: {
           title: {
             // text: 'transaction',
@@ -154,9 +161,9 @@
           },
           yAxis: {
             type: 'value',
-            name: 'Quantity',
+            // name: 'Quantity',
             nameLocation: 'center',
-            nameGap: 60, // 坐标轴的名称与轴线之间的距离
+            nameGap: 10, // 坐标轴的名称与轴线之间的距离
             axisLine: {
               show: false // 不显示纵轴的坐标轴
             },
@@ -171,7 +178,7 @@
               //     return value;
               //   }
               // },
-              margin: 15 // 刻度标签与轴线的距离
+              margin: 5 // 刻度标签与轴线的距离
             }
           },
           series: [{
@@ -180,7 +187,7 @@
             type: 'line',
             smooth: true,
             label: {
-              position: [50, 50]
+              position: [50, 60]
             },
             itemStyle: {
               color: '#ed303b', // 线的颜色
@@ -220,7 +227,7 @@
             {
               type: 'pie',
               radius : '55%',
-              // center: ['50%', '60%'],
+              center: ['60%', '50%'],
               data:[],
               itemStyle: {
                 emphasis: {
@@ -237,12 +244,27 @@
     created() {
       this.getHomePageInfo();
       this.getVoteStake();
-    },
-    mounted() {
       this.getTxHistory();
       this.echartPie();
+      this.blockListTimer();
+      this.getAvgPrice();
+    },
+    mounted() {
+
+    },
+    destroyed() {
+      clearInterval(this.timer)
     },
     methods: {
+      getHeight() {
+        this.$axios.get('/api/block/height').then(res => {
+          this.blockInfo = res.data;
+          this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
+          this.blockInfo.url = '/stats/statsdetail/' + res.data.miner;
+        }).catch(err => {
+          console.log(err);
+        })
+      },
       getVoteStake() {
         this.$axios.get('/api/node/votedStake').then(res => {
           this.voteStake = res.data;
@@ -250,10 +272,10 @@
           console.log(err);
         })
       },
-      getHeight() { //获取当前区块高度
-        this.$axios.get('/api/block/height').then(res => {
-          this.height = res.data.number;
-          this.nodeName = res.data.nodeName ? res.data.nodeName : res.data.miner;
+      getTps() { //获取当前区块高度
+        this.$axios.get('/api/block/tps').then(res => {
+          this.current = res.data.current;
+          this.max = res.data.max;
         }).catch(err => {
           console.log(err);
         })
@@ -277,6 +299,11 @@
           myChart.setOption(this.option)
         }).catch(err => {
           console.log(err);
+        })
+      },
+      getAvgPrice() { //获取近14天INT每天的平均价格
+        this.$axios.get('/api/tx/getPriceTrend').then(res => {
+          console.log(res.data);
         })
       },
       getAvgBlockTime() { //获取平均出块时间
@@ -334,12 +361,18 @@
           console.log(err);
         })
       },
+      blockListTimer() {
+        this.timer = setInterval(() => {
+          this.getHomePageInfo();
+        },5000)
+      },
       getHomePageInfo() {
-        this.getHeight();
+        this.getTps();
         this.getINTPrice();
         this.getAvgBlockTime();
         this.getBlockList();
-        this.getTransactionList()
+        this.getTransactionList();
+        this.getHeight();
       }
     }
   }
@@ -353,7 +386,7 @@
   .home .h-block {
     display: flex;
     justify-content: space-between;
-    padding: 32px 45px;
+    padding: 32px 40px;
     /*width: 100%;*/
     box-shadow:0 4px 8px 0 rgba(230,230,230,0.6);
     border-radius:4px;
@@ -364,7 +397,7 @@
   .home .h-block .hb-box {
     padding-top: 18px;
     padding-left: 20px;
-    width: 210px;
+    width: 180px;
     height: 120px;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
@@ -379,6 +412,15 @@
   .h-block .hb-box .hb-t {
     font-size: 14px;
     color: #333;
+  }
+
+  .h-block .hb-height .hb-data {
+    color: #ed303b!important;
+    cursor: pointer;
+  }
+
+  .h-block .hb-height .hb-data:hover {
+    text-decoration: underline;
   }
 
   .hb-box .hb-t .hb-icon {
@@ -400,9 +442,9 @@
     font-size: 20px;
     color: #ed303b;
   }
-  
+
   .h-block .hb-box .hb-data {
-    width: 150px;
+    width: 145px;
     font-size: 12px;
     color: #666;
     white-space: nowrap;
@@ -428,7 +470,7 @@
 
   .home .h-chart .h-l,
   .home .h-chart .h-r {
-    padding: 20px 45px;
+    padding: 20px 40px;
   }
 
   .home .h-list .h-l,
@@ -441,7 +483,7 @@
   }
 
   .home .h-list .h-up {
-    padding: 0 45px 20px;
+    padding: 0 40px 20px;
   }
 
   .home .h-t {
@@ -518,7 +560,7 @@
   }
 
   .home .h-list .hl-li {
-    padding: 15px 45px;
+    padding: 10px 40px;
     font-size: 14px;
     color: #666;
     border-top: 1px solid #f3f3f3;
@@ -527,7 +569,7 @@
   .home .h-list .hl-li:first-of-type {
     border-top: none;
   }
-  
+
   .h-list .hl-li:hover {
     background-color: #faf7f8;
   }
@@ -538,7 +580,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  
+
   .h-list .hl-li .hl-i {
     margin-bottom: 5px;
   }

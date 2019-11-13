@@ -70,4 +70,7 @@ export default {
     line-height: 100px!important;
   }
 
+  .el-table td {
+    padding: 10px 0!important;
+  }
 </style>
