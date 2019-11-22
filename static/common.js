@@ -113,5 +113,5 @@ const getMax = (arr,method) => {
     maxY = (maxY / 1000).toFixed(4);
     minY = (minY / 1000).toFixed(4);
   }
-  return {maxy: maxY,miny: minY};
+  return {maxy: maxY,miny: minY}
 };
