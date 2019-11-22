@@ -3,7 +3,7 @@
     <div id="box">
       <div class="tx-info">
         <div class="td-t"><span>Transaction Information</span></div>
-        <div class="td-c">
+        <div class="td-c" v-loading="isInfoLoading">
           <div class="tc-t"><span>TxHash : </span><span>{{hash}}</span></div>
           <div class="tc-c">
             <div class="tc-group">
@@ -49,7 +49,7 @@
       </div>
       <div class="tx-msg">
         <div class="td-t">Transaction Message</div>
-        <div class="td-c">
+        <div class="td-c" v-loading="isInfoLoading">
           <div class="tc-c">
             <div class="tc-group">
               <div class="tg-i">TxType :</div>
@@ -87,7 +87,8 @@
         hash: this.$route.params.hash,
         txDetail: {},
         blockUrl: '',
-        isTxInputShow: false
+        isTxInputShow: false,
+        isInfoLoading: true
       }
     },
     created() {
@@ -98,8 +99,8 @@
     },
     methods: {
       getTxDetail() {
+        this.isInfoLoading = true;
         this.$axios.get('/api/tx/detail',{params:{hash:this.hash}}).then(res => {
-          console.log(res);
           this.txDetail = res.data;
           this.txDetail.status = statusType(this.txDetail.status);
           this.txDetail.fee = new BigNumber(this.txDetail.gasPrice).times(this.txDetail.gasUsed) + ' INT';
@@ -108,6 +109,7 @@
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
           this.blockUrl = '/blockchain/blockdetail/' + this.txDetail.blockNumber;
           this.isTxInputShow = this.txDetail.type !== 'Transfer';
+          this.isInfoLoading = false
         }).catch(err => {
           console.log(err);
         })

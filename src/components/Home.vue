@@ -4,8 +4,8 @@
         <div class="h-block">
           <div class="hb-box hb-height">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Block Height</span></div>
-            <div class="hb-num"><span>{{blockInfo.number}}</span></div>
-            <router-link tag="div" :to="blockInfo.url" class="hb-data"><span>{{blockInfo.miner}}</span></router-link>
+            <router-link v-if="blockInfo.blockUrl" tag="div" :to="blockInfo.blockUrl" class="hb-num"><span>{{blockInfo.number}}</span></router-link>
+            <router-link v-if="blockInfo.addrUrl" tag="div" :to="blockInfo.addrUrl" class="hb-data"><span>{{blockInfo.miner}}</span></router-link>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Current TPS</span></div>
@@ -29,8 +29,8 @@
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Bonded INT</span></div>
-            <div class="hb-num"><span>29.47%</span></div>
-            <div class="hb-data"><span>592.47M / 2010.50M</span></div>
+            <div class="hb-num"><span>{{bondPer}}</span></div>
+            <div class="hb-data"><span>{{bondStake}} / {{bondTotal}}</span></div>
           </div>
         </div>
         <div class="h-chart">
@@ -45,7 +45,7 @@
           </div>
           <div class="h-r">
             <div class="h-up">
-              <div class="h-t"><i class="h-logo hl-history"></i><span>14 days Transaction History</span></div>
+              <div class="h-t"><i class="h-logo hl-history"></i><span>14 days Transaction History & INT Average Price</span></div>
 <!--              <div class="h-view"><span>View All</span></div>-->
             </div>
             <div class="hc-down">
@@ -120,28 +120,26 @@
         votingPower: '',
         validators: '',
         totalValidators: '',
+        bondStake: '',
+        bondTotal: '',
+        bondPer: '',
+        maxYTxn: 0,
+        maxYPrice: 0,
+        minYPrice: 0,
         timer: '',
         option: {
           title: {
-            // text: 'transaction',
-            left: 'center', // align属性设置居中不生效，这个就生效了
-            // subtext: 'data sources：INTChain',
-            subtextStyle: {
-              color: '#656665'
-            }
+            textAlign: 'center'
           },
-          // legend: {
-          //   orient: 'vertical', // 'vertical'
-          //   right: 100,
-          //   top: 20,
-          //   bottom: 20,
-          //   data: [
-          //     {
-          //       name: 'transaction',
-          //       // icon: 'circle' // 如果不写就默认，默认的圆形外面有两条短横线
-          //     },
-          //   ]
-          // },
+          legend: {
+            type: 'plain',
+            // orient: 'horizontal', // 'vertical'
+            right: 100,
+            top: '5%',
+            // bottom: 20,
+            data: ['Transaction(Txs)','Price($)'],
+            z: 100
+          },
           tooltip: {
             trigger: 'axis' // tooltip出现悬浮的解释框
           },
@@ -150,63 +148,83 @@
             data: [],
             // data: ['2018-08-22','2018-08-22', '2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22','2018-08-22',],
             axisLabel: {
-              interval: 0,
               rotate: 45, //倾斜度 -90 至 90 默认为0
               margin: 12, // 刻度标签与轴线的距离
               fontWeight: 500
             },
             axisTick: {
-              alignWithLabel: true // 刻度和标签对齐
+              // alignWithLabel: true // 刻度和标签对齐
+              show: false
             }
           },
-          yAxis: {
-            type: 'value',
-            // name: 'Quantity',
-            nameLocation: 'center',
-            nameGap: 10, // 坐标轴的名称与轴线之间的距离
-            axisLine: {
-              show: false // 不显示纵轴的坐标轴
+          yAxis: [
+            {
+              type: 'value',
+              name: 'Transaction(Txs)',
+              nameGap: 20, // 坐标轴的名称与轴线之间的距离
+              // min: 0,
+              // max: 250000,
+              // interval: 250000/5,
+              axisLine: {
+                lineStyle: {
+                  color: '#333'
+                }
+              },
+              axisLabel: {
+                formatter: '{value} ',
+                margin: 5 // 刻度标签与轴线的距离
+              },
+              splitLine: {
+                show: false
+              }
             },
-            axisTick: {
-              show: false // 不显示纵轴的刻度
-            },
-            axisLabel: {
-              // formatter: function (value, index) {
-              //   if (value >= 100000) {
-              //     return value = (value / 1000) + 'k';
-              //   } else {
-              //     return value;
-              //   }
-              // },
-              margin: 5 // 刻度标签与轴线的距离
+            {
+              type: 'value',
+              name: 'Price($)',
+              nameGap: 20, // 坐标轴的名称与轴线之间的距离
+              // min: 0.018,
+              // max: 0.025,
+              // interval: (0.025 - 0.018)/5,
+              axisLine: {
+                lineStyle: {
+                  color: '#333'
+                }
+              },
+              axisLabel: {
+                formatter: '{value} ',
+                margin: 10 // 刻度标签与轴线的距离
+              }
             }
-          },
-          series: [{
-            name: 'transaction', // 这个name必须与legend data中的name一致
-            data: [],
-            type: 'line',
-            smooth: true,
-            label: {
-              position: [50, 60]
+          ],
+          series: [
+            {
+              name: 'Transaction(Txs)', // 这个name必须与legend data中的name一致
+              data: [],
+              type: 'line',
+              smooth: true,
+              label: {
+                position: [10, 60]
+              },
+              itemStyle: {
+                color: '#ed303b', // 线的颜色
+                borderWidth: 5 // 线的宽度
+              }
             },
-            itemStyle: {
-              color: '#ed303b', // 线的颜色
-              borderWidth: 5 // 线的宽度
-            },
-            color: '#ed303b'/*{
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [{
-                offset: 0, color: '#fff' // 0% 处的颜色
-              }, {
-                offset: 1, color: '#ed303b' // 100% 处的颜色
-              }],
-              global: false // 缺省为 false
-            }*/
-          }]
+            {
+              name: 'Price($)', // 这个name必须与legend data中的name一致
+              data: [],
+              type: 'line',
+              smooth: true,
+              yAxisIndex: 1,
+              label: {
+                position: [10, 60]
+              },
+              itemStyle: {
+                color: '#3C31D7', // 线的颜色
+                borderWidth: 5 // 线的宽度
+              }
+            }
+          ]
         },
         optionPie:{
           // title : {
@@ -226,14 +244,34 @@
           series : [
             {
               type: 'pie',
-              radius : '55%',
+              radius : '85%',
               center: ['60%', '50%'],
               data:[],
+              label: {
+                normal: {
+                  show: false
+                }
+              },
+              // labelLine: {
+              //   normal: {
+              //     show: false
+              //   }
+              // },
               itemStyle: {
                 emphasis: {
                   shadowBlur: 10,
                   shadowOffsetX: 0,
                   shadowColor: 'rgba(0, 0, 0, 0.5)'
+                },
+                normal: {
+                  color: (params) => {
+                    let colorList = [];
+                    for (let i = 0; i < 10; i++) {
+                      colorList.push('rgba(237,48,59,' + (10-i/1.3)/10 +')');
+                    }
+                    colorList.push('rgba(237,48,59,0.2)');
+                    return colorList[params.dataIndex];
+                  }
                 }
               }
             }
@@ -244,13 +282,12 @@
     created() {
       this.getHomePageInfo();
       this.getVoteStake();
+      this.getAccountBond();
       this.getTxHistory();
       this.echartPie();
       this.blockListTimer();
-      this.getAvgPrice();
     },
     mounted() {
-
     },
     destroyed() {
       clearInterval(this.timer)
@@ -260,7 +297,8 @@
         this.$axios.get('/api/block/height').then(res => {
           this.blockInfo = res.data;
           this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
-          this.blockInfo.url = '/stats/statsdetail/' + res.data.miner;
+          this.blockInfo.addrUrl = '/stats/statsdetail/' + res.data.miner;
+          this.blockInfo.blockUrl = '/blockchain/blockdetail/' + res.data.number
         }).catch(err => {
           console.log(err);
         })
@@ -268,6 +306,18 @@
       getVoteStake() {
         this.$axios.get('/api/node/votedStake').then(res => {
           this.voteStake = res.data;
+        }).catch(err => {
+          console.log(err);
+        })
+      },
+      getAccountBond() {
+        this.$axios.get('/api/account/bond').then(res => {
+          this.bondStake = res.data.stake;
+          this.bondTotal = res.data.balance + res.data.stake;
+          this.bondPer = new BigNumber(this.bondStake).div(new BigNumber(this.bondTotal)).toNumber();
+          this.bondPer = toDecimal4NoZero(this.bondPer) * 100 + '%';
+          this.bondStake = nFormatter(this.bondStake,2);
+          this.bondTotal = nFormatter(this.bondTotal,2);
         }).catch(err => {
           console.log(err);
         })
@@ -295,15 +345,26 @@
             this.option.xAxis.data.push(item.time);
             this.option.series[0].data.push(item.txCount);
           });
-          var myChart = echarts.init(this.$refs.history);// 减少dom的消耗
-          myChart.setOption(this.option)
+          let max = getMax(this.option.series[0].data,'trans');
+          this.option.yAxis[0].min = 0;
+          this.option.yAxis[0].max = max.maxy;
+          this.option.yAxis[0].interval = max.maxy/5;
+          this.$axios.get('/api/tx/getPriceTrend').then(res1 => {
+            res1.data.forEach(item => {
+              // this.option.xAxis.data.push(item.time);
+              this.option.series[1].data.push(item.price);
+            });
+            let param = getMax(this.option.series[1].data,'price');
+            this.option.yAxis[1].min = +param.miny;
+            this.option.yAxis[1].max = +param.maxy;
+            this.option.yAxis[1].interval = (param.maxy - param.miny).toFixed(4)/5;
+            var myChart = echarts.init(this.$refs.history);// 减少dom的消耗
+            myChart.setOption(this.option)
+          }).catch(err1 => {
+            console.log(err1);
+          });
         }).catch(err => {
           console.log(err);
-        })
-      },
-      getAvgPrice() { //获取近14天INT每天的平均价格
-        this.$axios.get('/api/tx/getPriceTrend').then(res => {
-          console.log(res.data);
         })
       },
       getAvgBlockTime() { //获取平均出块时间
@@ -315,18 +376,29 @@
       },
       echartPie() {
         this.$axios.get('/api/node/list').then(res => {
-          console.log(res.data);
-          res.data.forEach(item => {
-            item.addr = item.address.slice(0,5) + '...' + item.address.slice(-3);
-            item.name = item.name ? item.name: item.addr;
-            item.power = item.voting_power / this.voteStake;
-            item.param = {
-              value: item.power,
-              name: item.name
+          let top10Power = 0;
+          for (let i in res.data) {
+            res.data[i].addr = res.data[i].address.slice(0,5) + '...' + res.data[i].address.slice(-5);
+            res.data[i].name = res.data[i].name ? res.data[i].name: res.data[i].addr;
+            res.data[i].power = res.data[i].voting_power / this.voteStake;
+            res.data[i].param = {
+              value: res.data[i].power,
+              name: res.data[i].name
             };
-            this.optionPie.legend.data.push(item.name);
-            this.optionPie.series[0].data.push(item.param);
-          });
+            if (i <= 9) {
+              top10Power += res.data[i].power;
+              this.optionPie.legend.data.push(res.data[i].name);
+              this.optionPie.series[0].data.push(res.data[i].param);
+            } else if (i > 9) {
+              let other = {
+                value: 1-top10Power,
+                name: 'Others'
+              };
+              this.optionPie.legend.data.push(other.name);
+              this.optionPie.series[0].data.push(other);
+              break;
+            }
+          }
           var PieChart = echarts.init(this.$refs.top10);// 减少dom的消耗
           PieChart.setOption(this.optionPie)
         }).catch(err => {
@@ -336,7 +408,8 @@
       getBlockList() { //获取出块列表
         this.$axios.get('/api/block/list').then(res => {
           this.blockList = res.data.list;
-          this.votingPower = toDecimal4NoZero(this.blockList[0].votingPower/this.blockList[0].totalVotingPower) * 100 + '%';
+          this.votingPower = toDecimal4NoZero(this.blockList[0].votingPower/this.blockList[0].totalVotingPower);
+          this.votingPower = new BigNumber(this.votingPower).times(100).toNumber() + '%';
           this.validators = this.blockList[0].validators;
           this.totalValidators = this.blockList[0].totalValidators;
           this.blockList.forEach(item => {
@@ -373,7 +446,7 @@
         this.getBlockList();
         this.getTransactionList();
         this.getHeight();
-      }
+      },
     }
   }
 </script>
@@ -420,6 +493,14 @@
   }
 
   .h-block .hb-height .hb-data:hover {
+    text-decoration: underline;
+  }
+
+  .h-block .hb-height .hb-num {
+    cursor: pointer;
+  }
+
+  .h-block .hb-height .hb-num:hover {
     text-decoration: underline;
   }
 

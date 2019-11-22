@@ -4,7 +4,7 @@
       <div class="bd-info">
         <div class="bd-t"><div class="bt-i"><span>Blockchain</span></div></div>
         <div class="bd-c">
-          <div class="bi-t"><i></i><span>Blockchain  #</span><span style="color: #ed303b">{{block.number}}</span></div>
+          <div class="bi-t"><i></i><span>Blockchain&nbsp;&nbsp;&nbsp;#</span><span style="color: #ed303b">{{block.number}}</span></div>
           <div class="bi-c" v-loading="isInfoLoading">
             <div class="bi-group">
               <div class="bg-i"><span>Block Hash :</span></div>
@@ -44,9 +44,18 @@
                 </div>
               </div>
             </div>
-            <div class="bi-group">
-              <div class="bg-i"><span>Block reward :</span></div>
-              <div class="bg-ii"><span></span></div>
+            <div class="bi-group bi-gas">
+              <div class="bg-i">Block reward :</div>
+              <div class="bg-ii">
+                <div><span>{{block.reward}}</span></div>
+                <div class="bg-tip">
+                  <div class="bgt-icon"></div>
+                  <div class="bgt-tx">
+                    <div><span>Reward: </span><span>{{block.blockReward}}</span></div>
+                    <div><span>Block Fee: </span><span>{{block.blockFee}}</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Timestamp :</span></div>
@@ -128,9 +137,11 @@
         this.isInfoLoading = true;
         this.$axios.get('/api/block/detail',{params:{height:this.height}}).then(res=> {
           this.block = res.data;
-          this.voteP = toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower) * 100 + '%';
+          this.voteP = toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower);
+          this.voteP = new BigNumber(this.voteP).times(100).toNumber() + '%';
           this.block.createTime = this.$moment(this.block.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           this.block.url = '/stats/statsdetail/' + this.block.miner;
+          this.block.reward = toDecimal4NoZero(this.block.blockReward + this.block.blockFee) + ' INT';
           this.isInfoLoading = false;
         }).catch(err => {
           console.log(err);

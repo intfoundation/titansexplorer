@@ -18,12 +18,12 @@
         <el-table :data="blockList" height="800" v-loading="isLoading">
           <el-table-column label="Block" width="100" align="left">
             <template slot-scope="scope">
-              <router-link tag="span" :to="scope.row.url" type="text" class="bl-num">{{scope.row.number}}</router-link>
+              <router-link v-if="scope.row.url" tag="span" :to="scope.row.url" type="text" class="bl-num">{{scope.row.number}}</router-link>
             </template>
           </el-table-column>
           <el-table-column label="Proposer" align="left">
             <template slot-scope="scope">
-              <router-link tag="span" :to="scope.row.addrUrl" type="text" class="bl-num">{{scope.row.miner}}</router-link>
+              <router-link v-if="scope.row.addrUrl" tag="span" :to="scope.row.addrUrl" type="text" class="bl-num">{{scope.row.miner}}</router-link>
             </template>
           </el-table-column>
           <el-table-column prop="txns" label="Transactions" align="left" width="120"></el-table-column>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+  import BigNumber from 'bignumber.js'
   export default {
     name: "Blocks",
     data() {
@@ -69,10 +70,10 @@
     },
     created() {
       this.currentPage = +this.page;
-      this.getBlockList();
-      this.getHeight();
     },
     mounted() {
+      this.getBlockList();
+      this.getHeight();
     },
     methods: {
       getBlockList() {
@@ -88,7 +89,8 @@
             item.addrUrl = '/stats/statsdetail/' + item.miner;
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
             item.passTime = '> ' + formatPassTime(item.timestamp,Date.now());
-            item.voteP = toDecimal4NoZero(item.votingPower/item.totalVotingPower) * 100 + '%';
+            item.voteP = toDecimal4NoZero(item.votingPower/item.totalVotingPower);
+            item.voteP = new BigNumber(item.voteP).times(100).toNumber() + '%';
           });
         })
       },

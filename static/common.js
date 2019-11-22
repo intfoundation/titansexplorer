@@ -60,3 +60,58 @@ const transAmount = (num) => {
     return arr[0].replace(/\d{1,3}(?=(\d{3})+$)/g,'$&,');
   }
 };
+
+//转化大数字数值计数方式
+const nFormatter = (num, digits) => {
+  const si = [
+    { value: 1, symbol: "" },
+    { value: 1E3, symbol: "K" },
+    { value: 1E6, symbol: "M" },
+    { value: 1E9, symbol: "G" },
+    { value: 1E12, symbol: "T" },
+    { value: 1E15, symbol: "P" },
+    { value: 1E18, symbol: "E" }
+  ];
+  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+  let i;
+  for (i = si.length - 1; i > 0; i--) {
+    if (num >= si[i].value) {
+      break;
+    }
+  }
+  return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+};
+
+//折线图Y轴'取整'
+const getMax = (arr,method) => {
+  let maxY = 0;
+  let minY = 0;
+  let arrNem = [...arr];
+  arrNem.sort((a,b) => {return a-b});
+  let max = arrNem[arrNem.length-1];
+  let min = arrNem[0];
+  let str = max.toString();
+  if (method === 'trans') { //交易量曲线
+    if (max >= 1 && max < 10) {
+      maxY = 10;
+    } else if (max >=10) {
+      let num = str.substr(0,2);
+      let numMax = (5 - num % 5) + (+num);
+      str = str.substr(2).replace(/./g,'0');
+      maxY = numMax.toString() + str;
+      maxY = +maxY;
+    }
+  } else if (method === 'price') {
+    max = (max * 1000).toFixed(1).toString();
+    min = (min * 1000).toFixed(1).toString();
+    let maxArr = max.split('.');
+    let minArr = min.split('.');
+    let numMax = +maxArr[0] + 1;
+    let numMin = +minArr[0] - 1;
+    maxY = numMax.toString() + '.' + maxArr[1].replace(/./g,'0');
+    minY = numMin.toString() + '.' + minArr[1].replace(/./g,'0');
+    maxY = (maxY / 1000).toFixed(4);
+    minY = (minY / 1000).toFixed(4);
+  }
+  return {maxy: maxY,miny: minY};
+};
