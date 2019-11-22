@@ -220,7 +220,7 @@
                 position: [10, 60]
               },
               itemStyle: {
-                color: '#3C31D7', // 线的颜色
+                color: '#F88C35', // 线的颜色
                 borderWidth: 5 // 线的宽度
               }
             }
