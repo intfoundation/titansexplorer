@@ -245,7 +245,7 @@
             {
               type: 'pie',
               radius : '85%',
-              center: ['60%', '50%'],
+              center: ['60%', '47%'],
               data:[],
               label: {
                 normal: {
