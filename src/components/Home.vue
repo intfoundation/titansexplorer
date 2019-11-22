@@ -293,6 +293,16 @@
       clearInterval(this.timer)
     },
     methods: {
+      getVotingPower() {
+        this.$axios.get('/api/node/getVotingPower').then(res => {
+          // console.log(res.data);
+          this.votingPower = res.data.rate;
+          this.validators = res.data.validators;
+          this.totalValidators = res.data.totalValidators;
+        }).catch(err => {
+          console.log(err);
+        })
+      },
       getHeight() {
         this.$axios.get('/api/block/height').then(res => {
           this.blockInfo = res.data;
@@ -408,10 +418,6 @@
       getBlockList() { //获取出块列表
         this.$axios.get('/api/block/list').then(res => {
           this.blockList = res.data.list;
-          this.votingPower = toDecimal4NoZero(this.blockList[0].votingPower/this.blockList[0].totalVotingPower);
-          this.votingPower = new BigNumber(this.votingPower).times(100).toNumber() + '%';
-          this.validators = this.blockList[0].validators;
-          this.totalValidators = this.blockList[0].totalValidators;
           this.blockList.forEach(item => {
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
             item.passTime = formatPassTime(item.timestamp,Date.now());
@@ -446,6 +452,7 @@
         this.getBlockList();
         this.getTransactionList();
         this.getHeight();
+        this.getVotingPower();
       },
     }
   }

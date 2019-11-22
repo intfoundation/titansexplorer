@@ -173,11 +173,10 @@
       },
       methods: {
         search() {
-          console.log(+this.keyword);
           let txRex = /^0x/;
           let addrRex = /^INT3/;
           if (this.keyword.trim()) {
-            if (+this.keyword && !this.keyword.match(txRex) && +this.keyword % 1 === 0) { //搜索关键字为整数
+            if (+this.keyword && !this.keyword.match(txRex) && +this.keyword % 1 === 0) {
               this.$axios.get('/api/block/detail',{params:{height:this.keyword}}).then(res => {
                 if (res.data) {
                   this.$router.push('/blockchain/blockdetail/' + this.keyword)
@@ -198,7 +197,7 @@
             } else if (this.keyword.match(addrRex)) {
               this.$axios.get('/api/account/detail', {params: {address: this.keyword}}).then(res => {
                 if (res.data) {
-                  this.$router.push('/transfer/transferdetail/' + this.keyword)
+                  this.$router.push('/stats/statsdetail/' + this.keyword)
                 } else {
                   this.$router.push('/result/' + this.keyword)
                 }
