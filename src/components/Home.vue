@@ -381,7 +381,7 @@
         this.$axios.get('/api/block/avgBlockTime').then(res => {
           this.avgTime = toDecimal4NoZero(res.data/1000);
         }).catch(err => {
-          console.log(err);
+          console.log(err)
         })
       },
       echartPie() {

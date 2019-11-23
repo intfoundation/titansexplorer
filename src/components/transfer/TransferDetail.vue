@@ -236,7 +236,7 @@
     margin-bottom: 30px;
   }
 
-  .txDetail .tx-input .tc-c {
+  .txDetail .tx-input .td-c {
     padding: 30px 25px;
     background-color: #fff;
     border: 1px solid #e6e6e6;
