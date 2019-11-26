@@ -1,6 +1,7 @@
 //保留4位小数，整数不补全0;
 const toDecimal4NoZero = (x) => {
-  let f = Math.round(x * 10000) / 10000;
+  let num = Math.round(x * 10000);
+  let f = num/10000;
   let s = f.toString();
   return s;
 };

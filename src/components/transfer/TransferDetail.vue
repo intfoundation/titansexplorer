@@ -57,7 +57,7 @@
             </div>
             <div class="tc-group">
               <div class="tg-i">From :</div>
-              <div class="tg-ii text-url"><span>{{txDetail.fromAddress}}</span></div>
+              <router-link tag="div" :to="fromUrl" class="tg-ii text-url"><span>{{txDetail.fromAddress}}</span></router-link>
             </div>
             <div class="tc-group">
               <div class="tg-i">Amount :</div>
@@ -65,7 +65,7 @@
             </div>
             <div class="tc-group">
               <div class="tg-i">To :</div>
-              <div class="tg-ii text-url"><span>{{txDetail.toAddress}}</span></div>
+              <router-link tag="div" :to="toUrl" class="tg-ii text-url"><span>{{txDetail.toAddress}}</span></router-link>
             </div>
           </div>
         </div>
@@ -87,6 +87,8 @@
         hash: this.$route.params.hash,
         txDetail: {},
         blockUrl: '',
+        fromUrl: '',
+        toUrl: '',
         isTxInputShow: false,
         isInfoLoading: true
       }
@@ -108,6 +110,8 @@
           this.txDetail.createTime = this.$moment(this.txDetail.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
           this.blockUrl = '/blockchain/blockdetail/' + this.txDetail.blockNumber;
+          this.fromUrl = '/stats/statsdetail/' + this.txDetail.fromAddress;
+          this.toUrl = '/stats/statsdetail/' + this.txDetail.toAddress;
           this.isTxInputShow = this.txDetail.type !== 'Transfer';
           this.isInfoLoading = false
         }).catch(err => {
