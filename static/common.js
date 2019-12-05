@@ -1,8 +1,14 @@
 //保留4位小数，整数不补全0;
 const toDecimal4NoZero = (x) => {
-  let num = Math.round(x * 10000);
-  let f = num/10000;
-  let s = f.toString();
+  x = +x;
+  let s = '';
+  if (x == 0) {
+    s = 0;
+  } else {
+    let num = Math.round(x * 10000);
+    let f = num/10000;
+    s = f.toString();
+  }
   return s;
 };
 
@@ -116,3 +122,8 @@ const getMax = (arr,method) => {
   }
   return {maxy: maxY,miny: minY}
 };
+
+const overHide = (str) => {
+  str =
+  this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
+}

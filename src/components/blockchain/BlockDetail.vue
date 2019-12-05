@@ -29,7 +29,7 @@
             </div>
             <div class="bi-group">
               <div class="bg-i"><span>Transactions :</span></div>
-              <router-link tag="div" to="" class="bg-ii bg-link"><span>{{block.txns}}</span></router-link>
+              <div class="bg-ii"><span style="color: #ed303b">{{block.txns}}</span></div>
             </div>
             <div class="bi-group bi-gas">
               <div class="bg-i">Gas Used :</div>
@@ -52,7 +52,7 @@
                   <div class="bgt-icon"></div>
                   <div class="bgt-tx">
                     <div><span>Reward: </span><span>{{block.blockReward}}</span></div>
-                    <div><span>Block Fee: </span><span>{{block.blockFee}}</span></div>
+                    <div><span>Tx Fee: </span><span>{{block.blockFee}}</span></div>
                   </div>
                 </div>
               </div>
@@ -64,35 +64,53 @@
           </div>
         </div>
       </div>
-      <!--<div class="bd-trans" v-if="isTxShow">
+      <div class="bd-trans" v-if="isTxShow">
         <div class="bd-t">
           <div class="bt-i"><span>Transactions</span></div>
+          <div class="bt-ii" v-if="total > 10">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              :current-page.sync="currentPage"
+              :page-size="10"
+              :total="total"
+              layout="prev, pager, next, jumper"
+              background>
+            </el-pagination>
+          </div>
         </div>
         <div class="bd-c">
           <el-table :data="txList" max-height="800" v-loading="isTxLoading">
-            <el-table-column prop="hash" label="TxHash" align="left" :show-overflow-tooltip="over"></el-table-column>
+            <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
+              <template slot-scope="scope">
+                <router-link tag="div" :to="scope.row.txUrl" class="bd-link">{{scope.row.hash}}</router-link>
+              </template>
+            </el-table-column>
             <el-table-column prop="blockNumber" label="Block" align="left" width="100"></el-table-column>
-            <el-table-column prop="type" label="TxType" align="left" width="100"></el-table-column>
+            <el-table-column prop="type" label="TxType" align="left" width="150"></el-table-column>
             <el-table-column prop="fee" label="Fee" align="left" width="150"></el-table-column>
-            <el-table-column prop="fromAddress" label="Signer" align="left" :show-overflow-tooltip="over"></el-table-column>
+            <el-table-column label="Signer" align="left" width="280" :show-overflow-tooltip="over">
+              <template slot-scope="scope">
+                <router-link tag="div" :to="scope.row.addrUrl" class="bd-link">{{scope.row.fromAddress}}</router-link>
+              </template>
+            </el-table-column>
             <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
             <el-table-column prop="time" label="Timestamp" align="right"></el-table-column>
           </el-table>
         </div>
-      </div>-->
+      </div>
       <div class="bd-validator">
         <div class="bd-t">
           <div class="bt-i"><span>Validator Set</span></div></div>
         <div class="bd-c">
           <el-table :data="vdList" max-height="600" v-loading="isVdLoading">
             <el-table-column prop="i" label="#" align="left" width="80"></el-table-column>
-            <el-table-column prop="" label="Moniker" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+            <el-table-column prop="moniker" label="Moniker" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
             <el-table-column label="Operator" align="left">
               <template slot-scope="scope">
-                <router-link tag="span" :to="scope.row.addrUrl" class="bv-link">{{scope.row.address}}</router-link>
+                <router-link tag="span" :to="scope.row.addrUrl" class="bd-link">{{scope.row.address}}</router-link>
               </template>
             </el-table-column>
-            <el-table-column prop="" label="Proposer Priority" align="left"></el-table-column>
+            <el-table-column prop="proposerPriority" label="Proposer Priority" align="left"></el-table-column>
             <el-table-column prop="voting_power" label="Voting Power" align="left"></el-table-column>
           </el-table>
         </div>
@@ -113,6 +131,9 @@
     data() {
       return {
         height: this.$route.params.height,
+        page: this.$route.params.page || 1,
+        currentPage: 1,
+        total: 0,
         block: {},
         txList: [],
         isTxLoading: false,
@@ -125,17 +146,16 @@
       }
     },
     created() {
-
+      this.getTxList();
     },
     mounted() {
       this.getBlockDetail();
-      // this.getTxList();
       this.getValidatorList();
     },
     methods:{
       getBlockDetail() {
         this.isInfoLoading = true;
-        this.$axios.get('/api/block/detail',{params:{height:this.height}}).then(res=> {
+        this.$axios.get('/api/block/detail',{params:{height:this.height,pageNum:1,pageSize:10}}).then(res=> {
           this.block = res.data;
           this.voteP = toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower);
           this.voteP = new BigNumber(this.voteP).times(100).toNumber() + '%';
@@ -147,26 +167,28 @@
           console.log(err);
         })
       },
-      // getTxList() {
-      //   this.isTxLoading = true;
-      //   this.$axios.get('/api/tx/blocktx',{params:{height:this.height}}).then(res => {
-      //     this.txList = res.data;
-      //     this.isTxShow = this.txList.length;
-      //     if (this.txList.length) {
-      //       this.txList.forEach((item,index) => {
-      //         item.i = index + 1;
-      //         item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
-      //         item.time = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
-      //         item.status = statusType(item.status);
-      //       });
-      //       console.log(this.txList);
-      //     } else {
-      //     }
-      //     this.isTxLoading = false
-      //   }).catch(err => {
-      //     console.log(err);
-      //   })
-      // },
+      getTxList() {
+        this.isTxLoading = true;
+        this.$axios.get('/api/tx/blocktx',{params:{height:this.height,pageNo:this.page,pageSize:10}}).then(res => {
+          this.txList = res.data.list;
+          this.isTxShow = res.data.count > 0;
+          this.total = res.data.count;
+          console.log(this.total);
+          if (this.isTxShow) {
+            this.txList.forEach((item,index) => {
+              item.i = index + 1;
+              item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
+              item.time = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
+              item.status = statusType(item.status);
+              item.txUrl = '/transfer/transferdetail/' + item.hash;
+              item.addrUrl = '/stats/statsdetail/' + item.addrUrl;
+            });
+          }
+          this.isTxLoading = false
+        }).catch(err => {
+          console.log(err);
+        })
+      },
       getValidatorList() {
         this.isVdLoading = true;
         this.$axios.get('/api/block/validators',{params:{height:this.height}}).then(res => {
@@ -175,12 +197,25 @@
             item.i = index + 1;
             item.voting_power = toDecimal4NoZero(item.voting_power);
             item.addrUrl = '/stats/statsdetail/' + item.address;
+            if (item.proposerPriority === undefined) {
+              item.proposerPriority = '';
+            } else if (item.proposerPriority === 0) {
+              item.proposerPriority = '0%';
+            } else {
+              item.proposerPriority = toDecimal4NoZero(item.proposerPriority).toString() + '%';
+            }
           });
           this.isVdLoading = false;
         }).catch(err => {
           console.log(err);
         })
-      }
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val;
+        this.$router.push ('/blockchain/blockdetail/' + this.height + '/' + val);
+        this.page = val;
+        this.getTxList()
+      },
     }
   }
 </script>
@@ -195,9 +230,12 @@
   }
 
   .blockDetail .bd-t {
+    margin-bottom: 10px;
+  }
+
+  .blockDetail .bd-t .bt-i {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 10px;
   }
 
   .blockDetail .bd-c {
@@ -292,6 +330,20 @@
     filter: Alpha(opacity = 100);
   }
 
+  .blockDetail .bd-trans {
+    margin-bottom: 30px;
+  }
+
+  .bd-trans .bd-c {
+    padding: 0 15px;
+  }
+
+  .bd-trans .bd-t {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .blockDetail .bd-validator {
     margin-bottom: 30px;
   }
@@ -300,12 +352,12 @@
     padding: 0 15px;
   }
 
-  .bd-validator .bd-c .bv-link {
+  .blockDetail .bd-c .bd-link {
     color: #ed303b;
     cursor: pointer;
   }
 
-  .bd-validator .bd-c .bv-link:hover {
+  .blockDetail .bd-c .bd-link:hover {
     text-decoration: underline;
   }
 

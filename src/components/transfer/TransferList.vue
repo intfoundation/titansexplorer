@@ -94,7 +94,7 @@
             item.amount = toDecimal4NoZero(item.value);
             item.amount = transAmount(item.amount);
             item.txUrl = '/transfer/transferdetail/' + item.hash;
-            item.blockUrl = '/blockchain/blockdetail/' + item.blockNumber;
+            item.blockUrl = '/blockchain/blockdetail/' + item.blockNumber + '/1';
             item.toUrl = '/stats/statsdetail/' + item.toAddress;
             item.fromUrl = '/stats/statsdetail/' + item.fromAddress;
           });

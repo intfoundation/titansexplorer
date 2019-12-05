@@ -102,7 +102,7 @@
           // ],
           transferNavList: [
             {
-              name: 'Transaction',
+              name: 'Transactions',
               url: '/transfer/transferlist/1'
             },
             // {
@@ -179,7 +179,7 @@
             if (+this.keyword && !this.keyword.match(txRex) && +this.keyword % 1 === 0) {
               this.$axios.get('/api/block/detail',{params:{height:this.keyword}}).then(res => {
                 if (res.data) {
-                  this.$router.push('/blockchain/blockdetail/' + this.keyword)
+                  this.$router.push('/blockchain/blockdetail/' + this.keyword + '/1')
                 } else {
                   this.$router.push('/result/' + this.keyword)
                 }

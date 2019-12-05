@@ -5,7 +5,7 @@
           <div class="hb-box hb-height">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Block Height</span></div>
             <router-link v-if="blockInfo.blockUrl" tag="div" :to="blockInfo.blockUrl" class="hb-num"><span>{{blockInfo.number}}</span></router-link>
-            <router-link v-if="blockInfo.addrUrl" tag="div" :to="blockInfo.addrUrl" class="hb-data"><span>{{blockInfo.miner}}</span></router-link>
+            <router-link v-if="blockInfo.addrUrl" tag="div" :to="blockInfo.addrUrl" class="hb-data"><span>{{blockInfo.name}}</span></router-link>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Current TPS</span></div>
@@ -37,7 +37,7 @@
           <div class="h-l">
             <div class="h-up">
               <div class="h-t"><i class="h-logo hl-top"></i><span>Validators Top 10</span></div>
-<!--              <div class="h-view"><span>View All</span></div>-->
+              <router-link tag="div" to="/stats/validators" class="h-view"><span>View All</span></router-link>
             </div>
             <div class="hc-down">
               <div ref="top10" class="echarts"></div>
@@ -306,9 +306,10 @@
       getHeight() {
         this.$axios.get('/api/block/height').then(res => {
           this.blockInfo = res.data;
-          this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
           this.blockInfo.addrUrl = '/stats/statsdetail/' + res.data.miner;
-          this.blockInfo.blockUrl = '/blockchain/blockdetail/' + res.data.number
+          this.blockInfo.blockUrl = '/blockchain/blockdetail/' + res.data.number + '/1';
+          res.data.miner = res.data.miner.slice(0,5) + '...' + res.data.miner.slice(-5);
+          this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
         }).catch(err => {
           console.log(err);
         })
@@ -325,7 +326,7 @@
           this.bondStake = res.data.stake;
           this.bondTotal = res.data.balance + res.data.stake;
           this.bondPer = new BigNumber(this.bondStake).div(new BigNumber(this.bondTotal)).toNumber();
-          this.bondPer = toDecimal4NoZero(this.bondPer) * 100 + '%';
+          this.bondPer = new BigNumber(toDecimal4NoZero(this.bondPer)).times(100).toNumber() + '%';
           this.bondStake = nFormatter(this.bondStake,2);
           this.bondTotal = nFormatter(this.bondTotal,2);
         }).catch(err => {
@@ -421,7 +422,7 @@
           this.blockList.forEach(item => {
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
             item.passTime = formatPassTime(item.timestamp,Date.now());
-            item.url = '/blockchain/blockdetail/' + item.number;
+            item.url = '/blockchain/blockdetail/' + item.number + '/1';
           });
         }).catch(err => {
           console.log(err);

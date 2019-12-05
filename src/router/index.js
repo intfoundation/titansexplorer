@@ -8,6 +8,8 @@ import Asset1 from '@/components/asset/Asset1'
 import Staking1 from '@/components/staking/Staking1'
 import StatsList from '@/components/stats/StatsList'
 import StatsDetail from '@/components/stats/StatsDetail'
+import Validators from '@/components/stats/Validators'
+import ValidatorDetail from '@/components/stats/ValidatorDetail'
 import TransferList from '@/components/transfer/TransferList'
 import TransferDetail from '@/components/transfer/TransferDetail'
 import Result from '@/components/Oops'
@@ -32,7 +34,7 @@ export default new Router({
           component: Blocks
         },
         {
-          path: '/blockchain/blockdetail/:height',
+          path: '/blockchain/blockdetail/:height/:page',
           name: 'BlockDetail',
           component: BlocksDetail
         },
@@ -55,6 +57,16 @@ export default new Router({
           path: '/stats/statsdetail/:addr',
           name: 'StatsDetail',
           component: StatsDetail
+        },
+        {
+          path: '/stats/validators',
+          name: 'Validators',
+          component: Validators
+        },
+        {
+          path: '/stats/validatorDetail/:addr',
+          name: 'ValidatorDetail',
+          component: ValidatorDetail
         },
         {
           path: '/transfer/transferlist/:page',

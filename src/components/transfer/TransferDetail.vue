@@ -109,7 +109,7 @@
           this.txDetail.amount = transAmount(this.txDetail.value) + ' INT';
           this.txDetail.createTime = this.$moment(this.txDetail.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
-          this.blockUrl = '/blockchain/blockdetail/' + this.txDetail.blockNumber;
+          this.blockUrl = '/blockchain/blockdetail/' + this.txDetail.blockNumber + '/1';
           this.fromUrl = '/stats/statsdetail/' + this.txDetail.fromAddress;
           this.toUrl = '/stats/statsdetail/' + this.txDetail.toAddress;
           this.isTxInputShow = this.txDetail.type !== 'Transfer';
