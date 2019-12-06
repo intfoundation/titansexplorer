@@ -185,7 +185,6 @@
           this.txList = res.data.list;
           this.isTxShow = res.data.count > 0;
           this.total = res.data.count;
-          console.log(this.total);
           if (this.isTxShow) {
             this.txList.forEach((item,index) => {
               item.i = index + 1;

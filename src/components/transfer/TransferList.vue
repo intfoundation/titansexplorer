@@ -100,7 +100,6 @@
             item.toUrl = '/stats/statsdetail/' + item.toAddress;
             item.fromUrl = '/stats/statsdetail/' + item.fromAddress;
           });
-          console.log(this.txList);
         }).catch(err => {
           console.log(err);
         })

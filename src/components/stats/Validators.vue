@@ -166,7 +166,6 @@
             item.url = '/stats/validatorDetail/' + item.address;
             item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
           });
-          console.log(this.actVdList);
           this.isActLoading = false;
         }).catch(err =>{
           console.log(err);
