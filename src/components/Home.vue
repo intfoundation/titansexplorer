@@ -37,7 +37,7 @@
           <div class="h-l">
             <div class="h-up">
               <div class="h-t"><i class="h-logo hl-top"></i><span>Validators Top 10</span></div>
-              <router-link tag="div" to="/stats/validators" class="h-view"><span>View All</span></router-link>
+              <router-link tag="div" to="/staking/validators" class="h-view"><span>View All</span></router-link>
             </div>
             <div class="hc-down">
               <div ref="top10" class="echarts"></div>

@@ -59,12 +59,12 @@ export default new Router({
           component: StatsDetail
         },
         {
-          path: '/stats/validators',
+          path: '/staking/validators',
           name: 'Validators',
           component: Validators
         },
         {
-          path: '/stats/validatorDetail/:addr',
+          path: '/staking/validatorDetail/:addr',
           name: 'ValidatorDetail',
           component: ValidatorDetail
         },

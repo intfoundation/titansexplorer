@@ -163,7 +163,7 @@
             item.bondedTokens = transAmount(item.bondedTokens) + ' INT';
             item.uptime = new BigNumber(toDecimal4NoZero(item.uptime)).times(100).toNumber() + '%';
             item.selfBonded = transAmount(item.selfBonded) + ' INT';
-            item.url = '/stats/validatorDetail/' + item.address;
+            item.url = '/staking/validatorDetail/' + item.address;
             item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
           });
           this.isActLoading = false;
@@ -180,7 +180,7 @@
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
             item.bondedTokens = transAmount(item.bondedTokens) + ' INT';
             item.selfBonded = transAmount(item.selfBonded) + ' INT';
-            item.url = '/stats/validatorDetail/' + item.address;
+            item.url = '/staking/validatorDetail/' + item.address;
           });
           this.isCanLoading = false;
         }).catch(err => {

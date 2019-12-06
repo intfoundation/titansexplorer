@@ -172,7 +172,6 @@
       getAddrTx() {
         this.isTxLoading = true;
         this.$axios.get('/api/tx/addresstx',{params:{address:this.addr,pageNo:this.currentPage,pageSize:'10'}}).then(res => {
-          console.log(res);
           this.total = res.data.count;
           this.isPageShow = this.total > 10;
           this.txList = res.data.list;
@@ -194,7 +193,6 @@
         })
       },
       handleCurrentChange(val) {
-        console.log(val);
         this.isTxLoading = true;
         this.currentPage = val;
         this.page = val;

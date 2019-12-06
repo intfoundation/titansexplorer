@@ -15,12 +15,12 @@
               <router-link v-for="(item,index) in blockNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
-<!--          <li class="m-li">-->
-<!--            <div class="nav-item-f" :class="{'nav-active-f': (/staking/g).test($route.path)}"><span>Staking</span><i class="nav-icon"></i></div>-->
-<!--            <div class="nav-block">-->
-<!--              <router-link v-for="(item,index) in stakingNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
-<!--            </div>-->
-<!--          </li>-->
+          <li class="m-li">
+            <div class="nav-item-f" :class="{'nav-active-f': (/staking/g).test($route.path)}"><span>Staking</span><i class="nav-icon"></i></div>
+            <div class="nav-block">
+              <router-link v-for="(item,index) in stakingNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
+            </div>
+          </li>
           <li class="m-li">
             <div class="nav-item-f" :class="{'nav-active-f': (/transfer/g).test($route.path)}"><span>Transfer</span><i class="nav-icon"></i></div>
             <div class="nav-block">
@@ -78,28 +78,28 @@
             //   url: '/blockchain/blocks/1'
             // },
           ],
-          // stakingNavList: [
-          //   {
-          //     name: 'Staking1',
-          //     url: '/staking/staking1'
-          //   },
-          //   {
-          //     name: 'Staking2',
-          //     url: '/staking/staking1'
-          //   },
-          //   {
-          //     name: 'Staking3',
-          //     url: '/staking/staking1'
-          //   },
-          //   {
-          //     name: 'Staking4',
-          //     url: '/staking/staking1'
-          //   },
-          //   {
-          //     name: 'Staking5',
-          //     url: '/staking/staking1'
-          //   },
-          // ],
+          stakingNavList: [
+            {
+              name: 'Validators',
+              url: '/staking/validators'
+            },
+            // {
+            //   name: 'Staking2',
+            //   url: '/staking/staking1'
+            // },
+            // {
+            //   name: 'Staking3',
+            //   url: '/staking/staking1'
+            // },
+            // {
+            //   name: 'Staking4',
+            //   url: '/staking/staking1'
+            // },
+            // {
+            //   name: 'Staking5',
+            //   url: '/staking/staking1'
+            // },
+          ],
           transferNavList: [
             {
               name: 'Transactions',
@@ -149,10 +149,10 @@
               name: 'Accounts',
               url: '/stats/statslist'
             },
-            {
-              name: 'Validators',
-              url: '/stats/validators'
-            },
+            // {
+            //   name: 'Validators',
+            //   url: '/stats/validators'
+            // },
             // {
             //   name: 'Stats3',
             //   url: '/stats/stats1'
@@ -184,6 +184,8 @@
                   this.$router.push('/result/' + this.keyword)
                 }
                 this.keyword = '';
+              }).catch(err => {
+                console.log(err);
               })
             } else if (this.keyword.match(txRex)) {
               this.$axios.get('/api/tx/detail',{params:{hash:this.keyword}}).then(res => {
@@ -193,6 +195,8 @@
                   this.$router.push('/result/' + this.keyword)
                 }
                 this.keyword = '';
+              }).catch(err => {
+                console.log(err);
               })
             } else if (this.keyword.match(addrRex)) {
               this.$axios.get('/api/account/detail', {params: {address: this.keyword}}).then(res => {
@@ -202,6 +206,8 @@
                   this.$router.push('/result/' + this.keyword)
                 }
                 this.keyword = '';
+              }).catch(err => {
+                console.log(err);
               })
             } else {
               this.$router.push('/result/' + this.keyword)

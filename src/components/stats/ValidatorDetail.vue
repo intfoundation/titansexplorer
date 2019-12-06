@@ -204,6 +204,8 @@
           this.bond = this.valInfo.bondedTokens;
           this.getDelList();
           this.getPowerList();
+        }).catch(err => {
+          console.log(err);
         })
       },
       getDelList() {
@@ -217,6 +219,8 @@
           });
           this.delTotal = res.data.count;
           this.isDelLoading = false;
+        }).catch(err => {
+          console.log(err);
         })
       },
       getPowerList() {
@@ -231,6 +235,8 @@
           });
           this.powerTotal = res.data.count;
           this.isPowerLoading = false;
+        }).catch(err => {
+          console.log(err);
         })
       },
       getPropList() {
@@ -243,6 +249,8 @@
             item.time = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           });
           this.isPropLoading = false;
+        }).catch(err => {
+          console.log(err);
         })
       },
       handleDelChange(val) {

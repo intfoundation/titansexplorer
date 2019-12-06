@@ -172,7 +172,7 @@
           this.voteP = this.block.totalVotingPower === 0 ? 0 : toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower);
           this.voteP = new BigNumber(this.voteP).times(100).toNumber() + '%';
           this.block.createTime = this.$moment(this.block.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
-          this.block.url = '/stats/validatorDetail/' + this.block.miner;
+          this.block.url = '/staking/validatorDetail/' + this.block.miner;
           this.block.reward = toDecimal4NoZero(this.block.blockReward + this.block.blockFee) + ' INT';
           this.isInfoLoading = false;
         }).catch(err => {
@@ -208,7 +208,7 @@
           this.vdList.forEach((item,index)=> {
             item.i = index + 1;
             item.voting_power = toDecimal4NoZero(item.voting_power);
-            item.addrUrl = '/stats/validatorDetail/' + item.address;
+            item.addrUrl = '/staking/validatorDetail/' + item.address;
             if (item.proposerPriority === undefined) {
               item.proposerPriority = '';
             } else if (item.proposerPriority === 0) {
