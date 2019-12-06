@@ -29,7 +29,7 @@ export default {
   }
 
   .el-pagination.is-background .el-pager li:not(.disabled):hover {
-    color: #ed303b;
+    color: #ed303b!important;
   }
 
   /*.el-input.is-active .el-input__inner, .el-input__inner {*/
@@ -38,7 +38,7 @@ export default {
   /*}*/
 
   .el-input.is-active .el-input__inner, .el-input__inner:focus {
-    border-color: #ed303b;
+    border-color: #ed303b!important;
   }
 
   .el-input__inner:hover {
@@ -46,16 +46,16 @@ export default {
   }
 
   .el-loading-spinner .path {
-    stroke: #ed303b;
+    stroke: #ed303b!important;
     stroke-width: 3;
   }
 
   .el-table {
-    color: #333;
+    color: #333!important;
   }
 
   .el-table thead {
-    color: #333;
+    color: #333!important;
   }
 
   .el-table__body tr:hover>td{

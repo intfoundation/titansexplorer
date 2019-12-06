@@ -82,19 +82,19 @@
               </el-table-column>
               <el-table-column label="From" align="left" :show-overflow-tooltip="over">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddress}}</span>
-                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddress}}</span>
+                  <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
+                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="amount" label="Amount" align="right" width="120" :show-overflow-tooltip="over"></el-table-column>
+              <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
               <el-table-column label="To" align="left" :show-overflow-tooltip="over">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.toAddress === addr">{{scope.row.toAddress}}</span>
-                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{scope.row.toAddress}}</span>
+                  <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
+                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{scope.row.toAddr}}</span>
                 </template>
               </el-table-column>
               <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-              <el-table-column prop="fromAddress" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+              <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
               <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
               <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
             </el-table>
@@ -185,6 +185,8 @@
             item.blockUrl = '/blockchain/blockdetail/' + item.blockNumber;
             item.fAddrUrl = '/stats/statsdetail/' + item.fromAddress;
             item.tAddrUrl = '/stats/statsdetail/' + item.toAddress;
+            item.fromAddr = addrHide(item.fromAddress);
+            item.toAddr = addrHide(item.toAddress);
           });
           this.isTxLoading = false;
         }).catch(err => {

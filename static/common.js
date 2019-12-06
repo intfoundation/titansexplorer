@@ -107,6 +107,8 @@ const getMax = (arr,method) => {
       str = str.substr(2).replace(/./g,'0');
       maxY = numMax.toString() + str;
       maxY = +maxY;
+    } else if (max === 0) {
+      maxY = 0;
     }
   } else if (method === 'price') {
     max = (max * 1000).toFixed(1).toString();
@@ -123,7 +125,7 @@ const getMax = (arr,method) => {
   return {maxy: maxY,miny: minY}
 };
 
-const overHide = (str) => {
-  str =
-  this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
-}
+const addrHide = (str) => {
+  str = str.slice(0,6) + '...' + str.slice(-6);
+  return str;
+};

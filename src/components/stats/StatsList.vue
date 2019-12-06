@@ -3,7 +3,7 @@
       <div id="box">
         <div class="al-t"><span>Top {{num}} Addresses by INT</span></div>
         <div class="al-c">
-          <el-table :data="aList" max-height="800" v-loading="isLoading">
+          <el-table :data="aList" v-loading="isLoading">
             <el-table-column prop="index" label="#" align="left" width="80"></el-table-column>
             <el-table-column prop="address" label="Address" align="left" :show-overflow-tooltip="over">
               <template slot-scope="scope">

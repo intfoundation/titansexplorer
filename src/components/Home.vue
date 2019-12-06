@@ -283,11 +283,11 @@
       this.getHomePageInfo();
       this.getVoteStake();
       this.getAccountBond();
-      this.getTxHistory();
-      this.echartPie();
       this.blockListTimer();
     },
     mounted() {
+      this.getTxHistory();
+      this.echartPie();
     },
     destroyed() {
       clearInterval(this.timer)
@@ -390,7 +390,7 @@
           let top10Power = 0;
           for (let i in res.data) {
             res.data[i].addr = res.data[i].address.slice(0,5) + '...' + res.data[i].address.slice(-5);
-            res.data[i].name = res.data[i].name ? res.data[i].name: res.data[i].addr;
+            res.data[i].name = res.data[i].moniker ? res.data[i].moniker: res.data[i].addr;
             res.data[i].power = res.data[i].voting_power / this.voteStake;
             res.data[i].param = {
               value: res.data[i].power,

@@ -4,7 +4,7 @@
       <div class="bd-info">
         <div class="bd-t"><div class="bt-i"><span>Blockchain</span></div></div>
         <div class="bd-c">
-          <div class="bi-t"><i></i><span>Blockchain&nbsp;&nbsp;&nbsp;#</span><span style="color: #ed303b">{{block.number}}</span></div>
+          <div class="bi-t"><i></i><span>Blockchain&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;</span><span style="color: #ed303b">{{block.number}}</span></div>
           <div class="bi-c" v-loading="isInfoLoading">
             <div class="bi-group">
               <div class="bg-i"><span>Block Hash :</span></div>
@@ -80,7 +80,7 @@
         </div>
         <div class="bd-c">
           <el-table :data="txList" max-height="800" v-loading="isTxLoading">
-            <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
+            <el-table-column label="TxHash" align="left" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <router-link tag="div" :to="scope.row.txUrl" class="bd-link">{{scope.row.hash}}</router-link>
               </template>
@@ -88,11 +88,7 @@
             <el-table-column prop="blockNumber" label="Block" align="left" width="100"></el-table-column>
             <el-table-column prop="type" label="TxType" align="left" width="150"></el-table-column>
             <el-table-column prop="fee" label="Fee" align="left" width="150"></el-table-column>
-            <el-table-column label="Signer" align="left" width="280" :show-overflow-tooltip="over">
-              <template slot-scope="scope">
-                <router-link tag="div" :to="scope.row.addrUrl" class="bd-link">{{scope.row.fromAddress}}</router-link>
-              </template>
-            </el-table-column>
+            <el-table-column prop="fromAddress" label="Signer" align="left" width="280" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
             <el-table-column prop="time" label="Timestamp" align="right"></el-table-column>
           </el-table>
@@ -102,9 +98,13 @@
         <div class="bd-t">
           <div class="bt-i"><span>Validator Set</span></div></div>
         <div class="bd-c">
-          <el-table :data="vdList" max-height="600" v-loading="isVdLoading">
+          <el-table :data="vdList" v-loading="isVdLoading">
             <el-table-column prop="i" label="#" align="left" width="80"></el-table-column>
-            <el-table-column prop="moniker" label="Moniker" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+            <el-table-column label="Moniker" align="left" width="120" :show-overflow-tooltip="over">
+              <template slot-scope="scope">
+                <router-link tag="span" :to="scope.row.addrUrl" class="bd-link">{{scope.row.moniker}}</router-link>
+              </template>
+            </el-table-column>
             <el-table-column label="Operator" align="left">
               <template slot-scope="scope">
                 <router-link tag="span" :to="scope.row.addrUrl" class="bd-link">{{scope.row.address}}</router-link>
@@ -113,6 +113,16 @@
             <el-table-column prop="proposerPriority" label="Proposer Priority" align="left"></el-table-column>
             <el-table-column prop="voting_power" label="Voting Power" align="left"></el-table-column>
           </el-table>
+<!--          <div class="bd-f">-->
+<!--            <el-pagination-->
+<!--              @current-change="handleVdChange"-->
+<!--              :current-page.sync="vdPage"-->
+<!--              :page-size="10"-->
+<!--              :total="vdTotal"-->
+<!--              layout="prev, pager, next, jumper"-->
+<!--              background>-->
+<!--            </el-pagination>-->
+<!--          </div>-->
         </div>
       </div>
       <div class="bd-extra">
@@ -139,10 +149,12 @@
         isTxLoading: false,
         isInfoLoading: false,
         isTxShow: true,
-        over:true,
+        over: true,
         voteP: '',
         vdList: [],
-        isVdLoading: false
+        isVdLoading: false,
+        vdPage: 1,
+        vdTotal: 0
       }
     },
     created() {
@@ -157,10 +169,10 @@
         this.isInfoLoading = true;
         this.$axios.get('/api/block/detail',{params:{height:this.height,pageNum:1,pageSize:10}}).then(res=> {
           this.block = res.data;
-          this.voteP = toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower);
+          this.voteP = this.block.totalVotingPower === 0 ? 0 : toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower);
           this.voteP = new BigNumber(this.voteP).times(100).toNumber() + '%';
           this.block.createTime = this.$moment(this.block.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
-          this.block.url = '/stats/statsdetail/' + this.block.miner;
+          this.block.url = '/stats/validatorDetail/' + this.block.miner;
           this.block.reward = toDecimal4NoZero(this.block.blockReward + this.block.blockFee) + ' INT';
           this.isInfoLoading = false;
         }).catch(err => {
@@ -191,12 +203,13 @@
       },
       getValidatorList() {
         this.isVdLoading = true;
-        this.$axios.get('/api/block/validators',{params:{height:this.height}}).then(res => {
+        this.$axios.get('/api/block/validators',{params:{height:this.height,pageNo:this.vdPage,pageSize:10}}).then(res => {
           this.vdList = res.data;
+          this.vdTotal = this.vdList.length;
           this.vdList.forEach((item,index)=> {
             item.i = index + 1;
             item.voting_power = toDecimal4NoZero(item.voting_power);
-            item.addrUrl = '/stats/statsdetail/' + item.address;
+            item.addrUrl = '/stats/validatorDetail/' + item.address;
             if (item.proposerPriority === undefined) {
               item.proposerPriority = '';
             } else if (item.proposerPriority === 0) {
@@ -212,6 +225,12 @@
       },
       handleCurrentChange(val) {
         this.currentPage = val;
+        this.$router.push ('/blockchain/blockdetail/' + this.height + '/' + val);
+        this.page = val;
+        this.getTxList()
+      },
+      handleVdChange(val) {
+        this.vdPage = val;
         this.$router.push ('/blockchain/blockdetail/' + this.height + '/' + val);
         this.page = val;
         this.getTxList()
@@ -350,6 +369,11 @@
 
   .bd-validator .bd-c {
     padding: 0 15px;
+  }
+
+  .bd-validator .bd-c .bd-f {
+    padding: 10px 0;
+    text-align: right;
   }
 
   .blockDetail .bd-c .bd-link {

@@ -149,10 +149,10 @@
               name: 'Accounts',
               url: '/stats/statslist'
             },
-            // {
-            //   name: 'Stats2',
-            //   url: '/stats/stats1'
-            // },
+            {
+              name: 'Validators',
+              url: '/stats/validators'
+            },
             // {
             //   name: 'Stats3',
             //   url: '/stats/stats1'

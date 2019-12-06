@@ -7,7 +7,7 @@
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"
-            :page-size="30"
+            :page-size="20"
             :total="total"
             layout="prev, pager, next, jumper"
             background>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="b-list">
-        <el-table :data="blockList" height="800" v-loading="isLoading">
+        <el-table :data="blockList" v-loading="isLoading">
           <el-table-column label="Block" width="100" align="left">
             <template slot-scope="scope">
               <router-link v-if="scope.row.url" tag="span" :to="scope.row.url" type="text" class="bl-num">{{scope.row.number}}</router-link>
@@ -41,7 +41,7 @@
             <el-pagination
               @current-change="handleCurrentChange"
               :current-page.sync="currentPage"
-              :page-size="30"
+              :page-size="20"
               :total="total"
               layout="prev, pager, next, jumper"
               background>
@@ -79,18 +79,18 @@
       getBlockList() {
         this.$axios.get('/api/block/list',{params:{
             pageNo: this.page|| '1',
-            pageSize: '30'
+            pageSize: '20'
           }}).then(res => {
           this.isLoading = false;
           this.total = res.data.count;
           this.blockList = res.data.list;
           this.blockList.forEach(item => {
             item.url = '/blockchain/blockdetail/' + item.number + '/1';
-            item.addrUrl = '/stats/statsdetail/' + item.miner;
+            item.addrUrl = '/stats/validatorDetail/' + item.miner;
             item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
             item.passTime = '> ' + formatPassTime(item.timestamp,Date.now());
-            item.voteP = toDecimal4NoZero(item.votingPower/item.totalVotingPower);
-            item.voteP = new BigNumber(item.voteP).times(100).toNumber() + '%';
+            item.voteP = item.totalVotingPower !== 0 ? toDecimal4NoZero(item.votingPower/item.totalVotingPower) : 0;
+            item.voteP = item.voteP === 0 ? '0%' : new BigNumber(item.voteP).times(100).toNumber() + '%';
           });
         })
       },
