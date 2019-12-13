@@ -214,7 +214,7 @@
             } else if (item.proposerPriority === 0) {
               item.proposerPriority = '0%';
             } else {
-              item.proposerPriority = toDecimal4NoZero(item.proposerPriority).toString() + '%';
+              item.proposerPriority = new BigNumber(toDecimal4NoZero(item.proposerPriority)).times(100).toNumber() + '%';
             }
           });
           this.isVdLoading = false;

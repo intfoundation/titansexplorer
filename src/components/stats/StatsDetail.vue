@@ -162,6 +162,7 @@
         this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
           this.addrInfo = res.data;
           this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
+          this.addrInfo.balance = this.addrInfo.available + this.addrInfo.delegated + this.addrInfo.unbonding;
           this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
           this.addrInfo.time = this.$moment(this.addrInfo.createtime).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
           this.isInfoLoading = false;
