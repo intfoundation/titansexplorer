@@ -10,7 +10,7 @@
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Current TPS</span></div>
             <div class="hb-num"><span>{{current}}</span></div>
-            <div class="hb-data"><span>Max TPS: </span> <router-link tag="span" class="hb-tps" :to="'/blockchain/blockdetail/' + max + '/1'">{{max}}</router-link></div>
+            <div class="hb-data"><span>Max TPS: </span> <router-link tag="span" class="hb-tps" :to="'/blockchain/blockdetail/' + maxBlock + '/1'">{{max}}</router-link></div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Price</span></div>
@@ -117,6 +117,7 @@
         blockList: [],
         transList: [],
         max: '0',
+        maxBlock: '0',
         votingPower: '',
         validators: '',
         totalValidators: '',
@@ -283,7 +284,7 @@
       this.getHomePageInfo();
       this.getVoteStake();
       this.getAccountBond();
-      // this.blockListTimer();
+      this.blockListTimer();
     },
     mounted() {
       this.getTxHistory();
@@ -337,6 +338,7 @@
         this.$axios.get('/api/block/tps').then(res => {
           this.current = res.data.current;
           this.max = res.data.max;
+          this.maxBlock = res.data.maxTpsBlockNumber;
         }).catch(err => {
           console.log(err);
         })
