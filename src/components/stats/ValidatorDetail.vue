@@ -125,7 +125,7 @@
         </div>
         <div class="vd-prop">
           <div class="vp-t"><span>Proposed Blocks</span></div>
-          <div class="vp-c vd-block" :class="{'vp-minH' : !propList.length}">
+          <div v-loading="isPropLoading" class="vp-c vd-block" :class="{'vp-minH' : !propList.length}">
             <div class="nodata" v-if="!propList.length">
               <img src="../../assets/nodata.png" alt="">
               <div class="dt">No Proposed Blocks</div>
@@ -241,7 +241,7 @@
       },
       getPropList() {
         this.isPropLoading = true;
-        this.$axios.get('/api/block/list',{params:{address:this.addr,pageNo:this.propPage,pageSize:10}}).then(res => {
+        this.$axios.get('/api/block/list',{params:{miner:this.addr,pageNo:this.propPage,pageSize:10}}).then(res => {
           this.propList = res.data.list;
           this.propTotal = res.data.count;
           this.propList.forEach(item => {

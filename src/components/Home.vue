@@ -10,7 +10,7 @@
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Current TPS</span></div>
             <div class="hb-num"><span>{{current}}</span></div>
-            <div class="hb-data"><span>Max TPS: </span> <span>{{max}}</span></div>
+            <div class="hb-data"><span>Max TPS: </span> <router-link tag="span" class="hb-tps" :to="'/blockchain/blockdetail/' + max + '/1'">{{max}}</router-link></div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Price</span></div>
@@ -283,7 +283,7 @@
       this.getHomePageInfo();
       this.getVoteStake();
       this.getAccountBond();
-      this.blockListTimer();
+      // this.blockListTimer();
     },
     mounted() {
       this.getTxHistory();
@@ -343,8 +343,8 @@
       },
       getINTPrice() { //获取当前INT价格
         this.INTPTime = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
-        this.$axios.get('https://api.coinmarketcap.com/v2/ticker/2399/').then(res => {
-          this.INTPrice = res.data.data.quotes.USD.price;
+        this.$axios.get('/api/wallet/getIntPtice').then(res => {
+          this.INTPrice = res.data;
           this.INTPrice = toDecimal4NoZero(this.INTPrice);
         }).catch(err => {
           console.log(err);
@@ -500,7 +500,16 @@
     cursor: pointer;
   }
 
+  .h-block .hb-data .hb-tps {
+    color: #ed303b!important;
+    cursor: pointer;
+  }
+
   .h-block .hb-height .hb-data:hover {
+    text-decoration: underline;
+  }
+
+  .h-block .hb-data .hb-tps:hover {
     text-decoration: underline;
   }
 
