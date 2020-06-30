@@ -10,6 +10,7 @@ import StatsList from '@/components/stats/StatsList'
 import StatsDetail from '@/components/stats/StatsDetail'
 import Validators from '@/components/stats/Validators'
 import ValidatorDetail from '@/components/stats/ValidatorDetail'
+import MiningRank from '@/components/stats/MiningRank'
 import TransferList from '@/components/transfer/TransferList'
 import TransferDetail from '@/components/transfer/TransferDetail'
 import Result from '@/components/Oops'
@@ -57,6 +58,11 @@ export default new Router({
           path: '/stats/statsdetail/:addr',
           name: 'StatsDetail',
           component: StatsDetail
+        },
+        {
+          path: '/stats/miningrank',
+          name: 'MiningRank',
+          component: MiningRank
         },
         {
           path: '/staking/validators',

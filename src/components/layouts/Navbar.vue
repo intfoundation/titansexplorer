@@ -149,10 +149,10 @@
               name: 'Accounts',
               url: '/stats/statslist'
             },
-            // {
-            //   name: 'Validators',
-            //   url: '/stats/validators'
-            // },
+            {
+              name: 'MiningRank',
+              url: '/stats/miningrank'
+            },
             // {
             //   name: 'Stats3',
             //   url: '/stats/stats1'
