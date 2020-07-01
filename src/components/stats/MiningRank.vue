@@ -85,7 +85,7 @@
     methods: {
       getActiveVdList () {
         this.isActLoading = true;
-        this.$axios.get('/api/node/validators',{params:{active:2,pageNo:1,pageSize:1000,block:2010000}}).then(res => {
+        this.$axios.get('/api/node/validators',{params:{active:2,pageNo:1,pageSize:1000,block:2180000}}).then(res => {
           this.actVdList = res.data.list;
           this.minedList = res.data.minedList;
           this.totalBond = res.data.totalBondedTokens;
