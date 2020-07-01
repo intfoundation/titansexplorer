@@ -4,9 +4,6 @@
       <div class="sd-t">Mining Rank <span>Start From 2180000 Block Height</span></div>
       <div class="sd-c">
         <div class="sc-asset">
-<!--          <div class="sa-t">-->
-<!--            <div class="sa-tab" v-for="(item,index) in tabList" :class="{'sa-tab-choose': choose === index}" @click="choose = index"><span>{{item}}</span></div>-->
-<!--          </div>-->
           <div class="sa-c">
             <div class="sa-block" v-if="choose === 0">
               <el-table :data="minedList" v-loading="isActLoading">
