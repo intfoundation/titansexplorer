@@ -422,7 +422,7 @@
         this.$axios.get('/api/block/list').then(res => {
           this.blockList = res.data.list;
           this.blockList.forEach(item => {
-            item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+            item.createTime = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.passTime = formatPassTime(item.timestamp,Date.now());
             item.url = '/blockchain/blockdetail/' + item.number + '/1';
           });

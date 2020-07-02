@@ -157,7 +157,7 @@
           this.addrInfo = res.data;
           this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
           this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
-          this.addrInfo.time = this.$moment(this.addrInfo.createtime).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+          this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           this.isInfoLoading = false;
         }).catch(err => {
           console.log(err);
@@ -171,7 +171,7 @@
           this.isPageShow = this.total > 10;
           this.txList = res.data.list;
           this.txList.forEach(item => {
-            item.time = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+            item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.status = statusType(item.status);
             item.amount = toDecimal4NoZero(item.value);
             item.amount = transAmount(item.amount);
