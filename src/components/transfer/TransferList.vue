@@ -88,7 +88,7 @@
           this.total = res.data.count;
           this.txList = res.data.list;
           this.txList.forEach(item => {
-            item.time = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+            item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.status = statusType(item.status);
             item.amount = new BigNumber(item.value).dividedBy(Math.pow(10, 18)).toString();
             item.amount = toDecimal4NoZero(item.value);

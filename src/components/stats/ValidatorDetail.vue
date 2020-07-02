@@ -229,7 +229,7 @@
           this.powerList = res.data.list;
           this.powerList.forEach(item => {
             item.amount = transAmount(item.value);
-            item.time = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+            item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.txUrl = '/transfer/transferdetail/' + item.hash;
             item.heightUrl = '/blockchain/blockdetail/' + item.blockNumber + '/1';
           });
@@ -246,7 +246,7 @@
           this.propTotal = res.data.count;
           this.propList.forEach(item => {
             item.url = '/blockchain/blockdetail/' + item.number + '/1';
-            item.time = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+            item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           });
           this.isPropLoading = false;
         }).catch(err => {

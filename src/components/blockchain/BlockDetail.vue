@@ -171,7 +171,7 @@
           this.block = res.data;
           this.voteP = this.block.totalVotingPower === 0 ? 0 : toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower);
           this.voteP = new BigNumber(this.voteP).times(100).toNumber() + '%';
-          this.block.createTime = this.$moment(this.block.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+          this.block.createTime = this.$moment(this.block.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           this.block.url = '/staking/validatorDetail/' + this.block.miner;
           this.block.reward = toDecimal4NoZero(this.block.blockReward + this.block.blockFee) + ' INT';
           this.isInfoLoading = false;
