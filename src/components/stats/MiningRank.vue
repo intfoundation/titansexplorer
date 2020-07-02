@@ -8,7 +8,7 @@
             <div class="sa-block" v-if="choose === 0">
               <el-table :data="minedList" v-loading="isActLoading">
                 <el-table-column prop="i" label="Rank" :key="Math.random()" align="center" width="60"></el-table-column>
-                <el-table-column label="Moniker" align="center" :key="Math.random()" :show-overflow-tooltip="true" width="150">
+                <el-table-column label="Moniker" align="left" :key="Math.random()" :show-overflow-tooltip="true" width="150">
                   <template slot-scope="scope">
                     <router-link tag="div" :to="scope.row.url" class="al-mo">
                       <img src="../../assets/moniker.png" alt="" v-if="!scope.row.thumbnail">
