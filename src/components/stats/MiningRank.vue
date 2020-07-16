@@ -1,7 +1,7 @@
 <template>
   <div class="sDetail">
     <div id="box">
-      <div class="sd-t">Mining Rank <span>Start From 2180000 Block Height</span></div>
+      <div class="sd-t">Mining Rank <span>The First Stage Start/EndBlock 2180000/2639493</span></div>
       <div class="sd-c">
         <div class="sc-asset">
           <div class="sa-c">
