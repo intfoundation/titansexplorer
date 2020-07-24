@@ -13,6 +13,7 @@ module.exports = {
         proxyTable: {
             '/api': {
                 target: 'http://titansexplorer.intchain.io/',
+                // target: 'http://localhost:6660',
                 changeOrigin: true
             }
         },
