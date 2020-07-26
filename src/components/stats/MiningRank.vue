@@ -1,17 +1,14 @@
 <template>
   <div class="sDetail">
     <div id="box">
-      <div class="sd-t">Mining Rank <span>Start From 2180000 Block Height</span></div>
+      <div class="sd-t">Mining Rank <span>The First Stage Start/EndBlock 2180000/2639493</span></div>
       <div class="sd-c">
         <div class="sc-asset">
-<!--          <div class="sa-t">-->
-<!--            <div class="sa-tab" v-for="(item,index) in tabList" :class="{'sa-tab-choose': choose === index}" @click="choose = index"><span>{{item}}</span></div>-->
-<!--          </div>-->
           <div class="sa-c">
             <div class="sa-block" v-if="choose === 0">
               <el-table :data="minedList" v-loading="isActLoading">
                 <el-table-column prop="i" label="Rank" :key="Math.random()" align="center" width="60"></el-table-column>
-                <el-table-column label="Moniker" align="center" :key="Math.random()" :show-overflow-tooltip="true" width="150">
+                <el-table-column label="Moniker" align="left" :key="Math.random()" :show-overflow-tooltip="true" width="150">
                   <template slot-scope="scope">
                     <router-link tag="div" :to="scope.row.url" class="al-mo">
                       <img src="../../assets/moniker.png" alt="" v-if="!scope.row.thumbnail">
@@ -62,6 +59,7 @@
         isCanLoading: false,
         isJailLoading: false,
         totalBond: 1,
+        officialMinerList: ["INT3PJJjEoK6FBSFwUg4UDtyoThrvpzB", "INT3FLSfrYVyxeeJZBvoNcJiMzAbbc2i", "INT3AV2Z33g3vcFz8n7jEKWsns8RbV6o", "INT3MjFkyK3bZ6oSCK8i38HVxbbsiRTY", "INT3ETpxfNquuFa2czSHuFJTyhuepgXa", "INT3D4sNnoM4NcLJeosDKUjxgwhofDdi", "INT32YViqoXKLjRnp2rB7F8dXWUQMFhN", "INT3JqvEfW7eTymfA6mfruwipcc1dAEi", "INT39iewq2jAyREvwqAZX4Wig5GVmSsc", "INT3FcSg4P5NQsd8GhYRjXY76Tt9Q2Lr", "INT385MNAM44dwVJ4GUaqUbUTZqrMdHZ", "INT3H49CRxuaThaDzH1r2X4VSkmWkbo6", "INT3LYjx5V3oqWPvDBvfYLfUR9NpsrwL"]
       }
     },
     created() {
@@ -87,10 +85,18 @@
     methods: {
       getActiveVdList () {
         this.isActLoading = true;
-        this.$axios.get('/api/node/validators',{params:{active:2,pageNo:1,pageSize:1000,block:2180000}}).then(res => {
+        this.$axios.get('/api/node/validators',{params:{active:2,pageNo:1,pageSize:1000,block:2180000,endBlock:2639493}}).then(res => {
           this.actVdList = res.data.list;
           this.minedList = res.data.minedList;
           this.totalBond = res.data.totalBondedTokens;
+          let newMinedList = []
+          for(let i = 0; i < this.minedList.length; i++) {
+            if (this.officialMinerList.indexOf(this.minedList[i].miner) === -1) {
+              newMinedList.push(this.minedList[i])
+            }
+          }
+          this.minedList = newMinedList
+          console.log(this.minedList);
           this.minedList.forEach((a,index) => {
             a.i = index + 1;
             a.addr = a.miner;

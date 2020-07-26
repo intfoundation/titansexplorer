@@ -87,7 +87,7 @@
           this.blockList.forEach(item => {
             item.url = '/blockchain/blockdetail/' + item.number + '/1';
             item.addrUrl = '/staking/validatorDetail/' + item.miner;
-            item.createTime = this.$moment(item.timestamp).format('YYYY/MM/DD hh:mm:ss') + '+UTC';
+            item.createTime = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.passTime = '> ' + formatPassTime(item.timestamp,Date.now());
             item.voteP = item.totalVotingPower !== 0 ? toDecimal4NoZero(item.votingPower/item.totalVotingPower) : 0;
             item.voteP = item.voteP === 0 ? '0%' : new BigNumber(item.voteP).times(100).toNumber() + '%';
