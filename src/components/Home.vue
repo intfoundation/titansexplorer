@@ -498,12 +498,12 @@
   }
 
   .h-block .hb-height .hb-data {
-    color: #ed303b!important;
+    /* color: #ed303b!important; */
     cursor: pointer;
   }
 
   .h-block .hb-data .hb-tps {
-    color: #ed303b!important;
+    /* color: #ed303b!important; */
     cursor: pointer;
   }
 
@@ -540,7 +540,7 @@
     margin-bottom: 5px;
     font-weight: bold;
     font-size: 20px;
-    color: #ed303b;
+    /* color: #ed303b; */
   }
 
   .h-block .hb-box .hb-data {
@@ -631,7 +631,7 @@
     background-color: #fdeaeb;
     border: 1px solid #ed303b;
     border-radius: 4px;
-    color: #ed303b;
+    /* color: #ed303b; */
     font-size: 14px;
     cursor: pointer;
   }

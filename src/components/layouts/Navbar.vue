@@ -2,7 +2,7 @@
   <div class="navbar">
     <div id="box" class="clearfix">
       <router-link tag="div" to="/" class="logo">
-        <img src="../../assets/int-logo.png" alt="">
+        <img src="../../assets/intchain-logo.png" alt="">
       </router-link>
       <div class="menu">
         <ul class="m-ul">
@@ -223,8 +223,8 @@
 <style scoped>
   .navbar {
     width: 100%;
-    height: 80px;
-    background-color: #fff;
+    height: 68px;
+    background-color: #171921;
     box-shadow:0 4px 8px 0 rgba(230,230,230,0.6);
   }
 
@@ -233,9 +233,9 @@
   }
 
   .navbar .logo {
-    margin-top: 10px;
-    width: 60px;
-    height: 60px;
+    /* margin-top: 10px; */
+    width: 68px;
+    height: 68px;
   }
 
   .navbar .logo img {
@@ -261,7 +261,8 @@
   .navbar .menu .nav-item-f {
     font-weight: bold;
     font-size: 16px;
-    line-height: 80px;
+    line-height: 68px;
+    color: #fff;
   }
 
   .navbar .menu .nav-icon {
@@ -278,7 +279,7 @@
 
   .navbar .menu .m-li:hover .nav-item-f span{
     padding-bottom: 2px;
-    border-bottom: 2px solid #ed303b;
+    /* border-bottom: 2px solid #ed303b; */
     color: #ed303b;
   }
 
@@ -296,7 +297,7 @@
     overflow: hidden;
     border-radius: 3px;
     background-color: #fff;
-    box-shadow:0 0 8px 0 rgb(230,230,230);
+    /* box-shadow:0 0 8px 0 rgb(230,230,230); */
     transition: all .3s;
     z-index: 10000;
   }
@@ -324,7 +325,7 @@
 
   .navbar .menu .m-ul .nav-active-f span {
     padding-bottom: 2px;
-    border-bottom: 2px solid #ed303b;
+    /* border-bottom: 2px solid #ed303b; */
     color: #ed303b;
   }
 
@@ -338,12 +339,11 @@
     align-items: center;
     float: right;
     height: 36px;
-    margin-top: 20px;
+    margin-top: 16px;
   }
 
   .navbar .search .s-input {
     background-color: #f3f3f3;
-    border-radius: 4px 0 0 4px;
     width: 360px;
   }
 
@@ -360,8 +360,7 @@
   .search .s-btn {
     width: 56px;
     height: 38px;
-    border-radius: 0 4px 4px 0;
-    background-color: #ed303b;
+    background-color: #1f80c1;
     text-align: center;
     cursor: pointer;
   }
