@@ -40,6 +40,7 @@
             </div>
             <div class="sa-block" v-if="choose === 1">
               <el-table :data="canVdList" v-loading="isCanLoading">
+                <el-table-column prop="i" label="#" :key="Math.random()" align="left" width="50"></el-table-column>
                 <el-table-column label="Moniker" align="left" :key="Math.random()" :show-overflow-tooltip="true" width="150">
                   <template slot-scope="scope">
                     <router-link tag="div" :to="scope.row.url" class="al-mo">
