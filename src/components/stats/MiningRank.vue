@@ -1,7 +1,7 @@
 <template>
   <div class="sDetail">
     <div id="box">
-      <div class="sd-t">Mining Rank <span>The First Stage Start/EndBlock 2180000/2639493</span></div>
+      <div class="sd-t">Mining Rank <span>The Second Stage Start/EndBlock 200000/450000</span></div>
       <div class="sd-c">
         <div class="sc-asset">
           <div class="sa-c">
@@ -85,7 +85,7 @@
     methods: {
       getActiveVdList () {
         this.isActLoading = true;
-        this.$axios.get('/api/node/validators',{params:{active:2,pageNo:1,pageSize:1000,block:2180000,endBlock:2639493}}).then(res => {
+        this.$axios.get('/api/node/validators',{params:{active:2,pageNo:1,pageSize:1000,block:200000,endBlock:450000}}).then(res => {
           this.actVdList = res.data.list;
           this.minedList = res.data.minedList;
           this.totalBond = res.data.totalBondedTokens;
