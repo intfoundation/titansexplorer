@@ -177,6 +177,7 @@
         this.$axios.get('/api/node/validators',{params:{active:1,pageNo:1,pageSize:100}}).then(res => {
           this.canVdList = res.data.list;
           this.canVdList.forEach((item) => {
+            item.i = index + 1;
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
             item.bondedTokens = transAmount(item.bondedTokens) + ' INT';
