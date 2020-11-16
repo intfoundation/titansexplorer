@@ -41,7 +41,7 @@
             <el-pagination
               @current-change="handleCurrentChange"
               :current-page.sync="currentPage"
-              :page-size="20"
+              :page-size="size"
               :total="total"
               layout="prev, pager, next, jumper"
               background>
@@ -65,6 +65,7 @@
         currentPage: 1,
         page: this.$route.params.page || 1,
         total: 0,
+        size: 20,
         height: ''
       }
     },
@@ -79,7 +80,7 @@
       getBlockList() {
         this.$axios.get('/api/block/list',{params:{
             pageNo: this.page|| '1',
-            pageSize: '20'
+            pageSize: this.size
           }}).then(res => {
           this.isLoading = false;
           this.total = res.data.count;

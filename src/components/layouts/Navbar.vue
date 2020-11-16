@@ -233,13 +233,11 @@
   }
 
   .navbar .logo {
-    margin-top: 10px;
-    width: 60px;
-    height: 60px;
+    height: 80px;
   }
 
   .navbar .logo img {
-    width: 100%;
+    height: 100%;
   }
 
   .navbar .menu {

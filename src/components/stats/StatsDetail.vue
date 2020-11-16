@@ -14,15 +14,11 @@
                 <div class="sg-ii"><span>{{addrInfo.address}}</span></div>
               </div>
               <div class="sa-group">
-                <div class="sg-i"><span>Name :</span></div>
-                <div class="sg-ii"><span>{{addrInfo.name}}</span></div>
-              </div>
-              <div class="sa-group">
                 <div class="sg-i"><span>Balance :</span></div>
                 <div class="sg-ii"><span>{{addrInfo.balance}}</span></div>
               </div>
               <div class="sa-group">
-                <div class="sg-i"><span>Stake :</span></div>
+                <div class="sg-i"><span>Delegate :</span></div>
                 <div class="sg-ii"><span>{{addrInfo.stake}}</span></div>
               </div>
               <div class="sa-group">
@@ -61,7 +57,7 @@
               <el-pagination
                 @current-change="handleCurrentChange"
                 :current-page.sync="currentPage"
-                :page-size="30"
+                :page-size="size"
                 :total="total"
                 layout="prev, pager, next, jumper"
                 background>
@@ -126,6 +122,7 @@
         over: true,
         currentPage: 1,
         page: 1,
+        size: 10,
         total: 0,
         isPageShow: false
       }
@@ -172,7 +169,7 @@
       },
       getAddrTx() {
         this.isTxLoading = true;
-        this.$axios.get('/api/tx/addresstx',{params:{address:this.addr,pageNo:this.currentPage,pageSize:'10'}}).then(res => {
+        this.$axios.get('/api/tx/addresstx',{params:{address:this.addr,pageNo:this.currentPage,pageSize:this.size}}).then(res => {
           this.total = res.data.count;
           this.isPageShow = this.total > 10;
           this.txList = res.data.list;
@@ -181,10 +178,10 @@
             item.status = statusType(item.status);
             item.amount = toDecimal4NoZero(item.value);
             item.amount = transAmount(item.amount);
-            item.txUrl = '/transfer/transferdetail/' + item.hash;
-            item.blockUrl = '/blockchain/blockdetail/' + item.blockNumber;
-            item.fAddrUrl = '/stats/statsdetail/' + item.fromAddress;
-            item.tAddrUrl = '/stats/statsdetail/' + item.toAddress;
+            item.txUrl = `/transfer/transferdetail/${item.hash}`;
+            item.blockUrl =  `/blockchain/blockdetail/${item.blockNumber}/1`;
+            item.fAddrUrl = `/stats/statsdetail/${item.fromAddress}`;
+            item.tAddrUrl =  `/stats/statsdetail/${item.toAddress}`;
             item.fromAddr = addrHide(item.fromAddress);
             item.toAddr = addrHide(item.toAddress);
           });
