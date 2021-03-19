@@ -19,33 +19,72 @@
               </div>
               <div class="sa-group">
                 <div class="sg-i"><span>Delegate :</span></div>
-                <div class="sg-ii"><span>{{addrInfo.stake}}</span></div>
+                <div class="sg-ii"><span>{{addrInfo.delegated}}</span></div>
+              </div>
+              <div class="sa-group">
+                <div class="sg-i"><span>Reward :</span></div>
+                <div class="sg-ii"><span>{{addrInfo.reward}}</span></div>
+              </div>
+              <div class="sa-group">
+                <div class="sg-i"><span>Pending Refund :</span></div>
+                <div class="sg-ii"><span>{{addrInfo.pending}}</span></div>
               </div>
               <div class="sa-group">
                 <div class="sg-i"><span>Create Time :</span></div>
                 <div class="sg-ii"><span>{{addrInfo.time}}</span></div>
               </div>
             </div>
-            <div class="sa-block" v-if="choose === 1">
+            <div class="sa-block sa-del" v-if="choose === 1">
               <el-table :data="delList" max-height="800" v-loading="isDelLoading">
-                <el-table-column prop="" label="Address" align="left"></el-table-column>
-                <el-table-column prop="" label="Amount" align="left"></el-table-column>
-                <el-table-column prop="" label="Shares" align="left"></el-table-column>
-                <el-table-column prop="" label="Block" align="left"></el-table-column>
+                <el-table-column label="Address" align="left" width="450">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.address}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Amount" align="left"></el-table-column>
+                <el-table-column prop="shares" label="Shares" align="left">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.shares}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Block" align="left">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>
+                  </template>
+                </el-table-column>
               </el-table>
             </div>
-            <div class="sa-block" v-if="choose === 2">
+            <div class="sa-block sa-undel" v-if="choose === 2">
               <el-table :data="unDelList" max-height="800" v-loading="isUnDelLoading">
-                <el-table-column prop="" label="Address" align="left"></el-table-column>
-                <el-table-column prop="" label="Amount" align="left"></el-table-column>
-                <el-table-column prop="" label="Block" align="left"></el-table-column>
-                <el-table-column prop="" label="End Time" align="left"></el-table-column>
+                <el-table-column label="Address" align="left" width="450">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.address}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Amount" align="left"></el-table-column>
+                <el-table-column label="Block" align="left">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="End Time" align="left">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.endTime}}</span>
+                  </template>
+                </el-table-column>
               </el-table>
             </div>
-            <div class="sa-block" v-if="choose === 3">
+            <div class="sa-block sa-reward" v-if="choose === 3">
               <el-table :data="delRewardList" max-height="800" v-loading="isReWardLoading">
-                <el-table-column prop="" label="Address" align="left"></el-table-column>
-                <el-table-column prop="" label="Amount" align="right"></el-table-column>
+                <el-table-column label="Address" align="left">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.address}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="reward" label="Reward" align="left"></el-table-column>
               </el-table>
             </div>
           </div>
@@ -109,7 +148,7 @@
         addr: this.$route.params.addr,
         choose: 0,
         addrInfo: {},
-        tabList: ['Assets','Delegations','Unbonding Delegations','Delegator Rewards'],
+        tabList: ['Assets','Delegations',' UnDelegations','Delegator Rewards'],
         delList: [],
         unDelList: [],
         delRewardList: [],
@@ -159,8 +198,10 @@
         this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
           this.addrInfo = res.data;
           this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
-          this.addrInfo.balance = this.addrInfo.available + this.addrInfo.delegated + this.addrInfo.unbonding;
-          this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
+          this.addrInfo.balance = transAmount(this.addrInfo.available) + ' INT';
+          this.addrInfo.delegated = transAmount(this.addrInfo.delegated) + ' INT';
+          this.addrInfo.pending = transAmount(this.addrInfo.unbonding) + ' INT';
+          this.addrInfo.reward = transAmount(this.addrInfo.reward) + ' INT';
           this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           this.isInfoLoading = false;
         }).catch(err => {
@@ -205,13 +246,113 @@
         this.getAddrTx();
       },
       getDel() {
-
+        this.isDelLoading = true;
+        this.delList = [
+          {
+            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
+            amount: '100',
+            shares: '40%',
+            block: 1000
+          },
+          {
+            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
+            amount: '100',
+            shares: '40%',
+            block: 1000
+          },
+          {
+            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
+            amount: '100',
+            shares: '40%',
+            block: 1000
+          },
+          {
+            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
+            amount: '100',
+            shares: '40%',
+            block: 1000
+          },
+          {
+            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
+            amount: '100',
+            shares: '40%',
+            block: 1000
+          }
+        ];
+        this.delList.forEach((v, i) => {
+          v.blockUrl = `/blockchain/blockdetail/${v.block}/1`;
+          v.addUrl = `/stats/statsdetail/${v.address}`;
+        });
+        this.isDelLoading = false;
       },
       getUnDel() {
-
+        this.isUnDelLoading = true;
+        this.unDelList = [
+          {
+            address: '0x26ee',
+            amount: 100,
+            block: 1000,
+            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
+          },
+          {
+            address: '0x26ee',
+            amount: 100,
+            block: 1000,
+            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
+          },
+          {
+            address: '0x26ee',
+            amount: 100,
+            block: 1000,
+            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
+          },
+          {
+            address: '0x26ee',
+            amount: 100,
+            block: 1000,
+            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
+          },
+          {
+            address: '0x26ee',
+            amount: 100,
+            block: 1000,
+            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
+          }
+        ];
+        this.unDelList.forEach((v, i) => {
+          v.blockUrl = `/blockchain/blockdetail/${v.block}/1`;
+          v.addUrl = `/stats/statsdetail/${v.address}`;
+        });
+        this.isUnDelLoading = false;
       },
       getDelReward() {
-
+        this.isReWardLoading = true;
+        this.delRewardList = [
+          {
+            address: '0x26ee0906f135303a0ab66',
+            reward: 100
+          },
+          {
+            address: '0x26ee0906f135303a0ab66',
+            reward: 100
+          },
+          {
+            address: '0x26ee0906f135303a0ab66',
+            reward: 100
+          },
+          {
+            address: '0x26ee0906f135303a0ab66',
+            reward: 100
+          },
+          {
+            address: '0x26ee0906f135303a0ab66',
+            reward: 100
+          }
+        ];
+        this.delRewardList.forEach((v, i) => {
+          v.addUrl = `/stats/statsdetail/${v.address}`;
+        });
+        this.isReWardLoading = false;
       }
     }
   }
@@ -326,12 +467,12 @@
     border: 1px solid rgb(230,230,230);
   }
 
-  .sc-tx .stx-c .sc-url {
+  .sc-url {
     color: #ed303b;
     cursor: pointer;
   }
 
-  .sc-tx .stx-c .sc-url:hover {
+  .sc-url:hover {
     text-decoration: underline;
   }
 </style>
