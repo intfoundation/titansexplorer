@@ -27,7 +27,7 @@
               </div>
               <div class="sa-group">
                 <div class="sg-i"><span>Pending Refund :</span></div>
-                <div class="sg-ii"><span>{{addrInfo.pending}}</span></div>
+                <div class="sg-ii"><span>{{addrInfo.pendingRefund}}</span></div>
               </div>
               <div class="sa-group">
                 <div class="sg-i"><span>Create Time :</span></div>
@@ -36,23 +36,23 @@
             </div>
             <div class="sa-block sa-del" v-if="choose === 1">
               <el-table :data="delList" max-height="800" v-loading="isDelLoading">
-                <el-table-column label="Address" align="left" width="450">
+                <el-table-column label="Address" align="left">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
-                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.address}}</span>
+                    <span v-if="scope.row.candidate === addr">{{scope.row.candidate}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.candidate}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="amount" label="Amount" align="left"></el-table-column>
-                <el-table-column prop="shares" label="Shares" align="left">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.shares}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="Block" align="left">
-                  <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>
-                  </template>
-                </el-table-column>
+                <el-table-column prop="amount" label="Amount" ></el-table-column>
+<!--                <el-table-column prop="shares" label="Shares" align="left">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    <span>{{scope.row.shares}}</span>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
+<!--                <el-table-column label="Block" align="left">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
               </el-table>
             </div>
             <div class="sa-block sa-undel" v-if="choose === 2">
@@ -80,8 +80,8 @@
               <el-table :data="delRewardList" max-height="800" v-loading="isReWardLoading">
                 <el-table-column label="Address" align="left">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
-                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.address}}</span>
+                    <span v-if="scope.row.candidate === addr">{{scope.row.candidate}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.candidate}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="reward" label="Reward" align="left"></el-table-column>
@@ -198,10 +198,10 @@
         this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
           this.addrInfo = res.data;
           this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
-          this.addrInfo.balance = transAmount(this.addrInfo.available) + ' INT';
-          this.addrInfo.delegated = transAmount(this.addrInfo.delegated) + ' INT';
-          this.addrInfo.pending = transAmount(this.addrInfo.unbonding) + ' INT';
-          this.addrInfo.reward = transAmount(this.addrInfo.reward) + ' INT';
+          this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
+          this.addrInfo.delegated = transAmount(this.addrInfo.delegate_balance) + ' INT';
+          this.addrInfo.pendingRefund = transAmount(this.addrInfo.pending_refund_balance) + ' INT';
+          this.addrInfo.reward = transAmount(this.addrInfo.reward_balance) + ' INT';
           this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           this.isInfoLoading = false;
         }).catch(err => {
@@ -247,41 +247,12 @@
       },
       getDel() {
         this.isDelLoading = true;
-        this.delList = [
-          {
-            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
-            amount: '100',
-            shares: '40%',
-            block: 1000
-          },
-          {
-            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
-            amount: '100',
-            shares: '40%',
-            block: 1000
-          },
-          {
-            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
-            amount: '100',
-            shares: '40%',
-            block: 1000
-          },
-          {
-            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
-            amount: '100',
-            shares: '40%',
-            block: 1000
-          },
-          {
-            address: '0x26ee0906f135303a0ab66b3196efabd0853c481b',
-            amount: '100',
-            shares: '40%',
-            block: 1000
-          }
-        ];
+        this.$axios.get('/api/account/delegations', {params: {address: this.addr}}).then( res => {
+          this.delList = res.data;
+          // console.log('delegations', res.data)
+        });
         this.delList.forEach((v, i) => {
-          v.blockUrl = `/blockchain/blockdetail/${v.block}/1`;
-          v.addUrl = `/stats/statsdetail/${v.address}`;
+          v.addUrl = `/stats/statsdetail/${v.candidate}`;
         });
         this.isDelLoading = false;
       },
@@ -327,30 +298,11 @@
       },
       getDelReward() {
         this.isReWardLoading = true;
-        this.delRewardList = [
-          {
-            address: '0x26ee0906f135303a0ab66',
-            reward: 100
-          },
-          {
-            address: '0x26ee0906f135303a0ab66',
-            reward: 100
-          },
-          {
-            address: '0x26ee0906f135303a0ab66',
-            reward: 100
-          },
-          {
-            address: '0x26ee0906f135303a0ab66',
-            reward: 100
-          },
-          {
-            address: '0x26ee0906f135303a0ab66',
-            reward: 100
-          }
-        ];
+        this.$axios.get('/api/account/delrewards', {params: {address: this.addr}}).then( res => {
+          this.delRewardList = res.data;
+        });
         this.delRewardList.forEach((v, i) => {
-          v.addUrl = `/stats/statsdetail/${v.address}`;
+          v.addUrl = `/stats/statsdetail/${v.candidate}`;
         });
         this.isReWardLoading = false;
       }
