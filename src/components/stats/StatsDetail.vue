@@ -64,10 +64,10 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="amount" label="Amount"  align="left"></el-table-column>
-                <el-table-column prop="block" label="Block" align="left">
-<!--                  <template slot-scope="scope">-->
-<!--                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>-->
-<!--                  </template>-->
+                <el-table-column label="Block" align="left">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>
+                  </template>
                 </el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="left"></el-table-column>
               </el-table>
@@ -250,33 +250,34 @@
         this.$axios.get('/api/account/delegations', {params: {address: this.addr}}).then( res => {
           this.delList = res.data;
           // console.log('delegations', res.data)
+          this.delList.forEach((v, i) => {
+            v.addUrl = `/stats/statsdetail/${v.candidate}`;
+          });
         });
-        this.delList.forEach((v, i) => {
-          v.addUrl = `/stats/statsdetail/${v.candidate}`;
-        });
+
         this.isDelLoading = false;
       },
       getUnDel() {
         this.isUnDelLoading = true;
         this.$axios.get('/api/account/undelegations', { params: {address: this.addr}}).then( res => {
           this.unDelList = res.data;
+          this.unDelList.forEach( v => {
+            let input = JSON.parse(v.unlockInput);
+            v.amount = new BigNumber(input.amount, 16).div(new BigNumber(Math.pow(10, 18))).toString();
+            v.blockUrl = `/blockchain/blockdetail/${v.block}/1`;
+            v.addUrl = `/stats/statsdetail/${v.candidate}`;
+            v.time = this.$moment(v.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + 'UTC';
+          });
         })
-        this.unDelList.forEach( v => {
-          let input = JSON.parse(v.unlockInput);
-          v.amount = new BigNumber(input.amount, 16).div(new BigNumber(Math.pow(10, 18))).toString();
-          v.blockUrl = `/blockchain/blockdetail/${v.block}/1`;
-          v.addUrl = `/stats/statsdetail/${v.candidate}`;
-          v.time = this.$moment(v.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + 'UTC';
-        });
         this.isUnDelLoading = false;
       },
       getDelReward() {
         this.isReWardLoading = true;
         this.$axios.get('/api/account/delrewards', {params: {address: this.addr}}).then( res => {
           this.delRewardList = res.data;
-        });
-        this.delRewardList.forEach((v, i) => {
-          v.addUrl = `/stats/statsdetail/${v.candidate}`;
+          this.delRewardList.forEach((v, i) => {
+            v.addUrl = `/stats/statsdetail/${v.candidate}`;
+          });
         });
         this.isReWardLoading = false;
       }
