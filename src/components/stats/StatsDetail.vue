@@ -59,21 +59,17 @@
               <el-table :data="unDelList" max-height="800" v-loading="isUnDelLoading">
                 <el-table-column label="Address" align="left" width="450">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
-                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.address}}</span>
+                    <span v-if="scope.row.candidate === addr">{{scope.row.candidate}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.candidate}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="amount" label="Amount" align="left"></el-table-column>
-                <el-table-column label="Block" align="left">
-                  <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>
-                  </template>
+                <el-table-column prop="amount" label="Amount"  align="left"></el-table-column>
+                <el-table-column prop="block" label="Block" align="left">
+<!--                  <template slot-scope="scope">-->
+<!--                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block}}</router-link>-->
+<!--                  </template>-->
                 </el-table-column>
-                <el-table-column label="End Time" align="left">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.endTime}}</span>
-                  </template>
-                </el-table-column>
+                <el-table-column prop="time" label="Timestamp" align="left"></el-table-column>
               </el-table>
             </div>
             <div class="sa-block sa-reward" v-if="choose === 3">
@@ -141,6 +137,7 @@
 </template>
 
 <script>
+  import BigNumber from 'bignumber.js'
   export default {
     name: "StatsDetail",
     data() {
@@ -244,6 +241,9 @@
         this.currentPage = this.page;
         this.getAddrDetail();
         this.getAddrTx();
+        this.getDel();
+        this.getUnDel();
+        this.getDelReward();
       },
       getDel() {
         this.isDelLoading = true;
@@ -258,41 +258,15 @@
       },
       getUnDel() {
         this.isUnDelLoading = true;
-        this.unDelList = [
-          {
-            address: '0x26ee',
-            amount: 100,
-            block: 1000,
-            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
-          },
-          {
-            address: '0x26ee',
-            amount: 100,
-            block: 1000,
-            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
-          },
-          {
-            address: '0x26ee',
-            amount: 100,
-            block: 1000,
-            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
-          },
-          {
-            address: '0x26ee',
-            amount: 100,
-            block: 1000,
-            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
-          },
-          {
-            address: '0x26ee',
-            amount: 100,
-            block: 1000,
-            endTime: this.$moment(new Date().getTime()).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
-          }
-        ];
-        this.unDelList.forEach((v, i) => {
+        this.$axios.get('/api/account/undelegations', { params: {address: this.addr}}).then( res => {
+          this.unDelList = res.data;
+        })
+        this.unDelList.forEach( v => {
+          let input = JSON.parse(v.unlockInput);
+          v.amount = new BigNumber(input.amount, 16).div(new BigNumber(Math.pow(10, 18))).toString();
           v.blockUrl = `/blockchain/blockdetail/${v.block}/1`;
-          v.addUrl = `/stats/statsdetail/${v.address}`;
+          v.addUrl = `/stats/statsdetail/${v.candidate}`;
+          v.time = this.$moment(v.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + 'UTC';
         });
         this.isUnDelLoading = false;
       },
