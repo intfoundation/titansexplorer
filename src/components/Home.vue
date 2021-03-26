@@ -28,7 +28,7 @@
             <div class="hb-data"><span>{{validators}}/{{totalValidators}} Validators</span></div>
           </div>
           <div class="hb-box">
-            <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Bonded INT</span></div>
+            <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Staked INT</span></div>
             <div class="hb-num"><span>{{bondPer}}</span></div>
             <div class="hb-data"><span>{{bondStake}} / {{bondTotal}}</span></div>
           </div>

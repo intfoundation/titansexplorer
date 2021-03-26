@@ -145,7 +145,7 @@
         addr: this.$route.params.addr,
         choose: 0,
         addrInfo: {},
-        tabList: ['Assets','Delegations',' UnDelegations','Delegator Rewards'],
+        tabList: ['Assets','Delegations','UnDelegations','Delegate Rewards'],
         delList: [],
         unDelList: [],
         delRewardList: [],
