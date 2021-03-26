@@ -11,7 +11,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="amount" label="Amount" align="left" width="200" :show-overflow-tooltip="over"></el-table-column>
-            <el-table-column prop="stake" label="Stake" align="left" width="200" :show-overflow-tooltip="over"></el-table-column>
+            <el-table-column prop="delegate_balance" label="Stake" align="left" width="200" :show-overflow-tooltip="over"></el-table-column>
             <el-table-column prop="per" label="Percentage" align="left" width="150"></el-table-column>
           </el-table>
         </div>
