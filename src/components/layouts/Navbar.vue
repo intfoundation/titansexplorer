@@ -153,6 +153,10 @@
               name: 'MiningRank',
               url: '/stats/miningrank'
             },
+            {
+              name: 'MappingList',
+              url: '/stats/mappinglist/1'
+            }
             // {
             //   name: 'Stats3',
             //   url: '/stats/stats1'
