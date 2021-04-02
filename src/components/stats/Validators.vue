@@ -10,7 +10,7 @@
           <div class="sa-c">
             <div class="sa-block" v-if="choose === 0">
               <el-table :data="actVdList" v-loading="isActLoading">
-                <el-table-column prop="i" label="#" :key="Math.random()" align="left" width="50"></el-table-column>
+                <el-table-column prop="i" label="Rank" :key="Math.random()" align="left" width="60"></el-table-column>
                 <el-table-column label="Moniker" align="left" :key="Math.random()" :show-overflow-tooltip="true" width="150">
                   <template slot-scope="scope">
                     <router-link tag="div" :to="scope.row.url" class="al-mo">
@@ -20,18 +20,19 @@
                     </router-link>
                   </template>
                 </el-table-column>
-                <el-table-column label="Operator" align="left" :key="Math.random()">
+                <el-table-column label="Operator" align="left" :key="Math.random()" width="150">
                   <template slot-scope="scope">
                     <router-link tag="span" :to="scope.row.url" class="al-url">{{scope.row.addr}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column prop="commission" label="Commission" :key="Math.random()" align="left" width="120" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop='bondedTokens' label="Bonded_Tokens" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="voteP" label="Voting_Power" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="voteP" label="Voting Power" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="uptime" label="Uptime" align="left" width="80" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="selfBonded" label="Self-Bonded " align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="delegators" label="Delegators" align="left" width="100" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="bondHeight" label="Bond_Height" align="left" :key="Math.random()" :show-overflow-tooltip="true">
+                <el-table-column prop="selfStaked" label="Self Staked" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="delegated" label="Delegated" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop='totalStaked' label="Total Staked" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="delegators" label="Delegators" align="center" width="100" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="bondHeight" label="Height" align="left" :key="Math.random()" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     <router-link tag="span" :to="scope.row.blockUrl" class="al-url">{{scope.row.bondHeight}}</router-link>
                   </template>
@@ -40,7 +41,7 @@
             </div>
             <div class="sa-block" v-if="choose === 1">
               <el-table :data="canVdList" v-loading="isCanLoading">
-                <el-table-column prop="i" label="#" :key="Math.random()" align="left" width="50"></el-table-column>
+                <el-table-column prop="i" label="Rank" :key="Math.random()" align="left" width="60"></el-table-column>
                 <el-table-column label="Moniker" align="left" :key="Math.random()" :show-overflow-tooltip="true" width="150">
                   <template slot-scope="scope">
                     <router-link tag="div" :to="scope.row.url" class="al-mo">
@@ -50,16 +51,17 @@
                     </router-link>
                   </template>
                 </el-table-column>
-                <el-table-column label="Operator" align="left" :key="Math.random()">
+                <el-table-column label="Operator" align="left" :key="Math.random()" width="150">
                   <template slot-scope="scope">
                     <router-link tag="span" :to="scope.row.url" class="al-url">{{scope.row.addr}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column prop="commission" label="Commission" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop='bondedTokens' label="Bonded_Tokens" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="selfBonded" label="Self-Bonded " align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="selfStaked" label="Self Staked" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="delegated" label="Delegated" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop='totalStaked' label="Total Staked" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="delegators" label="Delegators" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="bondHeight" label="Bond_Height" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="bondHeight" label="Height" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
 <!--                <el-table-column label="Unbonding_Height" align="left" :key="Math.random()" :show-overflow-tooltip="true">-->
 <!--                  <template slot-scope="scope">-->
 <!--                    <router-link tag="span" to="" class="al-url"></router-link>-->
@@ -161,9 +163,10 @@
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
             item.voteP = new BigNumber(toDecimal4NoZero(item.bondedTokens/this.totalBond)).times(100).toNumber() + '%';
-            item.bondedTokens = transAmount(item.bondedTokens) + ' INT';
             item.uptime = new BigNumber(toDecimal4NoZero(item.uptime)).times(100).toNumber() + '%';
-            item.selfBonded = transAmount(item.selfBonded) + ' INT';
+            item.selfStaked = transAmount(item.selfBonded) + ' INT';
+            item.delegated = 0 + ' INT';
+            item.totalStaked = transAmount(item.bondedTokens) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
             item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
           });
@@ -180,8 +183,9 @@
             item.i = index + 1;
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
-            item.bondedTokens = transAmount(item.bondedTokens) + ' INT';
-            item.selfBonded = transAmount(item.selfBonded) + ' INT';
+            item.selfStaked = transAmount(item.selfBonded) + ' INT';
+            item.delegated = 0 + ' INT';
+            item.totalStaked = transAmount(item.bondedTokens) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
           });
           this.isCanLoading = false;
