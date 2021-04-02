@@ -21,6 +21,8 @@
               <el-table :data="epochList" v-loading="isActLoading">
                 <el-table-column prop="i" label="#" :key="Math.random()" align="center" width="50"></el-table-column>
                 <el-table-column prop="number" label="Epoch" align="center" :key="Math.random()"></el-table-column>
+                <el-table-column prop="startTime" label="Start Time" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="endTime" label="End Time" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column label="Start Block" align="center" :key="Math.random()">
                   <template slot-scope="scope">
                     <router-link tag="span" :to="scope.row.startBlockUrl" class="al-url">{{ scope.row.start_block }}</router-link>
@@ -31,8 +33,6 @@
                     <router-link tag="span" :to="scope.row.endBlockUrl" class="al-url">{{ scope.row.end_block }}</router-link>
                   </template>
                 </el-table-column>
-                <el-table-column prop="startTime" label="Start Time" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="endTime" label="End Time" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="rewardPerBlcok" label="Reward/Block" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
               </el-table>
               <div class="sd-t-ii">
