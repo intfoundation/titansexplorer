@@ -10,6 +10,7 @@ import StatsList from '@/components/stats/StatsList'
 import StatsDetail from '@/components/stats/StatsDetail'
 import Validators from '@/components/stats/Validators'
 import ValidatorDetail from '@/components/stats/ValidatorDetail'
+import Epochs from '@/components/staking/Epoch'
 import MiningRank from '@/components/stats/MiningRank'
 import MappingList from '@/components/stats/MappingList'
 import TransferList from '@/components/transfer/TransferList'
@@ -79,6 +80,11 @@ export default new Router({
           path: '/staking/validatorDetail/:addr',
           name: 'ValidatorDetail',
           component: ValidatorDetail
+        },
+        {
+          path: '/staking/epochs/:page',
+          name: 'Epochs',
+          component: Epochs
         },
         {
           path: '/transfer/transferlist/:page',

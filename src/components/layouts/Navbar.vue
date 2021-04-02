@@ -83,10 +83,10 @@
               name: 'Validators',
               url: '/staking/validators'
             },
-            // {
-            //   name: 'Staking2',
-            //   url: '/staking/staking1'
-            // },
+            {
+              name: 'Epochs',
+              url: '/staking/epochs/1'
+            },
             // {
             //   name: 'Staking3',
             //   url: '/staking/staking1'
