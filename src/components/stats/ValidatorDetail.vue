@@ -214,8 +214,8 @@
           this.delList = res.data.list;
           this.delList.forEach(item => {
             item.url = '/stats/statsdetail/' + item.address;
-            item.share = new BigNumber(toDecimal4NoZero(item.amount/this.bond)).times(100).toNumber() + '%';
-            item.amount = transAmount(item.amount);
+            item.share = new BigNumber(toDecimal4NoZero(item.deposit_proxied_balance/this.bond)).times(100).toNumber() + '%';
+            item.amount = transAmount(item.deposit_proxied_balance);
           });
           this.delTotal = res.data.count;
           this.isDelLoading = false;
