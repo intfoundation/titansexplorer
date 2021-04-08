@@ -54,6 +54,16 @@
 <!--                  </template>-->
 <!--                </el-table-column>-->
               </el-table>
+              <div class="sa-r" v-if="delPage.isPageShow">
+                <el-pagination
+                  @current-change="handleDelCurrentChange"
+                  :current-page.sync="delPage.currentPage"
+                  :page-size="delPage.size"
+                  :total="delPage.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
             </div>
             <div class="sa-block sa-undel" v-if="choose === 2">
               <el-table :data="unDelList" max-height="800" v-loading="isUnDelLoading">
@@ -71,6 +81,16 @@
                 </el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="left"></el-table-column>
               </el-table>
+              <div class="sa-r" v-if="unDelPage.isPageShow">
+                <el-pagination
+                  @current-change="handleUnDelCurrentChange"
+                  :current-page.sync="unDelPage.currentPage"
+                  :page-size="unDelPage.size"
+                  :total="unDelPage.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
             </div>
             <div class="sa-block sa-reward" v-if="choose === 3">
               <el-table :data="delRewardList" max-height="800" v-loading="isReWardLoading">
@@ -82,6 +102,16 @@
                 </el-table-column>
                 <el-table-column prop="reward" label="Reward" align="left"></el-table-column>
               </el-table>
+              <div class="sa-r" v-if="delRewardPage.isPageShow">
+                <el-pagination
+                  @current-change="handleDelRewardCurrentChange"
+                  :current-page.sync="delRewardPage.currentPage"
+                  :page-size="delRewardPage.size"
+                  :total="delRewardPage.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
             </div>
           </div>
         </div>
@@ -160,7 +190,28 @@
         page: 1,
         size: 10,
         total: 0,
-        isPageShow: false
+        isPageShow: false,
+        delPage: {
+          currentPage: 1,
+          page: 1,
+          size: 5,
+          total: 0,
+          isPageShow: false,
+        },
+        unDelPage: {
+          currentPage: 1,
+          page: 1,
+          size: 5,
+          total: 0,
+          isPageShow: false,
+        },
+        delRewardPage: {
+          currentPage: 1,
+          page: 1,
+          size: 5,
+          total: 0,
+          isPageShow: false,
+        },
       }
     },
     created() {
@@ -207,7 +258,7 @@
       },
       getAddrTx() {
         this.isTxLoading = true;
-        this.$axios.get('/api/tx/addresstx',{params:{address:this.addr,pageNo:this.currentPage,pageSize:this.size}}).then(res => {
+        this.$axios.get('/api/tx/addresstx',{params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
           this.total = res.data.count;
           this.isPageShow = this.total > 10;
           this.txList = res.data.list;
@@ -247,8 +298,10 @@
       },
       getDel() {
         this.isDelLoading = true;
-        this.$axios.get('/api/account/delegations', {params: {address: this.addr}}).then( res => {
-          this.delList = res.data;
+        this.$axios.get('/api/account/delegations', {params: {address: this.addr, pageNo:this.delPage.currentPage, pageSize:this.delPage.size}}).then( res => {
+          this.delPage.total = res.data.count;
+          this.delPage.isPageShow = this.delPage.total > this.delPage.size;
+          this.delList = res.data.list;
           // console.log('delegations', res.data)
           this.delList.forEach((v, i) => {
             v.addUrl = `/stats/statsdetail/${v.candidate}`;
@@ -257,10 +310,18 @@
 
         this.isDelLoading = false;
       },
+      handleDelCurrentChange(val) {
+        this.isDelLoading = true;
+        this.delPage.currentPage = val;
+        this.delPage.page = val;
+        this.getDel();
+      },
       getUnDel() {
         this.isUnDelLoading = true;
-        this.$axios.get('/api/account/undelegations', { params: {address: this.addr}}).then( res => {
-          this.unDelList = res.data;
+        this.$axios.get('/api/account/undelegations', { params: {address: this.addr, pageNo:this.unDelPage.currentPage, pageSize:this.unDelPage.size}}).then( res => {
+          this.unDelPage.total = res.data.count;
+          this.unDelPage.isPageShow = this.unDelPage.total > this.unDelPage.size;
+          this.unDelList = res.data.list;
           this.unDelList.forEach( v => {
             let input = JSON.parse(v.unlockInput);
             v.amount = new BigNumber(input.amount, 16).div(new BigNumber(Math.pow(10, 18))).toString();
@@ -268,19 +329,33 @@
             v.addUrl = `/stats/statsdetail/${v.candidate}`;
             v.time = this.$moment(v.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + 'UTC';
           });
-        })
+        });
         this.isUnDelLoading = false;
+      },
+      handleUnDelCurrentChange(val) {
+        this.isUnDelLoading = true;
+        this.unDelPage.currentPage = val;
+        this.unDelPage.page = val;
+        this.getUnDel();
       },
       getDelReward() {
         this.isReWardLoading = true;
-        this.$axios.get('/api/account/delrewards', {params: {address: this.addr}}).then( res => {
-          this.delRewardList = res.data;
+        this.$axios.get('/api/account/delrewards', {params: {address: this.addr, pageNo:this.delRewardPage.currentPage, pageSize:this.delRewardPage.size}}).then( res => {
+          this.delRewardPage.total = res.data.count;
+          this.delRewardPage.isPageShow = this.delRewardPage.total > this.delRewardPage.size;
+          this.delRewardList = res.data.list;
           this.delRewardList.forEach((v, i) => {
             v.addUrl = `/stats/statsdetail/${v.candidate}`;
           });
         });
         this.isReWardLoading = false;
-      }
+      },
+      handleDelRewardCurrentChange(val) {
+        this.isReWardLoading = true;
+        this.delRewardPage.currentPage = val;
+        this.delRewardPage.page = val;
+        this.getDelReward();
+      },
     }
   }
 </script>
@@ -344,6 +419,12 @@
   .sc-asset .sa-c .sa-block {
     padding: 20px 15px 40px;
     border-radius: 0 0 4px 4px;
+  }
+
+  .sc-asset .sa-c .sa-block .sa-r {
+    height: 45px;
+    padding: 10px 0 10px;
+    text-align: right;
   }
 
   .sc-asset .sa-c .sa-asset {
