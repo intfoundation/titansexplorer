@@ -8,13 +8,18 @@
             <router-link v-if="blockInfo.addrUrl" tag="div" :to="blockInfo.addrUrl" class="hb-data"><span>{{blockInfo.name}}</span></router-link>
           </div>
           <div class="hb-box">
-            <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Current TPS</span></div>
-            <div class="hb-num"><span>{{current}}</span></div>
-            <div class="hb-data"><span>Max TPS: </span> <router-link tag="span" class="hb-tps" :to="'/blockchain/blockdetail/' + maxBlock + '/1'">{{max}}</router-link></div>
+            <div class="hb-t"><img src="../assets/Transactions.png" class="hb-icon"/><span>Transactions</span></div>
+            <div class="hb-num"><span>{{txs}}</span></div>
+            <div class="hb-data"><span>TPS: <span class="hb-tps">{{current}}</span></span></div>
+          </div>
+          <div class="hb-box">
+            <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Current Epoch</span></div>
+            <div class="hb-num"><span>{{currentEpoch.number}}</span></div>
+            <div class="hb-data"><span>Left Blocks: <span class="hb-tps">{{currentEpoch.end_block - blockInfo.number}}</span></span></div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Price</span></div>
-            <div class="hb-num"><span>{{INTPrice}} USD</span></div>
+            <div class="hb-num"><span>${{INTPrice}}</span></div>
             <div class="hb-data"><span>{{INTPTime}}</span></div>
           </div>
           <div class="hb-box">
@@ -108,6 +113,7 @@
       return {
         blockInfo: {},
         current: '0',
+        currentEpoch: {},
         INTPrice: '0.0000',
         INTPTime: '',
         avgTime: '0',
@@ -118,6 +124,7 @@
         transList: [],
         max: '0',
         maxBlock: '0',
+        txs: '0',
         votingPower: '',
         validators: '',
         totalValidators: '',
@@ -304,6 +311,11 @@
           console.log(err);
         })
       },
+      getEpoch() {
+        this.$axios.get('/api/epoch/list', { params: {pageNo:1, pageSize:1}}).then( res => {
+          this.currentEpoch = res.data.list[0];
+        })
+      },
       getHeight() {
         this.$axios.get('/api/block/height').then(res => {
           this.blockInfo = res.data;
@@ -339,12 +351,13 @@
           this.current = res.data.current;
           this.max = res.data.max;
           this.maxBlock = res.data.maxTpsBlockNumber;
+          this.txs = res.data.txs;
         }).catch(err => {
           console.log(err);
         })
       },
       getINTPrice() { //获取当前INT价格
-        this.INTPTime = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
+        this.INTPTime = this.$moment().utc().format('YYYY-MM-DD HH:mm') + '+UTC';
         this.$axios.get('/api/wallet/getIntPtice').then(res => {
           this.INTPrice = res.data;
           this.INTPrice = toDecimal4NoZero(this.INTPrice);
@@ -446,10 +459,11 @@
       blockListTimer() {
         this.timer = setInterval(() => {
           this.getHomePageInfo();
-        },5000)
+        },3000)
       },
       getHomePageInfo() {
         this.getTps();
+        this.getEpoch();
         this.getINTPrice();
         this.getAvgBlockTime();
         this.getBlockList();
@@ -480,7 +494,7 @@
   .home .h-block .hb-box {
     padding-top: 18px;
     padding-left: 20px;
-    width: 180px;
+    width: 160px;
     height: 120px;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
@@ -511,9 +525,9 @@
     text-decoration: underline;
   }
 
-  .h-block .hb-data .hb-tps:hover {
-    text-decoration: underline;
-  }
+  /*.h-block .hb-data .hb-tps:hover {*/
+  /*  text-decoration: underline;*/
+  /*}*/
 
   .h-block .hb-height .hb-num {
     cursor: pointer;

@@ -42,7 +42,7 @@
         </ul>
       </div>
       <div class="search">
-        <div class="s-input"><input type="text" placeholder="Search by Address / Txhash / Block" v-model="keyword" @keyup.enter="search"></div>
+        <div class="s-input"><input type="text" placeholder="Search by Address / TxHash / Block" v-model="keyword" @keyup.enter="search"></div>
         <div class="s-btn" @click="search">
           <i></i>
         </div>
