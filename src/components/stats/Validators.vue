@@ -184,7 +184,7 @@
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
             item.selfStaked = transAmount(item.selfBonded) + ' INT';
-            item.delegated = 0 + ' INT';
+            item.delegated = transAmount(item.bondedTokens - item.selfBonded) + ' INT';
             item.totalStaked = transAmount(item.bondedTokens) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
           });
