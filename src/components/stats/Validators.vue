@@ -165,7 +165,7 @@
             item.voteP = new BigNumber(toDecimal4NoZero(item.bondedTokens/this.totalBond)).times(100).toNumber() + '%';
             item.uptime = new BigNumber(toDecimal4NoZero(item.uptime)).times(100).toNumber() + '%';
             item.selfStaked = transAmount(item.selfBonded) + ' INT';
-            item.delegated = 0 + ' INT';
+            item.delegated = transAmount(item.bondedTokens - item.selfBonded) + ' INT';
             item.totalStaked = transAmount(item.bondedTokens) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
             item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
