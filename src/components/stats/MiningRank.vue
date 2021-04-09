@@ -1,7 +1,7 @@
 <template>
   <div class="sDetail">
     <div id="box">
-      <div class="sd-t">Mining Rank <span>The Third Stage Start/EndBlock 500000/1000000</span></div>
+      <div class="sd-t">Mining Rank <span>The Fourth Stage Start/EndBlock 100000/1000000</span></div>
       <div class="sd-c">
         <div class="sc-asset">
           <div class="sa-c">
@@ -62,7 +62,6 @@
         isCanLoading: false,
         isJailLoading: false,
         totalBond: 1,
-        // officialMinerList: ["INT3PJJjEoK6FBSFwUg4UDtyoThrvpzB", "INT3FLSfrYVyxeeJZBvoNcJiMzAbbc2i", "INT3AV2Z33g3vcFz8n7jEKWsns8RbV6o", "INT3MjFkyK3bZ6oSCK8i38HVxbbsiRTY", "INT3ETpxfNquuFa2czSHuFJTyhuepgXa", "INT3D4sNnoM4NcLJeosDKUjxgwhofDdi", "INT32YViqoXKLjRnp2rB7F8dXWUQMFhN", "INT3JqvEfW7eTymfA6mfruwipcc1dAEi", "INT39iewq2jAyREvwqAZX4Wig5GVmSsc", "INT3FcSg4P5NQsd8GhYRjXY76Tt9Q2Lr", "INT385MNAM44dwVJ4GUaqUbUTZqrMdHZ", "INT3H49CRxuaThaDzH1r2X4VSkmWkbo6", "INT3LYjx5V3oqWPvDBvfYLfUR9NpsrwL"]
       }
     },
     created() {
@@ -91,26 +90,11 @@
         this.$axios.get('/api/reward/getMineReward',{params:{rank:true, sort: true, pageNo:1, pageSize:1000}}).then(res => {
           // this.actVdList = res.data.list;
           this.minedList = res.data.list;
-          console.log("mined list", res.data.list)
-          // this.totalBond = res.data.totalBondedTokens;
-          // let newMinedList = []
-          // for(let i = 0; i < this.minedList.length; i++) {
-          //   if (this.officialMinerList.indexOf(this.minedList[i].miner) === -1) {
-          //     newMinedList.push(this.minedList[i])
-          //   }
-          // }
-          // this.minedList = newMinedList
-          // console.log(this.minedList);
+
           this.minedList.forEach((a,index) => {
             a.i = index + 1;
             a.addr = a.miner;
             a.url = '/staking/validatorDetail/' + a.miner;
-            // this.actVdList.forEach((b,index) => {
-            //   if (a.miner === b.address) {
-            //     a = Object.assign(a, b)
-            //   }
-            // });
-            // console.log(a)
           });
           this.isActLoading = false;
         }).catch(err =>{
