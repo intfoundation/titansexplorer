@@ -38,7 +38,7 @@
             </div>
             <div class="vai-group">
               <div class="vai-i">Voting Power</div>
-              <div class="vai-ii">{{valInfo.voteP}} ({{bond}} INT)</div>
+              <div class="vai-ii">{{valInfo.voteP}} ({{totalStaked}} INT)</div>
             </div>
             <div class="vai-group">
               <div class="vai-i">Bonded Height</div>
@@ -181,7 +181,7 @@
         isPropLoading: true,
         web: '',
         totalBond: 1,
-        bond: 0
+        totalStaked: 0
       }
     },
     created() {
@@ -198,10 +198,10 @@
           this.valInfo.commission = toDecimal4NoZero(this.valInfo.commission).toString() + '%';
           this.valInfo.uptime = new BigNumber(toDecimal4NoZero(this.valInfo.uptime)).times(100).toNumber() + '%';
           this.valInfo.url = '/blockchain/blockdetail/' + this.valInfo.bondHeight + '/1';
-          this.valInfo.voteP = new BigNumber(toDecimal4NoZero(this.valInfo.bondedTokens/this.valInfo.totalBondedTokens)).times(100).toNumber() + '%';
+          this.valInfo.voteP = new BigNumber(toDecimal4NoZero(this.valInfo.total_staked/this.valInfo.totalStaked)).times(100).toNumber() + '%';
           this.web = this.valInfo.website;
-          this.totalBond = this.valInfo.totalBondedTokens;
-          this.bond = this.valInfo.bondedTokens;
+          this.totalBond = this.valInfo.totalStaked;
+          this.totalStaked = this.valInfo.total_staked;
           this.getDelList();
           this.getPowerList();
         }).catch(err => {
@@ -214,7 +214,7 @@
           this.delList = res.data.list;
           this.delList.forEach(item => {
             item.url = '/stats/statsdetail/' + item.address;
-            item.share = new BigNumber(toDecimal4NoZero(item.deposit_proxied_balance/this.bond)).times(100).toNumber() + '%';
+            item.share = new BigNumber(toDecimal4NoZero(item.deposit_proxied_balance/this.totalStaked)).times(100).toNumber() + '%';
             item.amount = transAmount(item.deposit_proxied_balance);
           });
           this.delTotal = res.data.count;

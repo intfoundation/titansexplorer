@@ -41,13 +41,13 @@
     methods: {
       getAddressList() {
         this.isLoading = true;
-        this.$axios.get('/api/account/bond').then(res1 => {
+        this.$axios.get('/api/account/staked').then(res1 => {
           this.amount = res1.data.balance + res1.data.stake;
           this.$axios.get('/api/account/list',{params:{pageNo:'1',pageSize:this.num}}).then(res => {
             this.aList = res.data.list;
             this.aList.forEach((item,index) => {
               item.index = index+1;
-              item.per = (item.balance + item.stake)/this.amount;
+              item.per = (item.balance + item.delegate_balance)/this.amount;
               item.per = new BigNumber(toDecimal4NoZero(item.per)).times(100).toNumber() + '%';
               item.balance = toDecimal4NoZero(item.balance);
               item.amount = transAmount(item.balance);

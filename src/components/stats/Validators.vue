@@ -61,7 +61,11 @@
                 <el-table-column prop="delegated" label="Delegated" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop='totalStaked' label="Total Staked" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="delegators" label="Delegators" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="bondHeight" label="Height" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="bondHeight" label="Height" align="left" :key="Math.random()" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" class="al-url">{{scope.row.bondHeight}}</router-link>
+                  </template>
+                </el-table-column>
 <!--                <el-table-column label="Unbonding_Height" align="left" :key="Math.random()" :show-overflow-tooltip="true">-->
 <!--                  <template slot-scope="scope">-->
 <!--                    <router-link tag="span" to="" class="al-url"></router-link>-->
@@ -157,16 +161,16 @@
         this.isActLoading = true;
         this.$axios.get('/api/node/validators',{params:{active:2,pageNo:1,pageSize:100}}).then(res => {
           this.actVdList = res.data.list;
-          this.totalBond = res.data.totalBondedTokens;
+          this.totalBond = res.data.totalStaked;
           this.actVdList.forEach((item,index) => {
             item.i = index + 1;
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
-            item.voteP = new BigNumber(toDecimal4NoZero(item.bondedTokens/this.totalBond)).times(100).toNumber() + '%';
+            item.voteP = new BigNumber(toDecimal4NoZero(item.total_staked/this.totalBond)).times(100).toNumber() + '%';
             item.uptime = new BigNumber(toDecimal4NoZero(item.uptime)).times(100).toNumber() + '%';
-            item.selfStaked = transAmount(item.selfBonded) + ' INT';
-            item.delegated = transAmount(item.bondedTokens - item.selfBonded) + ' INT';
-            item.totalStaked = transAmount(item.bondedTokens) + ' INT';
+            item.selfStaked = transAmount(item.self_staked) + ' INT';
+            item.delegated = transAmount(item.total_staked - item.self_staked) + ' INT';
+            item.totalStaked = transAmount(item.total_staked) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
             item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
           });
@@ -183,10 +187,11 @@
             item.i = index + 1;
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
-            item.selfStaked = transAmount(item.selfBonded) + ' INT';
-            item.delegated = transAmount(item.bondedTokens - item.selfBonded) + ' INT';
-            item.totalStaked = transAmount(item.bondedTokens) + ' INT';
+            item.selfStaked = transAmount(item.self_staked) + ' INT';
+            item.delegated = transAmount(item.total_staked - item.self_staked) + ' INT';
+            item.totalStaked = transAmount(item.total_staked) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
+            item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
           });
           this.isCanLoading = false;
         }).catch(err => {

@@ -181,6 +181,7 @@
           let addrRex = /^(0x)?[0-9a-f]{40}$/i;
           if (this.keyword.trim()) {
             this.$axios.get('/api/search/querySearchType', { params: { input: this.keyword} }).then( res => {
+              // console.log("search type", res)
               if (res.data) {
                 switch (res.data.searchType) {
                   case "address":
@@ -196,7 +197,6 @@
                   default:
                     this.$router.push('/result/' + this.keyword)
                 }
-                this.$router.push('/stats/statsdetail/' + this.keyword)
               } else {
                 this.$router.push('/result/' + this.keyword)
               }
@@ -204,43 +204,6 @@
             }).catch(err => {
               console.log(err);
             });
-
-            if (this.keyword.match(addrRex)) {
-              this.$axios.get('/api/account/detail', {params: {address: this.keyword}}).then(res => {
-                if (res.data) {
-                  this.$router.push('/stats/statsdetail/' + this.keyword)
-                } else {
-                  this.$router.push('/result/' + this.keyword)
-                }
-                this.keyword = '';
-              }).catch(err => {
-                console.log(err);
-              })
-            } else if (+this.keyword && !this.keyword.match(txRex) && +this.keyword % 1 === 0) {
-              this.$axios.get('/api/block/detail',{params:{height:this.keyword}}).then(res => {
-                if (res.data) {
-                  this.$router.push('/blockchain/blockdetail/' + this.keyword + '/1')
-                } else {
-                  this.$router.push('/result/' + this.keyword)
-                }
-                this.keyword = '';
-              }).catch(err => {
-                console.log(err);
-              })
-            } else if (this.keyword.match(txRex)) {
-              this.$axios.get('/api/tx/detail',{params:{hash:this.keyword}}).then(res => {
-                if (res.data) {
-                  this.$router.push('/transfer/transferdetail/' + this.keyword)
-                } else {
-                  this.$router.push('/result/' + this.keyword)
-                }
-                this.keyword = '';
-              }).catch(err => {
-                console.log(err);
-              })
-            } else {
-              this.$router.push('/result/' + this.keyword)
-            }
           } else {
             this.keyword = '';
           }

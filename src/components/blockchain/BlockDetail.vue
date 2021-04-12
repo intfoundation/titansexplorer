@@ -140,7 +140,7 @@
     name: "BlockDetail",
     data() {
       return {
-        height: this.$route.params.height,
+        heightOrHash: this.$route.params.heightOrHash,
         page: this.$route.params.page || 1,
         currentPage: 1,
         total: 0,
@@ -167,7 +167,7 @@
     methods:{
       getBlockDetail() {
         this.isInfoLoading = true;
-        this.$axios.get('/api/block/detail',{params:{height:this.height,pageNum:1,pageSize:10}}).then(res=> {
+        this.$axios.get('/api/block/detail',{params:{heightOrHash:this.heightOrHash,pageNum:1,pageSize:10}}).then(res=> {
           this.block = res.data;
           this.voteP = this.block.totalVotingPower === 0 ? 0 : toDecimal4NoZero(this.block.votingPower/this.block.totalVotingPower);
           this.voteP = new BigNumber(this.voteP).times(100).toNumber() + '%';
@@ -181,7 +181,7 @@
       },
       getTxList() {
         this.isTxLoading = true;
-        this.$axios.get('/api/tx/blocktx',{params:{height:this.height,pageNo:this.page,pageSize:10}}).then(res => {
+        this.$axios.get('/api/tx/blocktx',{params:{heightOrHash:this.heightOrHash,pageNo:this.page,pageSize:10}}).then(res => {
           this.txList = res.data.list;
           this.isTxShow = res.data.count > 0;
           this.total = res.data.count;
@@ -202,7 +202,7 @@
       },
       getValidatorList() {
         this.isVdLoading = true;
-        this.$axios.get('/api/block/validators',{params:{height:this.height,pageNo:this.vdPage,pageSize:10}}).then(res => {
+        this.$axios.get('/api/block/validators',{params:{heightOrHash:this.heightOrHash,pageNo:this.vdPage,pageSize:10}}).then(res => {
           this.vdList = res.data;
           this.vdTotal = this.vdList.length;
           this.vdList.forEach((item,index)=> {
@@ -224,13 +224,13 @@
       },
       handleCurrentChange(val) {
         this.currentPage = val;
-        this.$router.push ('/blockchain/blockdetail/' + this.height + '/' + val);
+        this.$router.push ('/blockchain/blockdetail/' + this.heightOrHash + '/' + val);
         this.page = val;
         this.getTxList()
       },
       handleVdChange(val) {
         this.vdPage = val;
-        this.$router.push ('/blockchain/blockdetail/' + this.height + '/' + val);
+        this.$router.push ('/blockchain/blockdetail/' + this.heightOrHash + '/' + val);
         this.page = val;
         this.getTxList()
       },

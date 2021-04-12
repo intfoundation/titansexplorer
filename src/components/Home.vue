@@ -34,8 +34,8 @@
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Staked INT</span></div>
-            <div class="hb-num"><span>{{bondPer}}</span></div>
-            <div class="hb-data"><span>{{bondStake}} / {{bondTotal}}</span></div>
+            <div class="hb-num"><span>{{stakedPer}}</span></div>
+            <div class="hb-data"><span>{{totalStake}} / {{totalBalance}}</span></div>
           </div>
         </div>
         <div class="h-chart">
@@ -128,9 +128,9 @@
         votingPower: '',
         validators: '',
         totalValidators: '',
-        bondStake: '',
-        bondTotal: '',
-        bondPer: '',
+        totalStake: '',
+        totalBalance: '',
+        stakedPer: '',
         maxYTxn: 0,
         maxYPrice: 0,
         minYPrice: 0,
@@ -335,13 +335,13 @@
         })
       },
       getAccountBond() {
-        this.$axios.get('/api/account/bond').then(res => {
-          this.bondStake = res.data.stake;
-          this.bondTotal = res.data.balance + res.data.stake;
-          this.bondPer = new BigNumber(this.bondStake).div(new BigNumber(this.bondTotal)).toNumber();
-          this.bondPer = new BigNumber(toDecimal4NoZero(this.bondPer)).times(100).toNumber() + '%';
-          this.bondStake = nFormatter(this.bondStake,2);
-          this.bondTotal = nFormatter(this.bondTotal,2);
+        this.$axios.get('/api/account/staked').then(res => {
+          this.totalStake = res.data.stake;
+          this.totalBalance = res.data.balance + this.totalStake;
+          this.stakedPer = new BigNumber(this.totalStake).div(new BigNumber(this.totalBalance)).toNumber();
+          this.stakedPer = new BigNumber(toDecimal4NoZero(this.stakedPer)).times(100).toNumber() + '%';
+          this.totalStake = nFormatter(this.totalStake,2);
+          this.totalBalance = nFormatter(this.totalBalance,2);
         }).catch(err => {
           console.log(err);
         })

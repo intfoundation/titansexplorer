@@ -37,7 +37,7 @@ export default new Router({
           component: Blocks
         },
         {
-          path: '/blockchain/blockdetail/:height/:page',
+          path: '/blockchain/blockdetail/:heightOrHash/:page',
           name: 'BlockDetail',
           component: BlocksDetail
         },
