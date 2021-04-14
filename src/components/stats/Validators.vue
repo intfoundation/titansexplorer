@@ -20,12 +20,13 @@
                     </router-link>
                   </template>
                 </el-table-column>
-                <el-table-column label="Operator" align="left" :key="Math.random()" width="150">
+                <el-table-column prop="vid" label="Id" :key="Math.random()" align="center" width="50" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column label="Operator" align="left" :key="Math.random()" width="130">
                   <template slot-scope="scope">
                     <router-link tag="span" :to="scope.row.url" class="al-url">{{scope.row.addr}}</router-link>
                   </template>
                 </el-table-column>
-                <el-table-column prop="commission" label="Commission" :key="Math.random()" align="left" width="120" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="commission" label="Commission" :key="Math.random()" align="left" width="100" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="voteP" label="Voting Power" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="uptime" label="Uptime" align="left" width="80" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="selfStaked" label="Self Staked" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
@@ -163,7 +164,7 @@
           this.actVdList = res.data.list;
           this.totalBond = res.data.totalStaked;
           this.actVdList.forEach((item,index) => {
-            item.i = index + 1;
+            item.i = `# ${+index + 1}`;
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
             item.voteP = new BigNumber(toDecimal4NoZero(item.total_staked/this.totalBond)).times(100).toNumber() + '%';
@@ -184,7 +185,7 @@
         this.$axios.get('/api/node/validators',{params:{active:1,pageNo:1,pageSize:100}}).then(res => {
           this.canVdList = res.data.list;
           this.canVdList.forEach((item, index) => {
-            item.i = index + 1;
+            item.i = `# ${+index + 1}`;
             item.addr = addrHide(item.address);
             item.commission = toDecimal4NoZero(item.commission).toString() + '%';
             item.selfStaked = transAmount(item.self_staked) + ' INT';
