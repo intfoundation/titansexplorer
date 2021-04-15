@@ -15,7 +15,7 @@ export default {
     font-family: 'Roboto R','Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #333;
+    color: #1e2022;
     min-width: 1280px;
     height: 100%;
   }

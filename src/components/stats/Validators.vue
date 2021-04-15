@@ -20,7 +20,7 @@
                     </router-link>
                   </template>
                 </el-table-column>
-                <el-table-column prop="vid" label="Id" :key="Math.random()" align="center" width="50" :show-overflow-tooltip="true"></el-table-column>
+<!--                <el-table-column prop="vid" label="Id" :key="Math.random()" align="center" width="50" :show-overflow-tooltip="true"></el-table-column>-->
                 <el-table-column label="Operator" align="left" :key="Math.random()" width="130">
                   <template slot-scope="scope">
                     <router-link tag="span" :to="scope.row.url" class="al-url">{{scope.row.addr}}</router-link>

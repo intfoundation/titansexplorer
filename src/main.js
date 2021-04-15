@@ -9,6 +9,7 @@ import axios from 'axios'
 import moment from 'moment'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 Vue.config.productionTip = false;
 

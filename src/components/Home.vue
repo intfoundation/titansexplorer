@@ -508,7 +508,8 @@
 
   .h-block .hb-box .hb-t {
     font-size: 14px;
-    color: #333;
+    /*color: #333;*/
+    font-weight: 500;
   }
 
   .h-block .hb-height .hb-data {

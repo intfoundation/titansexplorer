@@ -10,31 +10,37 @@
             <router-link tag="div" to="/" class="nav-item-f" :class="{'nav-active-f': $route.path === '/'}"><span>Home</span></router-link>
           </li>
           <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/blockchain/g).test($route.path)}"><span>Blockchain</span><i class="nav-icon"></i></div>
+            <div class="nav-item-f" :class="{'nav-active-f': (/blockchain/g).test($route.path)}"><span>Blockchain</span><i class="nav-icon fas fa-angle-down"></i></div>
             <div class="nav-block">
               <router-link v-for="(item,index) in blockNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
           <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/staking/g).test($route.path)}"><span>Staking</span><i class="nav-icon"></i></div>
+            <div class="nav-item-f" :class="{'nav-active-f': (/staking/g).test($route.path)}"><span>Staking</span><i class="nav-icon fas fa-angle-down"></i></div>
             <div class="nav-block">
               <router-link v-for="(item,index) in stakingNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
           <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/transfer/g).test($route.path)}"><span>Transfer</span><i class="nav-icon"></i></div>
+            <div class="nav-item-f" :class="{'nav-active-f': (/tokens/g).test($route.path)}"><span>Tokens</span><i class="nav-icon fas fa-angle-down"></i></div>
+            <div class="nav-block">
+              <router-link v-for="(item,index) in tokensNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
+            </div>
+          </li>
+          <li class="m-li">
+            <div class="nav-item-f" :class="{'nav-active-f': (/transfer/g).test($route.path)}"><span>Transfer</span><i class="nav-icon fas fa-angle-down"></i></div>
             <div class="nav-block">
               <router-link v-for="(item,index) in transferNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
 <!--          <li class="m-li">-->
-<!--            <div class="nav-item-f" :class="{'nav-active-f': (/asset/g).test($route.path)}"><span>Asset</span><i class="nav-icon"></i></div>-->
+<!--            <div class="nav-item-f" :class="{'nav-active-f': (/asset/g).test($route.path)}"><span>Asset</span><i class="nav-icon fas fa-angle-down"></i></div>-->
 <!--            <div class="nav-block">-->
 <!--              <router-link v-for="(item,index) in assetNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
 <!--            </div>-->
 <!--          </li>-->
           <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/stats/g).test($route.path)}"><span>Stats</span><i class="nav-icon"></i></div>
+            <div class="nav-item-f" :class="{'nav-active-f': (/stats/g).test($route.path)}"><span>Stats</span><i class="nav-icon fas fa-angle-down"></i></div>
             <div class="nav-block">
               <router-link v-for="(item,index) in statsNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
@@ -99,6 +105,12 @@
             //   name: 'Staking5',
             //   url: '/staking/staking1'
             // },
+          ],
+          tokensNavList: [
+            {
+              name: 'IRC20 Tokens',
+              url: '/tokens/list/1'
+            }
           ],
           transferNavList: [
             {
@@ -256,11 +268,11 @@
 
   .navbar .menu .nav-icon {
     display: inline-block;
-    width: 0;
-    height: 0;
-    border-width: 7px 7px 0;
-    border-style: solid;
-    border-color: #999 transparent transparent;
+    /*width: 0;*/
+    /*height: 0;*/
+    /*border-width: 7px 7px 0;*/
+    /*border-style: solid;*/
+    /*border-color: #999 transparent transparent;*/
     margin-left: 8px;
     vertical-align: middle;
     transition: all .3s;
@@ -274,7 +286,7 @@
 
   .navbar .menu .m-li:hover .nav-item-f .nav-icon {
     transform: rotate(180deg);
-    border-color: #ed303b transparent transparent;
+    color: #ed303b;
   }
 
   .menu .m-li .nav-block {
@@ -332,7 +344,8 @@
   }
 
   .navbar .search .s-input {
-    background-color: #f3f3f3;
+    background-color: #fff;
+    border: 1px solid #f3f3f3;
     border-radius: 4px 0 0 4px;
     width: 360px;
   }

@@ -20,7 +20,7 @@
 
 <style scoped>
   .layout {
-    background-color: #f3f3f3;
+    background-color: #f8f9fa;
     width: 100%;
     min-height: 100%;
   }

@@ -16,6 +16,8 @@ import MappingList from '@/components/stats/MappingList'
 import TransferList from '@/components/transfer/TransferList'
 import TransferDetail from '@/components/transfer/TransferDetail'
 import Result from '@/components/Oops'
+import Tokens from '@/components/tokens/Tokens'
+import Token from '@/components/tokens/Token'
 
 Vue.use(Router);
 
@@ -85,6 +87,16 @@ export default new Router({
           path: '/staking/epochs/:page',
           name: 'Epochs',
           component: Epochs
+        },
+        {
+          path: '/tokens/list/:page',
+          name: 'Tokens',
+          component: Tokens
+        },
+        {
+          path: '/token/:address',
+          name: 'Token',
+          component: Token
         },
         {
           path: '/transfer/transferlist/:page',
