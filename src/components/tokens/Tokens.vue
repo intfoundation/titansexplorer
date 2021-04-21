@@ -2,7 +2,7 @@
   <div class="sDetail">
     <div id="box">
       <div class="sd-t">
-        <div class="sd-t-i">Token List</div>
+        <div class="sd-t-i">Token Tracker</div>
         <div class="sd-t-ii">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -17,13 +17,16 @@
       <div class="sd-c">
         <div class="sc-asset">
           <div class="sa-c">
+            <div class="sa-t">
+              <span class="sa-tt">IRC-20 Tokens</span>
+            </div>
             <div class="sa-block">
               <el-table :data="tokenList" v-loading="isActLoading">
                 <el-table-column prop="i" label="#" :key="Math.random()" align="left" width="50"></el-table-column>
                 <el-table-column label="Token" align="left" :key="Math.random()" width="400">
                   <template slot-scope="scope">
 <!--                    <span>{{ scope.row.name }}</span>-->
-                    <router-link tag="span" :to="scope.row.url" class="al-url">{{scope.row.name}}</router-link>
+                    <router-link tag="span" :to="'/token/' + scope.row.contract" class="al-url">{{scope.row.name + ' (' + scope.row.symbol + ')'}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column prop="price" label="Price" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
@@ -60,63 +63,69 @@
         tokenList: [
           {
             i: 1,
-            name: 'BTC',
-            price: 64205,
+            name: 'BitCoin',
+            symbol: 'BTC',
+            price: '$' + 64205,
             change: '1.8%',
-            volume: 234352523,
-            marketCap: 23424234,
+            volume: '$' + 234352523,
+            marketCap: '$' + 23424234,
             holders: 100,
-            url: '/token/0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
+            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
           },
           {
             i: 2,
-            name: 'ETH',
-            price: 64205,
+            name: 'Ethereum',
+            symbol: 'ETH',
+            price: '$' + 64205,
             change: '1.8%',
-            volume: 234352523,
-            marketCap: 23424234,
+            volume: '$' + 234352523,
+            marketCap: '$' + 23424234,
             holders: 100,
-            url: '/token/0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
+            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
           },
           {
             i: 3,
-            name: 'BCH',
-            price: 64205,
+            name: 'BitCoin Cash',
+            symbol: 'BCH',
+            price: '$' + 64205,
             change: '1.8%',
-            volume: 234352523,
-            marketCap: 23424234,
+            volume: '$' + 234352523,
+            marketCap: '$' + 23424234,
             holders: 100,
-            url: '/token/0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
+            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
           },
           {
             i: 4,
-            name: 'LTC',
-            price: 64205,
+            name: 'LitCoin',
+            symbol: 'LTC',
+            price: '$' + 64205,
             change: '1.8%',
-            volume: 234352523,
-            marketCap: 23424234,
+            volume: '$' + 234352523,
+            marketCap: '$' + 23424234,
             holders: 100,
-            url: '/token/0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
+            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
           },
           {
             i: 5,
-            name: 'ETC',
-            price: 64205,
+            name: 'Ethereum Classic',
+            symbol: 'ETC',
+            price: '$' + 64205,
             change: '1.8%',
-            volume: 234352523,
-            marketCap: 23424234,
+            volume: '$' + 234352523,
+            marketCap: '$' + 23424234,
             holders: 100,
-            url: '/token/0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
+            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
           },
           {
             i: 6,
             name: 'DOT',
-            price: 64205,
+            symbol: 'DOT',
+            price: '$' + 64205,
             change: '1.8%',
-            volume: 234352523,
-            marketCap: 23424234,
+            volume: '$' + 234352523,
+            marketCap: '$' + 23424234,
             holders: 100,
-            url: '/token/0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
+            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
           }
         ],
         isActLoading: false,
@@ -194,15 +203,23 @@
   }
 
   .sDetail .sc-asset .sa-t {
-    height: 60px;
+    height: 52px;
     width: 100%;
-    background-color: #f3f3f3;
-    border-radius: 4px 4px 0 0;
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgb(230,230,230);
+  }
+
+  .sDetail .sc-asset .sa-t .sa-tt {
+    display: block;
+    padding: 15px;
+    /*line-height: ;*/
+    font-weight: bold;
   }
 
   .sc-asset .sa-c .sa-block {
     padding: 20px 15px 0;
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 10px 10px;
   }
 
   .sc-asset .sa-t .sa-tab {

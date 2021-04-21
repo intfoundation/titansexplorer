@@ -102,11 +102,31 @@
                       </li>
                       <li class="list-inline-item">
                         <a class="sg-icon"
+                           v-if="tokenInfo.socialProfiles.whitePaper" :href="tokenInfo.socialProfiles.whitePaper">
+                          <el-tooltip effect="dark"
+                                      :content="'WhitePaper: ' + tokenInfo.socialProfiles.whitePaper"
+                                      placement="top">
+                            <span class="fas fa-file-alt"></span>
+                          </el-tooltip>
+                        </a>
+                      </li>
+                      <li class="list-inline-item">
+                        <a class="sg-icon"
                            v-if="tokenInfo.socialProfiles.cmc" :href="tokenInfo.socialProfiles.cmc">
                           <el-tooltip effect="dark"
                                       :content="'CoinMarketCap: ' + tokenInfo.socialProfiles.cmc"
                                       placement="top">
-                            <span class="fas fa-file-alt"></span>
+                            <img src="../../assets/cmc.svg" width="14" alt="">
+                          </el-tooltip>
+                        </a>
+                      </li>
+                      <li class="list-inline-item">
+                        <a class="sg-icon"
+                           v-if="tokenInfo.socialProfiles.coingecko" :href="tokenInfo.socialProfiles.coingecko">
+                          <el-tooltip effect="dark"
+                                      :content="'Coingecko: ' + tokenInfo.socialProfiles.coingecko"
+                                      placement="top">
+                            <img src="../../assets/coingecko.svg" width="14" alt="">
                           </el-tooltip>
                         </a>
                       </li>
@@ -193,6 +213,7 @@
             twitter: 'https://twitter.com/intchain',
             whitePaper: 'https://intchain.io/whitepaper/INT-whitepaper-release-EN.pdf',
             cmc: 'https://coinmarkercap.com/int',
+            coingecko: 'https://www.coingecko.com/en/coins/int-coin',
           }
         },
         choose: 0,

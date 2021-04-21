@@ -264,6 +264,7 @@
     font-weight: bold;
     font-size: 16px;
     line-height: 80px;
+    color: #6c757e;
   }
 
   .navbar .menu .nav-icon {
