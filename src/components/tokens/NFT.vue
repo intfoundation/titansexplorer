@@ -2,7 +2,7 @@
   <div class="sDetail">
     <div id="box">
       <div class="sd-t">
-        <div class="sd-t-i">Token Tracker</div>
+        <div class="sd-t-i">Non-Fungible Token Tracker</div>
         <div class="sd-t-ii">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -18,7 +18,7 @@
         <div class="sc-asset">
           <div class="sa-c">
             <div class="sa-t">
-              <span class="sa-tt">IRC-20 Tokens</span>
+              <span class="sa-tt">Non-Fungible Tokens (NFT)</span>
             </div>
             <div class="sa-block">
               <el-table :data="tokenList" v-loading="isActLoading">
@@ -26,7 +26,7 @@
                 <el-table-column label="Token" align="left" :key="Math.random()" width="400">
                   <template slot-scope="scope">
 <!--                    <span>{{ scope.row.name }}</span>-->
-                    <router-link tag="span" :to="'/token/1/' + scope.row.contract" class="al-url">{{scope.row.name + ' (' + scope.row.symbol + ')'}}</router-link>
+                    <router-link tag="span" :to="'/token/2/' + scope.row.contract" class="al-url">{{scope.row.name + ' (' + scope.row.symbol + ')'}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column prop="price" label="Price" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
@@ -142,22 +142,22 @@
 
     methods: {
       getTokenList () {
-          this.isActLoading = true;
-          this.$axios.get('/api/token/list', { params: { pageNo: this.page, pageSize: this.pageSize, type: 1 }}).then( res => {
-              this.tokenList = res.data.list;
-              this.total = res.data.count;
-              this.tokenList.forEach((val, index) => {
-                val.i = index + 1;
-                val.contract = val.contract_address;
-                val.price = val.price === 0 ? "-" : "$" + val.price;
-                val.change = val.change === 0 ? "-" : "$" + val.change;
-                val.volume = val.volume === 0 ? "-" : "$" + val.volume;
-                val.marketCap = val.marketCap === 0 ? "-" : "$" + val.marketCap;
-              });
-              this.isActLoading = false;
-          }).catch(err => {
-            console.log(err)
-          })
+        this.isActLoading = true;
+        this.$axios.get('/api/token/list', { params: { pageNo: this.page, pageSize: this.pageSize, type: 2 }}).then( res => {
+          this.tokenList = res.data.list;
+          this.total = res.data.count;
+          this.tokenList.forEach((val, index) => {
+            val.i = index + 1;
+            val.contract = val.contract_address;
+            val.price = val.price === 0 ? "-" : "$" + val.price;
+            val.change = val.change === 0 ? "-" : "$" + val.change;
+            val.volume = val.volume === 0 ? "-" : "$" + val.volume;
+            val.marketCap = val.marketCap === 0 ? "-" : "$" + val.marketCap;
+          });
+          this.isActLoading = false;
+        }).catch(err => {
+          console.log(err)
+        })
       },
 
       // getActiveVdList () {

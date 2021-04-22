@@ -17,6 +17,7 @@ import TransferList from '@/components/transfer/TransferList'
 import TransferDetail from '@/components/transfer/TransferDetail'
 import Result from '@/components/Oops'
 import Tokens from '@/components/tokens/Tokens'
+import NFT from '@/components/tokens/NFT'
 import Token from '@/components/tokens/Token'
 
 Vue.use(Router);
@@ -94,7 +95,12 @@ export default new Router({
           component: Tokens
         },
         {
-          path: '/token/:address',
+          path: '/tokens-nft/list/:page',
+          name: 'Tokens-nft',
+          component: NFT
+        },
+        {
+          path: '/token/:type/:address',
           name: 'Token',
           component: Token
         },

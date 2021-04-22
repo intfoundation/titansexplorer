@@ -62,9 +62,9 @@
                     <ul class="list-inline">
                       <li class="list-inline-item">
                         <a class="sg-icon"
-                           v-if="tokenInfo.socialProfiles.email" :href="'mailto:' + tokenInfo.socialProfiles.email">
+                           v-if="tokenInfo.email" :href="'mailto:' + tokenInfo.email">
                           <el-tooltip effect="dark"
-                                      :content="'Email: ' + tokenInfo.socialProfiles.email"
+                                      :content="'Email: ' + tokenInfo.email"
                                       placement="top">
                             <span class="fas fa-envelope-square"></span>
                           </el-tooltip>
@@ -72,9 +72,9 @@
                       </li>
                       <li class="list-inline-item">
                         <a class="sg-icon"
-                           v-if="tokenInfo.socialProfiles.reddit" :href="tokenInfo.socialProfiles.reddit" target="_blank">
+                           v-if="tokenInfo.reddit" :href="tokenInfo.reddit" target="_blank">
                           <el-tooltip effect="dark"
-                                      :content="'Reddit: ' + tokenInfo.socialProfiles.reddit"
+                                      :content="'Reddit: ' + tokenInfo.reddit"
                                       placement="top">
                             <span class="fab fa-reddit-square"></span>
                           </el-tooltip>
@@ -82,9 +82,9 @@
                       </li>
                       <li class="list-inline-item">
                         <a class="sg-icon"
-                           v-if="tokenInfo.socialProfiles.faceBook" :href="tokenInfo.socialProfiles.faceBook" target="_blank">
+                           v-if="tokenInfo.faceBook" :href="tokenInfo.faceBook" target="_blank">
                           <el-tooltip effect="dark"
-                                      :content="'FaceBook: ' + tokenInfo.socialProfiles.faceBook"
+                                      :content="'FaceBook: ' + tokenInfo.faceBook"
                                       placement="top">
                             <span class="fab fa-facebook-square"></span>
                           </el-tooltip>
@@ -92,9 +92,9 @@
                       </li>
                       <li class="list-inline-item">
                         <a class="sg-icon"
-                           v-if="tokenInfo.socialProfiles.twitter" :href="tokenInfo.socialProfiles.twitter">
+                           v-if="tokenInfo.twitter" :href="tokenInfo.twitter">
                           <el-tooltip effect="dark"
-                                      :content="'Twitter: ' + tokenInfo.socialProfiles.twitter"
+                                      :content="'Twitter: ' + tokenInfo.twitter"
                                       placement="top">
                             <span class="fab fa-twitter-square"></span>
                           </el-tooltip>
@@ -102,9 +102,9 @@
                       </li>
                       <li class="list-inline-item">
                         <a class="sg-icon"
-                           v-if="tokenInfo.socialProfiles.whitePaper" :href="tokenInfo.socialProfiles.whitePaper">
+                           v-if="tokenInfo.whitePaper" :href="tokenInfo.whitePaper">
                           <el-tooltip effect="dark"
-                                      :content="'WhitePaper: ' + tokenInfo.socialProfiles.whitePaper"
+                                      :content="'WhitePaper: ' + tokenInfo.whitePaper"
                                       placement="top">
                             <span class="fas fa-file-alt"></span>
                           </el-tooltip>
@@ -112,9 +112,9 @@
                       </li>
                       <li class="list-inline-item">
                         <a class="sg-icon"
-                           v-if="tokenInfo.socialProfiles.cmc" :href="tokenInfo.socialProfiles.cmc">
+                           v-if="tokenInfo.cmc" :href="tokenInfo.cmc">
                           <el-tooltip effect="dark"
-                                      :content="'CoinMarketCap: ' + tokenInfo.socialProfiles.cmc"
+                                      :content="'CoinMarketCap: ' + tokenInfo.cmc"
                                       placement="top">
                             <img src="../../assets/cmc.svg" width="14" alt="">
                           </el-tooltip>
@@ -122,9 +122,9 @@
                       </li>
                       <li class="list-inline-item">
                         <a class="sg-icon"
-                           v-if="tokenInfo.socialProfiles.coingecko" :href="tokenInfo.socialProfiles.coingecko">
+                           v-if="tokenInfo.coingecko" :href="tokenInfo.coingecko">
                           <el-tooltip effect="dark"
-                                      :content="'Coingecko: ' + tokenInfo.socialProfiles.coingecko"
+                                      :content="'Coingecko: ' + tokenInfo.coingecko"
                                       placement="top">
                             <img src="../../assets/coingecko.svg" width="14" alt="">
                           </el-tooltip>
@@ -196,6 +196,7 @@
     data() {
       return {
         addr: this.$route.params.address,
+        type: this.$route.params.type,
         tokenInfo: {
           name: 'BitCoin',
           symbol: 'BTC',
@@ -206,27 +207,19 @@
           contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a',
           decimals: 18,
           officialSite: 'https://www.intchain.io',
-          socialProfiles: {
-            email: 'int@intchain.io',
-            reddit: 'https://www.reddit.com/r/intchain',
-            faceBook: 'https://www.facebook.com/intchain',
-            twitter: 'https://twitter.com/intchain',
-            whitePaper: 'https://intchain.io/whitepaper/INT-whitepaper-release-EN.pdf',
-            cmc: 'https://coinmarkercap.com/int',
-            coingecko: 'https://www.coingecko.com/en/coins/int-coin',
-          }
+          email: 'int@intchain.io',
+          reddit: 'https://www.reddit.com/r/intchain',
+          faceBook: 'https://www.facebook.com/intchain',
+          twitter: 'https://twitter.com/intchain',
+          whitePaper: 'https://intchain.io/whitepaper/INT-whitepaper-release-EN.pdf',
+          cmc: 'https://coinmarkercap.com/int',
+          coingecko: 'https://www.coingecko.com/en/coins/int-coin',
         },
         choose: 0,
         addrInfo: {},
         tabList: ['Assets','Delegations','UnDelegations','Delegate Rewards'],
-        delList: [],
-        unDelList: [],
-        delRewardList: [],
         txList: [],
         isInfoLoading: true,
-        isDelLoading: false,
-        isUnDelLoading: false,
-        isReWardLoading: false,
         isTxLoading: false,
         over: true,
         currentPage: 1,
@@ -234,42 +227,31 @@
         size: 10,
         total: 0,
         isPageShow: false,
-        delPage: {
-          currentPage: 1,
-          page: 1,
-          size: 5,
-          total: 0,
-          isPageShow: false,
-        }
       }
     },
     created() {
       this.currentPage = +this.page;
-      this.getAddrDetail();
+      this.getTokenInfo();
       this.getAddrTx();
     },
     mounted() {
 
     },
     watch: {
-      choose(val) {
-        switch (val) {
-          case 0:
-            this.getAddrDetail();
-            break;
-          case 1:
-            this.getDel();
-            break;
-          case 2:
-            this.getUnDel();
-            break;
-          case 3:
-            this.getDelReward();
-            break;
-        }
-      },
     },
     methods: {
+      getTokenInfo() {
+        this.isInfoLoading = true;
+        this.$axios.get('/api/token/list', { params: { pageNo: this.page, pageSize: this.pageSize, type: this.type, contract: this.addr }}).then(res => {
+          this.tokenInfo = res.data.list[0];
+          this.tokenInfo.totalSupply = this.tokenInfo.totalSupply + " "+ this.tokenInfo.symbol;
+          this.tokenInfo.contract = this.tokenInfo.contract_address;
+          this.tokenInfo.price = "$" + this.tokenInfo.price;
+          this.tokenInfo.transfers = 0;
+          this.isInfoLoading = false;
+        })
+      },
+
       getAddrDetail() {
         this.isInfoLoading = true;
         this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
@@ -323,26 +305,6 @@
         this.getAddrTx();
         this.getDel();
       },
-      getDel() {
-        this.isDelLoading = true;
-        this.$axios.get('/api/account/delegations', {params: {address: this.addr, pageNo:this.delPage.currentPage, pageSize:this.delPage.size}}).then( res => {
-          this.delPage.total = res.data.count;
-          this.delPage.isPageShow = this.delPage.total > this.delPage.size;
-          this.delList = res.data.list;
-          // console.log('delegations', res.data)
-          this.delList.forEach((v, i) => {
-            v.addUrl = `/stats/statsdetail/${v.candidate}`;
-          });
-        });
-
-        this.isDelLoading = false;
-      },
-      handleDelCurrentChange(val) {
-        this.isDelLoading = true;
-        this.delPage.currentPage = val;
-        this.delPage.page = val;
-        this.getDel();
-      }
     }
   }
 </script>

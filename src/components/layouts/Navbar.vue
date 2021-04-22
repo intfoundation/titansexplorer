@@ -110,6 +110,10 @@
             {
               name: 'IRC20 Tokens',
               url: '/tokens/list/1'
+            },
+            {
+              name: 'IRC721 Tokens',
+              url: '/tokens-nft/list/1'
             }
           ],
           transferNavList: [
