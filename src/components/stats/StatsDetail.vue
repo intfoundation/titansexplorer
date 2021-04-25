@@ -1,7 +1,7 @@
 <template>
   <div class="sDetail">
     <div id="box">
-      <div class="sd-t">{{addr}}</div>
+      <div class="sd-t">{{isContract ? "Contract " + addr : "Address " + addr}}</div>
       <div class="sd-c">
         <div class="sc-asset">
           <div class="sa-t">
@@ -10,29 +10,72 @@
           <div class="sa-c">
             <div class="sa-block sa-asset" v-if="choose === 0" v-loading="isInfoLoading">
               <div class="sa-group">
-                <div class="sg-i"><span>Address :</span></div>
+                <div class="sg-i"><span>{{isContract ? "Contract :" : "Address :"}}</span></div>
                 <div class="sg-ii"><span>{{addrInfo.address}}</span></div>
               </div>
               <div class="sa-group">
                 <div class="sg-i"><span>Balance :</span></div>
                 <div class="sg-ii"><span>{{addrInfo.balance}}</span></div>
               </div>
+              <template v-if="isContract">
+                <div class="sa-group">
+                  <div class="sg-i"><span>Contract Creator :</span></div>
+                  <div class="sg-ii">
+                    <span>
+                      {{addrInfo.delegated}}
+                    </span>
+                    <span @click="toAddrDetail(addrInfo.creatorAddrUrl)" class="sc-url">{{addrInfo.creatorAddr}}</span>
+                    at tx
+                    <router-link tag="span" :to="addrInfo.creatHashUrl" type="text" class="sc-url">{{addrInfo.creatHash}}</router-link>
+                  </div>
+                </div>
+                <div class="sa-group">
+                  <div class="sg-i"><span>Token Tracker :</span></div>
+                  <div class="sg-ii"><span>{{addrInfo.tokenTracker}}</span></div>
+                </div>
+              </template>
+              <template v-else>
+                <div class="sa-group">
+                  <div class="sg-i"><span>Delegate :</span></div>
+                  <div class="sg-ii"><span>{{addrInfo.delegated}}</span></div>
+                </div>
+                <div class="sa-group">
+                  <div class="sg-i"><span>Reward :</span></div>
+                  <div class="sg-ii"><span>{{addrInfo.reward}}</span></div>
+                </div>
+                <div class="sa-group">
+                  <div class="sg-i"><span>Pending Refund :</span></div>
+                  <div class="sg-ii"><span>{{addrInfo.pendingRefund}}</span></div>
+                </div>
+              </template>
               <div class="sa-group">
-                <div class="sg-i"><span>Delegate :</span></div>
-                <div class="sg-ii"><span>{{addrInfo.delegated}}</span></div>
+                <div class="sg-i"><span>Token :</span></div>
+                <div class="sg-ii">
+                  <template>
+                    <el-select
+                      v-model="value"
+                      placeholder="请选择"
+                      class="sg-sl"
+                      @change="onTokenChange">
+                      <el-option-group
+                        v-for="group in tokenList"
+                        :key="group.label"
+                        :label="group.label">
+                        <el-option
+                          v-for="item in group.tokens"
+                          :key="item.address"
+                          :label="item.name + ' ' + item.balance + ' ' + item.symbol"
+                          :value="item.address">
+                        </el-option>
+                      </el-option-group>
+                    </el-select>
+                  </template>
+                </div>
               </div>
-              <div class="sa-group">
-                <div class="sg-i"><span>Reward :</span></div>
-                <div class="sg-ii"><span>{{addrInfo.reward}}</span></div>
-              </div>
-              <div class="sa-group">
-                <div class="sg-i"><span>Pending Refund :</span></div>
-                <div class="sg-ii"><span>{{addrInfo.pendingRefund}}</span></div>
-              </div>
-              <div class="sa-group">
-                <div class="sg-i"><span>Create Time :</span></div>
-                <div class="sg-ii"><span>{{addrInfo.time}}</span></div>
-              </div>
+<!--              <div class="sa-group">-->
+<!--                <div class="sg-i"><span>Create Time :</span></div>-->
+<!--                <div class="sg-ii"><span>{{addrInfo.time}}</span></div>-->
+<!--              </div>-->
             </div>
             <div class="sa-block sa-del" v-if="choose === 1">
               <el-table :data="delList" max-height="800" v-loading="isDelLoading">
@@ -150,8 +193,24 @@
               <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
               <el-table-column label="To" align="left" :show-overflow-tooltip="over">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
-                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{scope.row.toAddr}}</span>
+<!--                  {{scope.row.toAddress === null ? "[Contract&nbsp&nbsp" : ""}}-->
+<!--                  <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>-->
+<!--                  <span v-else-if="scope.row.contract_address === addr">{{scope.row.toAddr}}</span>-->
+<!--                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">-->
+<!--                    {{-->
+<!--                      scope.row.toAddress === null ? scope.row.contract_address : scope.row.toAddress-->
+<!--                    }}-->
+<!--                  </span>-->
+<!--                  {{scope.row.toAddress === null ? "&nbsp&nbspCreated]" : ""}}-->
+                  <template v-if="scope.row.toAddress === null">
+                    <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
+                  </template>
+                  <template v-else>
+                    <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
+                    {{scope.row.toAddr}}
+                  </span>
+                  </template>
                 </template>
               </el-table-column>
               <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
@@ -175,6 +234,7 @@
         addr: this.$route.params.addr,
         choose: 0,
         addrInfo: {},
+        isContract: false,
         tabList: ['Assets','Delegations','UnDelegations','Delegate Rewards'],
         delList: [],
         unDelList: [],
@@ -212,12 +272,41 @@
           total: 0,
           isPageShow: false,
         },
+        tokenList: [{
+          label: 'IRC-20 Tokens',
+          tokens: [{
+            name: 'Wrapped BTC',
+            symbol: 'WBTC',
+            balance: 1000,
+            address: '0xd3bae42552e6dcafdc31ddc6713e90d8ed424ae8',
+          }, {
+            name: 'Wrapped INT',
+            symbol: 'WINT',
+            balance: 1000,
+            address: '0x9baa8df7d59bafd3bc7b7adc0e881a9a74b5390f',
+          }]
+        }, {
+          label: 'IRC-721 Tokens',
+          tokens: [{
+            name: 'Wrapped BTC',
+            symbol: 'WBTC',
+            balance: 1000,
+            address: '0x11765cd221458804d6909fbc9a6bf72312e5917d',
+          }, {
+            name: 'Wrapped INT',
+            symbol: 'WINT',
+            balance: 1000,
+            address: '0x1890a5af2995a5321798c17b6583fdb9987b28d5',
+          }]
+        }],
+        value: '$123456789'
       }
     },
     created() {
       this.currentPage = +this.page;
       this.getAddrDetail();
       this.getAddrTx();
+      this.getTokens(this.addr);
     },
     mounted() {
 
@@ -244,13 +333,39 @@
       getAddrDetail() {
         this.isInfoLoading = true;
         this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
+          // console.log('api account detail', res.data);
           this.addrInfo = res.data;
-          this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
-          this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
-          this.addrInfo.delegated = transAmount(this.addrInfo.delegate_balance) + ' INT';
-          this.addrInfo.pendingRefund = transAmount(this.addrInfo.pending_refund_balance) + ' INT';
-          this.addrInfo.reward = transAmount(this.addrInfo.reward_balance) + ' INT';
-          this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
+          let keys = Object.keys(res.data);
+          if (keys.length === 0) {
+            this.addrInfo.address = this.addr;
+            this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
+            this.addrInfo.balance = 0 + ' INT';
+            this.addrInfo.delegated = 0 + ' INT';
+            this.addrInfo.pendingRefund = 0 + ' INT';
+            this.addrInfo.reward = 0 + ' INT';
+            this.addrInfo.time = '/';
+          } else {
+            if (res.data.isContract) {
+              this.isContract = true;
+              this.tabList = ['Overview'];
+              this.addrInfo.address = this.addrInfo.contract_address;
+              this.addrInfo.balance = this.addrInfo.balance ? transAmount(this.addrInfo.balance) + ' INT' : 0 + ' INT';
+              this.addrInfo.creatorAddr = hideEnd(this.addrInfo.creator_address);
+              this.addrInfo.creatorAddrUrl = `/stats/statsdetail/${this.addrInfo.creator_address}`;
+              this.addrInfo.creatHash = hideEnd(this.addrInfo.hash);
+              this.addrInfo.creatHashUrl = `/transfer/transferdetail/${this.addrInfo.hash}`;
+              this.addrInfo.tokenTracker = this.addrInfo.contract_type !== 0 ? `${this.addrInfo.name}(${this.addrInfo.symbol})` : "";
+              this.addrInfo.tokenTrackerUrl = this.addrInfo.contract_type !== 0 ? `/token/${this.addrInfo.contract_type}` : "";
+            }else {
+              this.addrInfo = res.data;
+              this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
+              this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
+              this.addrInfo.delegated = transAmount(this.addrInfo.delegate_balance) + ' INT';
+              this.addrInfo.pendingRefund = transAmount(this.addrInfo.pending_refund_balance) + ' INT';
+              this.addrInfo.reward = transAmount(this.addrInfo.reward_balance) + ' INT';
+              // this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
+            }
+          }
           this.isInfoLoading = false;
         }).catch(err => {
           console.log(err);
@@ -270,9 +385,9 @@
             item.txUrl = `/transfer/transferdetail/${item.hash}`;
             item.blockUrl =  `/blockchain/blockdetail/${item.blockNumber}/1`;
             item.fAddrUrl = `/stats/statsdetail/${item.fromAddress}`;
-            item.tAddrUrl =  `/stats/statsdetail/${item.toAddress}`;
+            item.tAddrUrl =  item.toAddress === null ? `/stats/statsdetail/${item.contractAddress}` : `/stats/statsdetail/${item.toAddress}`;
             item.fromAddr = addrHide(item.fromAddress);
-            item.toAddr = addrHide(item.toAddress);
+            item.toAddr = item.toAddress === null ? addrHide(item.contractAddress) : addrHide(item.toAddress);
           });
           this.isTxLoading = false;
         }).catch(err => {
@@ -290,11 +405,14 @@
         this.addr = this.$route.params.addr;
         this.page = 1;
         this.currentPage = this.page;
+        this.isContract = false;
+        this.tabList = ['Assets','Delegations','UnDelegations','Delegate Rewards'];
         this.getAddrDetail();
         this.getAddrTx();
-        this.getDel();
-        this.getUnDel();
-        this.getDelReward();
+        this.getTokens(this.addr);
+        // this.getDel();
+        // this.getUnDel();
+        // this.getDelReward();
       },
       getDel() {
         this.isDelLoading = true;
@@ -306,8 +424,9 @@
           this.delList.forEach((v, i) => {
             v.addUrl = `/stats/statsdetail/${v.candidate}`;
           });
+        }).catch(err => {
+          console.log(err);
         });
-
         this.isDelLoading = false;
       },
       handleDelCurrentChange(val) {
@@ -329,6 +448,8 @@
             v.addUrl = `/stats/statsdetail/${v.candidate}`;
             v.time = this.$moment(v.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + 'UTC';
           });
+        }).catch(err => {
+          console.log(err);
         });
         this.isUnDelLoading = false;
       },
@@ -347,6 +468,8 @@
           this.delRewardList.forEach((v, i) => {
             v.addUrl = `/stats/statsdetail/${v.candidate}`;
           });
+        }).catch(err => {
+          console.log(err);
         });
         this.isReWardLoading = false;
       },
@@ -356,6 +479,17 @@
         this.delRewardPage.page = val;
         this.getDelReward();
       },
+
+      getTokens() {
+        this.$axios.get('/api/token/tokens', { params: {holderAddress: this.addr}}).then(res => {
+          console.log(res.data);
+        })
+      },
+
+      onTokenChange(val) {
+        // console.log('token change', val)
+        this.$router.push(`/token/${val}`);
+      }
     }
   }
 </script>
@@ -482,5 +616,9 @@
 
   .sc-url:hover {
     text-decoration: underline;
+  }
+
+  .sg-ii .sg-sl {
+    width: 350px;
   }
 </style>

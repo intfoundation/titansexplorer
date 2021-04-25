@@ -93,11 +93,11 @@
             item.amount = new BigNumber(item.value).dividedBy(Math.pow(10, 18)).toString();
             item.amount = toDecimal4NoZero(item.value);
             item.fromAddr = addrHide(item.fromAddress);
-            item.toAddr = addrHide(item.toAddress);
+            item.toAddr = item.toAddress === null ? "Contract Creation" : addrHide(item.toAddress);
             item.amount = transAmount(item.amount);
             item.txUrl = '/transfer/transferdetail/' + item.hash;
             item.blockUrl = '/blockchain/blockdetail/' + item.blockNumber + '/1';
-            item.toUrl = '/stats/statsdetail/' + item.toAddress;
+            item.toUrl = item.toAddress === null ? '/stats/statsdetail/' + item.contractAddress : '/stats/statsdetail/' + item.toAddress;
             item.fromUrl = '/stats/statsdetail/' + item.fromAddress;
           });
         }).catch(err => {

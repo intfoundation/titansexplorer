@@ -65,7 +65,11 @@
             </div>
             <div class="tc-group">
               <div class="tg-i">To :</div>
-              <router-link tag="div" :to="toUrl" class="tg-ii text-url"><span>{{txDetail.toAddress}}</span></router-link>
+              {{txDetail.toAddress === null ? "[Contract&nbsp&nbsp" : ""}}
+              <router-link tag="div" :to="toUrl" class="tg-ii text-url"><span>{{
+                txDetail.toAddress === null ? txDetail.contractAddress : txDetail.toAddress
+                }}</span></router-link>
+              {{txDetail.toAddress === null ? "&nbsp&nbspCreated]" : ""}}
             </div>
           </div>
         </div>
@@ -111,7 +115,7 @@
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
           this.blockUrl = '/blockchain/blockdetail/' + this.txDetail.blockNumber + '/1';
           this.fromUrl = '/stats/statsdetail/' + this.txDetail.fromAddress;
-          this.toUrl = '/stats/statsdetail/' + this.txDetail.toAddress;
+          this.toUrl = this.txDetail.toAddress === null ? '/stats/statsdetail/' + this.txDetail.contractAddress : '/stats/statsdetail/' + this.txDetail.toAddress;
           this.isTxInputShow = this.txDetail.type !== 'Transfer';
           this.isInfoLoading = false
         }).catch(err => {

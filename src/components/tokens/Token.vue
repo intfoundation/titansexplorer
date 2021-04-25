@@ -46,7 +46,9 @@
               <div class="sa-block sa-asset" v-loading="isInfoLoading">
                 <div class="sa-group">
                   <div class="sg-i"><span>Contract :</span></div>
-                  <div class="sg-ii"><span>{{tokenInfo.contract}}</span></div>
+                  <div class="sg-ii">
+                      <router-link tag="span" :to="tokenInfo.addrUrl" type="text" class="sc-url">{{tokenInfo.contract}}</router-link>
+                  </div>
                 </div>
                 <div class="sa-group">
                   <div class="sg-i"><span>Decimals :</span></div>
@@ -192,28 +194,29 @@
 <script>
   import BigNumber from 'bignumber.js'
   export default {
-    name: "StatsDetail",
+    name: "Token",
     data() {
       return {
         addr: this.$route.params.address,
-        type: this.$route.params.type,
+        // type: this.$route.params.type,
         tokenInfo: {
-          name: 'BitCoin',
-          symbol: 'BTC',
-          price: '$8546.87',
-          totalSupply: 21000000 + ' BTC',
-          holders: 200,
-          transfers: 30000,
-          contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a',
-          decimals: 18,
-          officialSite: 'https://www.intchain.io',
-          email: 'int@intchain.io',
-          reddit: 'https://www.reddit.com/r/intchain',
-          faceBook: 'https://www.facebook.com/intchain',
-          twitter: 'https://twitter.com/intchain',
-          whitePaper: 'https://intchain.io/whitepaper/INT-whitepaper-release-EN.pdf',
-          cmc: 'https://coinmarkercap.com/int',
-          coingecko: 'https://www.coingecko.com/en/coins/int-coin',
+          addrUrl: "",
+          // name: 'BitCoin',
+          // symbol: 'BTC',
+          // price: '$8546.87',
+          // totalSupply: 21000000 + ' BTC',
+          // holders: 200,
+          // transfers: 30000,
+          // contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a',
+          // decimals: 18,
+          // officialSite: 'https://www.intchain.io',
+          // email: 'int@intchain.io',
+          // reddit: 'https://www.reddit.com/r/intchain',
+          // faceBook: 'https://www.facebook.com/intchain',
+          // twitter: 'https://twitter.com/intchain',
+          // whitePaper: 'https://intchain.io/whitepaper/INT-whitepaper-release-EN.pdf',
+          // cmc: 'https://coinmarkercap.com/int',
+          // coingecko: 'https://www.coingecko.com/en/coins/int-coin',
         },
         choose: 0,
         addrInfo: {},
@@ -242,31 +245,17 @@
     methods: {
       getTokenInfo() {
         this.isInfoLoading = true;
-        this.$axios.get('/api/token/list', { params: { pageNo: this.page, pageSize: this.pageSize, type: this.type, contract: this.addr }}).then(res => {
+        this.$axios.get('/api/token/list', { params: { pageNo: this.page, pageSize: this.pageSize, contract: this.addr }}).then(res => {
           this.tokenInfo = res.data.list[0];
           this.tokenInfo.totalSupply = this.tokenInfo.totalSupply + " "+ this.tokenInfo.symbol;
           this.tokenInfo.contract = this.tokenInfo.contract_address;
+          this.tokenInfo.addrUrl = '/stats/statsdetail/' + this.tokenInfo.contract_address;
+          // console.log('token addr url', this.tokenInfo.addrUrl);
           this.tokenInfo.price = "$" + this.tokenInfo.price;
-          this.tokenInfo.transfers = 0;
           this.isInfoLoading = false;
         })
       },
 
-      getAddrDetail() {
-        this.isInfoLoading = true;
-        this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
-          this.addrInfo = res.data;
-          this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
-          this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
-          this.addrInfo.delegated = transAmount(this.addrInfo.delegate_balance) + ' INT';
-          this.addrInfo.pendingRefund = transAmount(this.addrInfo.pending_refund_balance) + ' INT';
-          this.addrInfo.reward = transAmount(this.addrInfo.reward_balance) + ' INT';
-          this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
-          this.isInfoLoading = false;
-        }).catch(err => {
-          console.log(err);
-        })
-      },
       getAddrTx() {
         this.isTxLoading = true;
         this.$axios.get('/api/tx/addresstx',{params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {

@@ -129,3 +129,7 @@ const addrHide = (str) => {
   str = str.slice(0,6) + '...' + str.slice(-6);
   return str;
 };
+
+const hideEnd = (str) => {
+  return str.slice(0, 20) + '...'
+}

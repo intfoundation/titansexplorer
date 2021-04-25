@@ -73,4 +73,9 @@ export default {
   .el-table td {
     padding: 10px 0!important;
   }
+
+  .el-input__inner {
+    height: 32px;
+    line-height: 32px;
+  }
 </style>

@@ -100,7 +100,7 @@ export default new Router({
           component: NFT
         },
         {
-          path: '/token/:type/:address',
+          path: '/token/:address',
           name: 'Token',
           component: Token
         },

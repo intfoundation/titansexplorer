@@ -108,11 +108,11 @@
           ],
           tokensNavList: [
             {
-              name: 'IRC20 Tokens',
+              name: 'IIP20 Tokens',
               url: '/tokens/list/1'
             },
             {
-              name: 'IRC721 Tokens',
+              name: 'IIP721 Tokens',
               url: '/tokens-nft/list/1'
             }
           ],

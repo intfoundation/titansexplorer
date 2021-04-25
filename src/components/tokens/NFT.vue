@@ -26,13 +26,14 @@
                 <el-table-column label="Token" align="left" :key="Math.random()" width="400">
                   <template slot-scope="scope">
 <!--                    <span>{{ scope.row.name }}</span>-->
-                    <router-link tag="span" :to="'/token/2/' + scope.row.contract" class="al-url">{{scope.row.name + ' (' + scope.row.symbol + ')'}}</router-link>
+                    <router-link tag="span" :to="'/token/' + scope.row.contract" class="al-url">{{scope.row.name + ' (' + scope.row.symbol + ')'}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column prop="price" label="Price" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="change" label="Change(%)" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="volume" label="Volume" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="marketCap" label="Market Cap" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="transfers" label="Transfers" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="holders" label="Holders" :key="Math.random()" align="left" :show-overflow-tooltip="true" width="100"></el-table-column>
               </el-table>
               <div class="sd-t-ii">
@@ -59,74 +60,7 @@
     name: "tokens",
     data() {
       return {
-        tokenList: [
-          {
-            i: 1,
-            name: 'BitCoin',
-            symbol: 'BTC',
-            price: '$' + 64205,
-            change: '1.8%',
-            volume: '$' + 234352523,
-            marketCap: '$' + 23424234,
-            holders: 100,
-            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
-          },
-          {
-            i: 2,
-            name: 'Ethereum',
-            symbol: 'ETH',
-            price: '$' + 64205,
-            change: '1.8%',
-            volume: '$' + 234352523,
-            marketCap: '$' + 23424234,
-            holders: 100,
-            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
-          },
-          {
-            i: 3,
-            name: 'BitCoin Cash',
-            symbol: 'BCH',
-            price: '$' + 64205,
-            change: '1.8%',
-            volume: '$' + 234352523,
-            marketCap: '$' + 23424234,
-            holders: 100,
-            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
-          },
-          {
-            i: 4,
-            name: 'LitCoin',
-            symbol: 'LTC',
-            price: '$' + 64205,
-            change: '1.8%',
-            volume: '$' + 234352523,
-            marketCap: '$' + 23424234,
-            holders: 100,
-            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
-          },
-          {
-            i: 5,
-            name: 'Ethereum Classic',
-            symbol: 'ETC',
-            price: '$' + 64205,
-            change: '1.8%',
-            volume: '$' + 234352523,
-            marketCap: '$' + 23424234,
-            holders: 100,
-            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
-          },
-          {
-            i: 6,
-            name: 'DOT',
-            symbol: 'DOT',
-            price: '$' + 64205,
-            change: '1.8%',
-            volume: '$' + 234352523,
-            marketCap: '$' + 23424234,
-            holders: 100,
-            contract: '0x2b14a6b2649a28b5fc90c42bf90f5242ea82f66a'
-          }
-        ],
+        tokenList: [],
         isActLoading: false,
         currentPage: 1,
         page: this.$route.params.page || 1,
@@ -160,30 +94,12 @@
         })
       },
 
-      // getActiveVdList () {
-      //   this.isActLoading = true;
-      //   this.$axios.get('/api/reward/getMappingList',{params:{ current:this.page, pageSize:this.pageSize }}).then(res => {
-      //     this.mappingList = res.data.list.docs;
-      //     this.total = res.data.list.pageInfo.totalItems;
-      //     this.currentPage = res.data.list.pageInfo.current;
-      //     this.mappingList.forEach((a,index) => {
-      //       a.i = index + 1;
-      //       a.int4Url = '/stats/statsdetail/' + a.int4_address;
-      //       a.amount = transAmount(a.num);
-      //       a.time = this.$moment(a.mp_time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
-      //     });
-      //     this.isActLoading = false;
-      //   }).catch(err =>{
-      //     console.log(err);
-      //   })
-      // },
-
       handleCurrentChange(val) {
         this.isActLoading = true;
         this.currentPage = val;
-        this.$router.push ('/token/list/' + val);
+        this.$router.push ('/tokens-nft/list/' + val);
         this.page = val;
-        this.getActiveVdList()
+        this.getTokenList()
       },
     }
   }
