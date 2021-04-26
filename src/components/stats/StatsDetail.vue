@@ -53,7 +53,7 @@
                 <div class="sg-ii">
                   <template>
                     <el-select
-                      v-model="value"
+                      v-model="tokenCount"
                       placeholder="请选择"
                       class="sg-sl"
                       @change="onTokenChange">
@@ -64,7 +64,7 @@
                         <el-option
                           v-for="item in group.tokens"
                           :key="item.address"
-                          :label="item.name + ' ' + item.balance + ' ' + item.symbol"
+                          :label="item.name + ' (' + item.balance + ' ' + item.symbol + ')'"
                           :value="item.address">
                         </el-option>
                       </el-option-group>
@@ -273,33 +273,13 @@
           isPageShow: false,
         },
         tokenList: [{
-          label: 'IRC-20 Tokens',
-          tokens: [{
-            name: 'Wrapped BTC',
-            symbol: 'WBTC',
-            balance: 1000,
-            address: '0xd3bae42552e6dcafdc31ddc6713e90d8ed424ae8',
-          }, {
-            name: 'Wrapped INT',
-            symbol: 'WINT',
-            balance: 1000,
-            address: '0x9baa8df7d59bafd3bc7b7adc0e881a9a74b5390f',
-          }]
+          label: 'IIP-20 Tokens',
+          tokens: []
         }, {
-          label: 'IRC-721 Tokens',
-          tokens: [{
-            name: 'Wrapped BTC',
-            symbol: 'WBTC',
-            balance: 1000,
-            address: '0x11765cd221458804d6909fbc9a6bf72312e5917d',
-          }, {
-            name: 'Wrapped INT',
-            symbol: 'WINT',
-            balance: 1000,
-            address: '0x1890a5af2995a5321798c17b6583fdb9987b28d5',
-          }]
+          label: 'IIP-721 Tokens',
+          tokens: []
         }],
-        value: '$123456789'
+        tokenCount: 0,
       }
     },
     created() {
@@ -482,7 +462,27 @@
 
       getTokens() {
         this.$axios.get('/api/token/tokens', { params: {holderAddress: this.addr}}).then(res => {
-          console.log(res.data);
+          let r = res.data.list;
+          this.tokenCount = res.data.count;
+          r.forEach( val => {
+            if (val.type === 1) {
+              this.tokenList[0].tokens.push({
+                name: val.name,
+                symbol: val.symbol,
+                balance: transAmount(val.amount),
+                address: val.token_address
+              });
+            }
+
+            if (val.type === 2) {
+              this.tokenList[1].tokens.push({
+                name: val.name,
+                symbol: val.symbol,
+                balance: transAmount(val.amount),
+                address: val.token_address
+              });
+            }
+          });
         })
       },
 
