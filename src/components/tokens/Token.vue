@@ -8,9 +8,6 @@
       <div class="sd-c">
         <div class="sc-token">
           <div class="sc-asset">
-            <!--          <div class="sa-t">-->
-            <!--            <div class="sa-tab" v-for="(item,index) in tabList" :class="{'sa-tab-choose': choose === index}" @click="choose = index"><span>{{item}}</span></div>-->
-            <!--          </div>-->
             <div class="sa-c">
               <div class="sa-t">
                   <span class="sa-tt">Overview</span>
@@ -36,9 +33,6 @@
             </div>
           </div>
           <div class="sc-asset">
-            <!--          <div class="sa-t">-->
-            <!--            <div class="sa-tab" v-for="(item,index) in tabList" :class="{'sa-tab-choose': choose === index}" @click="choose = index"><span>{{item}}</span></div>-->
-            <!--          </div>-->
             <div class="sa-c">
               <div class="sa-t">
                 <span class="sa-tt">Summary</span>
@@ -142,48 +136,82 @@
         </div>
         <div class="sc-tx">
           <div class="stx-t">
-            <div class="st-l"><span>Transactions</span><span class="st-li">{{total}}Txs</span></div>
-            <div class="st-r" v-if="isPageShow">
-              <el-pagination
-                @current-change="handleCurrentChange"
-                :current-page.sync="currentPage"
-                :page-size="size"
-                :total="total"
-                layout="prev, pager, next, jumper"
-                background>
-              </el-pagination>
+            <div class="st-l">
+              <div class="st-tab" v-for="(item,index) in txTagList" :class="{'st-tab-choose': activeName === index}" @click="activeName = index"><span>{{item}}</span></div>
             </div>
           </div>
           <div class="stx-c">
-            <el-table :data="txList" v-loading="isTxLoading">
-              <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
-                <template slot-scope="scope">
-                  <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column label="Block" align="left" width="100">
-                <template slot-scope="scope">
-                  <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column label="From" align="left" :show-overflow-tooltip="over">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
-                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
-              <el-table-column label="To" align="left" :show-overflow-tooltip="over">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
-                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{scope.row.toAddr}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-              <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
-              <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
-              <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
-            </el-table>
+            <div class="stx-pane" v-if="activeName === 0">
+              <div class="st-r" v-if="isPageShow">
+                <el-pagination
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="size"
+                  :total="total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+              <el-table :data="txList" v-loading="isTxLoading">
+                <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Block" align="left" width="100">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="From" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
+                    <router-link tag="span"  v-else class="sc-url" :to="scope.row.fAddrUrl">{{scope.row.fromAddr}}</router-link>
+<!--                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>-->
+                  </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column label="To" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <template v-if="scope.row.toAddress === null">
+                      <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
+                    </template>
+                    <template v-else>
+                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
+                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
+                    {{scope.row.toAddr}}
+                  </span>
+                    </template>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
+                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
+                <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
+              </el-table>
+              <div class="st-r" v-if="isPageShow">
+                <el-pagination
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="size"
+                  :total="total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+            </div>
+            <div class="stx-pane" v-if="activeName === 1">
+
+            </div>
+            <div class="stx-pane" v-if="activeName === 2">
+
+            </div>
+            <div class="stx-pane" v-if="activeName === 3">
+
+            </div>
+            <div class="stx-pane" v-if="activeName === 4">
+
+            </div>
           </div>
         </div>
       </div>
@@ -198,7 +226,6 @@
     data() {
       return {
         addr: this.$route.params.address,
-        // type: this.$route.params.type,
         tokenInfo: {
           addrUrl: "",
           // name: 'BitCoin',
@@ -227,15 +254,25 @@
         over: true,
         currentPage: 1,
         page: 1,
-        size: 10,
+        size: 20,
         total: 0,
         isPageShow: false,
+        tokenList: [{
+          label: 'IIP-20 Tokens',
+          tokens: []
+        }, {
+          label: 'IIP-721 Tokens',
+          tokens: []
+        }],
+        tokenCount: 0,
+        txTagList: ['Transfers', 'Holders'],
+        activeName: 0
       }
     },
     created() {
       this.currentPage = +this.page;
       this.getTokenInfo();
-      this.getAddrTx();
+      this.getTokenTx();
     },
     mounted() {
 
@@ -256,11 +293,11 @@
         })
       },
 
-      getAddrTx() {
+      getTokenTx() {
         this.isTxLoading = true;
-        this.$axios.get('/api/tx/addresstx',{params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
+        this.$axios.get('/api/tx/tokentx', {params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
           this.total = res.data.count;
-          this.isPageShow = this.total > 10;
+          this.isPageShow = this.total > 25;
           this.txList = res.data.list;
           this.txList.forEach(item => {
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
@@ -283,17 +320,15 @@
         this.isTxLoading = true;
         this.currentPage = val;
         this.page = val;
-        this.getAddrTx()
+        this.getTokenTx()
       },
-      toAddrDetail(url) {
-        this.$router.push(url);
-        this.addr = this.$route.params.addr;
-        this.page = 1;
-        this.currentPage = this.page;
-        this.getAddrDetail();
-        this.getAddrTx();
-        this.getDel();
-      },
+      // toAddrDetail(url) {
+      //   this.$router.push(url);
+      //   this.addr = this.$route.params.addr;
+      //   this.page = 1;
+      //   this.currentPage = this.page;
+      //   this.getAddrTx();
+      // },
     }
   }
 </script>
@@ -434,29 +469,63 @@
   }
 
   .sDetail .sc-tx .stx-t {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 10px;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*align-items: flex-end;*/
+    /*margin-bottom: 10px;*/
   }
 
   .sc-tx .stx-t .st-l {
-    font-size: 24px;
-    font-weight: bold;
-  }
-
-  .sc-tx .stx-t .st-l .st-li {
-    font-size: 16px;
-    font-weight: 400;
-    margin-left: 10px;
-  }
-
-  .sDetail .sc-tx .stx-c {
-    padding: 0 15px;
     background-color: #fff;
     box-shadow: 0 4px 8px 0 #e6e6e6;
-    border-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid #e6e6e6;
+    /*height: 45px;*/
+  }
+
+  .sc-tx .stx-t .st-l .st-tab {
+    display: inline-block;
+    padding: 0 20px;
+    height: 45px;
+    line-height: 45px;
+    border-bottom: 2px solid transparent;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: .3s;
+  }
+
+  .sc-tx .stx-t .st-l .st-tab:hover {
+    color: #ed303b;
+  }
+
+  .sc-tx .stx-t .st-l .st-tab-choose {
+    color: #ed303b;
+    border-bottom-color: #ed303b;
+    background-color: #fff;
+  }
+
+
+  .sDetail .sc-tx .stx-c {
+    padding: 0 15px 15px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 #e6e6e6;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     border: 1px solid rgb(230,230,230);
+    border-top: 0;
+  }
+
+  .sDetail .sc-tx .stx-c .st-r {
+    float: right;
+    margin: 15px 0;
+  }
+
+  .sDetail .sc-tx .stx-c:after {
+    content:'';
+    display: block;
+    clear: both;
   }
 
   .sc-url {

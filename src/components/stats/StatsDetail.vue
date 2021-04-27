@@ -160,64 +160,81 @@
         </div>
         <div class="sc-tx">
           <div class="stx-t">
-            <div class="st-l"><span>Transactions</span><span class="st-li">{{total}}Txs</span></div>
-            <div class="st-r" v-if="isPageShow">
-              <el-pagination
-                @current-change="handleCurrentChange"
-                :current-page.sync="currentPage"
-                :page-size="size"
-                :total="total"
-                layout="prev, pager, next, jumper"
-                background>
-              </el-pagination>
+            <div class="st-l">
+              <div class="st-tab" v-for="(item,index) in txTagList" :class="{'st-tab-choose': activeName === index}" @click="activeName = index"><span>{{item}}</span></div>
             </div>
           </div>
           <div class="stx-c">
-            <el-table :data="txList" v-loading="isTxLoading">
-              <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
-                <template slot-scope="scope">
-                  <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column label="Block" align="left" width="100">
-                <template slot-scope="scope">
-                  <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column label="From" align="left" :show-overflow-tooltip="over">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
-                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
-              <el-table-column label="To" align="left" :show-overflow-tooltip="over">
-                <template slot-scope="scope">
-<!--                  {{scope.row.toAddress === null ? "[Contract&nbsp&nbsp" : ""}}-->
-<!--                  <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>-->
-<!--                  <span v-else-if="scope.row.contract_address === addr">{{scope.row.toAddr}}</span>-->
-<!--                  <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">-->
-<!--                    {{-->
-<!--                      scope.row.toAddress === null ? scope.row.contract_address : scope.row.toAddress-->
-<!--                    }}-->
-<!--                  </span>-->
-<!--                  {{scope.row.toAddress === null ? "&nbsp&nbspCreated]" : ""}}-->
-                  <template v-if="scope.row.toAddress === null">
-                    <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
+            <div class="stx-pane" v-if="activeName === 0">
+              <div class="st-r" v-if="isPageShow">
+                <el-pagination
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="size"
+                  :total="total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+              <el-table :data="txList" v-loading="isTxLoading">
+                <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
                   </template>
-                  <template v-else>
-                    <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
-                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
+                </el-table-column>
+                <el-table-column label="Block" align="left" width="100">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="From" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column label="To" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <template v-if="scope.row.toAddress === null">
+                      <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
+                    </template>
+                    <template v-else>
+                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
+                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
                     {{scope.row.toAddr}}
                   </span>
+                    </template>
                   </template>
-                </template>
-              </el-table-column>
-              <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-              <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
-              <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
-              <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
-            </el-table>
+                </el-table-column>
+                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
+                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
+                <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
+              </el-table>
+              <div class="st-r" v-if="isPageShow">
+                <el-pagination
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="size"
+                  :total="total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+            </div>
+            <div class="stx-pane" v-if="activeName === 1">
+
+            </div>
+            <div class="stx-pane" v-if="activeName === 2">
+
+            </div>
+            <div class="stx-pane" v-if="activeName === 3">
+
+            </div>
+            <div class="stx-pane" v-if="activeName === 4">
+
+            </div>
           </div>
         </div>
       </div>
@@ -248,7 +265,7 @@
         over: true,
         currentPage: 1,
         page: 1,
-        size: 10,
+        size: 25,
         total: 0,
         isPageShow: false,
         delPage: {
@@ -280,6 +297,8 @@
           tokens: []
         }],
         tokenCount: 0,
+        txTagList: ['Transactions', 'IIP20 Token Txs', 'IIP721 Token Txs'],
+        activeName: 0
       }
     },
     created() {
@@ -328,6 +347,7 @@
             if (res.data.isContract) {
               this.isContract = true;
               this.tabList = ['Overview'];
+              this.txTagList.push('Contract');
               this.addrInfo.address = this.addrInfo.contract_address;
               this.addrInfo.balance = this.addrInfo.balance ? transAmount(this.addrInfo.balance) + ' INT' : 0 + ' INT';
               this.addrInfo.creatorAddr = hideEnd(this.addrInfo.creator_address);
@@ -355,7 +375,7 @@
         this.isTxLoading = true;
         this.$axios.get('/api/tx/addresstx',{params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
           this.total = res.data.count;
-          this.isPageShow = this.total > 10;
+          this.isPageShow = this.total > 25;
           this.txList = res.data.list;
           this.txList.forEach(item => {
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
@@ -374,6 +394,32 @@
           console.log(err);
         })
       },
+
+      getTokenTx() {
+        this.isTxLoading = true;
+        this.$axios.get('/api/tx/tokentx',{params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
+          this.total = res.data.count;
+          this.isPageShow = this.total > 25;
+          this.txList = res.data.list;
+          this.txList.forEach(item => {
+            item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
+            item.status = statusType(item.status);
+            item.amount = toDecimal4NoZero(item.value);
+            item.amount = transAmount(item.amount);
+            item.txUrl = `/transfer/transferdetail/${item.hash}`;
+            item.blockUrl =  `/blockchain/blockdetail/${item.blockNumber}/1`;
+            item.fAddrUrl = `/stats/statsdetail/${item.fromAddress}`;
+            item.tAddrUrl =  item.toAddress === null ? `/stats/statsdetail/${item.contractAddress}` : `/stats/statsdetail/${item.toAddress}`;
+            item.fromAddr = addrHide(item.fromAddress);
+            item.toAddr = item.toAddress === null ? addrHide(item.contractAddress) : addrHide(item.toAddress);
+          });
+          this.isTxLoading = false;
+        }).catch(err => {
+          console.log(err);
+        })
+      },
+
+
       handleCurrentChange(val) {
         this.isTxLoading = true;
         this.currentPage = val;
@@ -562,7 +608,7 @@
   }
 
   .sc-asset .sa-c .sa-asset {
-    padding: 20px 0 40px 25px;
+    padding: 25px;
   }
 
   .sc-asset .sa-c .sa-group {
@@ -584,29 +630,62 @@
   }
 
   .sDetail .sc-tx .stx-t {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 10px;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*align-items: flex-end;*/
+    /*margin-bottom: 10px;*/
   }
 
   .sc-tx .stx-t .st-l {
-    font-size: 24px;
-    font-weight: bold;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 #e6e6e6;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid #e6e6e6;
+    /*height: 45px;*/
   }
 
-  .sc-tx .stx-t .st-l .st-li {
+  .sc-tx .stx-t .st-l .st-tab {
+    display: inline-block;
+    padding: 0 20px;
+    height: 45px;
+    line-height: 45px;
+    border-bottom: 2px solid transparent;
     font-size: 16px;
-    font-weight: 400;
-    margin-left: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: .3s;
+  }
+
+  .sc-tx .stx-t .st-l .st-tab:hover {
+    color: #ed303b;
+  }
+
+  .sc-tx .stx-t .st-l .st-tab-choose {
+    color: #ed303b;
+    border-bottom-color: #ed303b;
+    background-color: #fff;
   }
 
   .sDetail .sc-tx .stx-c {
-    padding: 0 15px;
+    padding: 0 15px 15px;
     background-color: #fff;
     box-shadow: 0 4px 8px 0 #e6e6e6;
-    border-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     border: 1px solid rgb(230,230,230);
+    border-top: 0;
+  }
+
+  .sDetail .sc-tx .stx-c .st-r {
+    float: right;
+    margin: 15px 0;
+  }
+
+  .sDetail .sc-tx .stx-c:after {
+    content:'';
+    display: block;
+    clear: both;
   }
 
   .sc-url {
