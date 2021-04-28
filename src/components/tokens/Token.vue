@@ -201,7 +201,37 @@
               </div>
             </div>
             <div class="stx-pane" v-if="activeName === 1">
-
+              <div class="st-r" v-if="isPageShow">
+                <el-pagination
+                  @current-change="handleHolersChange"
+                  :current-page.sync="holderPage.currentPage"
+                  :page-size="holderPage.size"
+                  :total="holderPage.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+              <el-table :data="holdersList" v-loading="isHolderLoading">
+                <el-table-column prop="i" label="Rank" :key="Math.random()" width="100"></el-table-column>
+                <el-table-column label="Address" align="center" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
+                    <router-link tag="span"  v-else class="sc-url" :to="scope.row.addrUrl">{{scope.row.address}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Amount" align="center"></el-table-column>
+                <el-table-column prop="percent" label="Percentage" align="center"></el-table-column>
+              </el-table>
+              <div class="st-r" v-if="isPageShow">
+                <el-pagination
+                  @current-change="handleHolersChange"
+                  :current-page.sync="holderPage.currentPage"
+                  :page-size="holderPage.size"
+                  :total="holderPage.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
             </div>
             <div class="stx-pane" v-if="activeName === 2">
 
@@ -245,12 +275,10 @@
           // cmc: 'https://coinmarkercap.com/int',
           // coingecko: 'https://www.coingecko.com/en/coins/int-coin',
         },
-        choose: 0,
-        addrInfo: {},
-        tabList: ['Assets','Delegations','UnDelegations','Delegate Rewards'],
         txList: [],
         isInfoLoading: true,
         isTxLoading: false,
+        isHolderLoading: false,
         over: true,
         currentPage: 1,
         page: 1,
@@ -266,7 +294,14 @@
         }],
         tokenCount: 0,
         txTagList: ['Transfers', 'Holders'],
-        activeName: 0
+        activeName: 0,
+        holdersList: [],
+        holderPage: {
+          currentPage: 1,
+          page: 1,
+          size: 20,
+          total: 0,
+        }
       }
     },
     created() {
@@ -278,6 +313,18 @@
 
     },
     watch: {
+      activeName(val) {
+        switch(val) {
+          case 0:
+            this.getTokenTx();
+            break;
+          case 1:
+            this.getTokenHolders();
+            break;
+          case 2:
+            break;
+        }
+      }
     },
     methods: {
       getTokenInfo() {
@@ -316,12 +363,48 @@
           console.log(err);
         })
       },
+
+      getTokenHolders() {
+        this.isHolderLoading = true;
+        this.$axios.get('/api/token/holders', {params:{address:this.addr, pageNo:this.holderPage.currentPage, pageSize:this.holderPage.size}}).then(res => {
+          this.holderPage.total = res.data.count;
+          this.isPageShow = this.total > 25;
+          this.holdersList = res.data.list;
+          this.holdersList.forEach((val, index) => {
+            val.i = ++index;
+            val.address = val.holder_address;
+            val.addrUrl = `/stats/statsdetail/${val.holder_address}`;
+            val.percent = res.data.totalSupply == 0 ? 0 : ((val.amount / (res.data.totalSupply) * 100).toFixed(2) + '%');
+            // item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
+            // item.status = statusType(item.status);
+            // item.amount = toDecimal4NoZero(item.value);
+            // item.amount = transAmount(item.amount);
+            // item.txUrl = `/transfer/transferdetail/${item.hash}`;
+            // item.blockUrl =  `/blockchain/blockdetail/${item.blockNumber}/1`;
+            // item.fAddrUrl = `/stats/statsdetail/${item.fromAddress}`;
+            // item.tAddrUrl =  `/stats/statsdetail/${item.toAddress}`;
+            // item.fromAddr = addrHide(item.fromAddress);
+            // item.toAddr = addrHide(item.toAddress);
+          });
+          this.isHolderLoading = false;
+        }).catch(err => {
+          console.log(err);
+        })
+      },
+
       handleCurrentChange(val) {
         this.isTxLoading = true;
         this.currentPage = val;
         this.page = val;
         this.getTokenTx()
       },
+
+      handleHolersChange(val) {
+        this.isHolderLoading = true;
+        this.holderPage.currentPage = val;
+        this.holderPage.page = val;
+        this.getTokenHolders()
+      }
       // toAddrDetail(url) {
       //   this.$router.push(url);
       //   this.addr = this.$route.params.addr;
