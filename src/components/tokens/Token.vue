@@ -174,13 +174,13 @@
                 <el-table-column label="To" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <template v-if="scope.row.toAddress === null">
-                      <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
+<!--                      <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>-->
+                      <router-link tag="span" class="sc-url" :to="scope.row.tAddrUrl">{{"Contract Creation"}}</router-link>
                     </template>
                     <template v-else>
                       <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
-                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
-                    {{scope.row.toAddr}}
-                  </span>
+                      <router-link v-else class="sc-url" :to="scope.row.tAddrUrl">{{scope.row.toAddr}}</router-link>
+<!--                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{scope.row.toAddr}}</span>-->
                     </template>
                   </template>
                 </el-table-column>
@@ -333,8 +333,7 @@
           this.tokenInfo = res.data.list[0];
           this.tokenInfo.totalSupply = this.tokenInfo.totalSupply + " "+ this.tokenInfo.symbol;
           this.tokenInfo.contract = this.tokenInfo.contract_address;
-          this.tokenInfo.addrUrl = '/stats/statsdetail/' + this.tokenInfo.contract_address;
-          // console.log('token addr url', this.tokenInfo.addrUrl);
+          this.tokenInfo.addrUrl = '/address/' + this.tokenInfo.contract_address;
           this.tokenInfo.price = "$" + this.tokenInfo.price;
           this.isInfoLoading = false;
         })
@@ -351,10 +350,10 @@
             item.status = statusType(item.status);
             item.amount = toDecimal4NoZero(item.value);
             item.amount = transAmount(item.amount);
-            item.txUrl = `/transfer/transferdetail/${item.hash}`;
-            item.blockUrl =  `/blockchain/blockdetail/${item.blockNumber}/1`;
-            item.fAddrUrl = `/stats/statsdetail/${item.fromAddress}`;
-            item.tAddrUrl =  `/stats/statsdetail/${item.toAddress}`;
+            item.txUrl = `/tx/${item.hash}`;
+            item.blockUrl =  `/block/${item.blockNumber}/1`;
+            item.fAddrUrl = `/address/${item.fromAddress}`;
+            item.tAddrUrl =  `/address/${item.toAddress}`;
             item.fromAddr = addrHide(item.fromAddress);
             item.toAddr = addrHide(item.toAddress);
           });
@@ -373,18 +372,8 @@
           this.holdersList.forEach((val, index) => {
             val.i = ++index;
             val.address = val.holder_address;
-            val.addrUrl = `/stats/statsdetail/${val.holder_address}`;
+            val.addrUrl = `/address/${val.holder_address}`;
             val.percent = res.data.totalSupply == 0 ? 0 : ((val.amount / (res.data.totalSupply) * 100).toFixed(2) + '%');
-            // item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
-            // item.status = statusType(item.status);
-            // item.amount = toDecimal4NoZero(item.value);
-            // item.amount = transAmount(item.amount);
-            // item.txUrl = `/transfer/transferdetail/${item.hash}`;
-            // item.blockUrl =  `/blockchain/blockdetail/${item.blockNumber}/1`;
-            // item.fAddrUrl = `/stats/statsdetail/${item.fromAddress}`;
-            // item.tAddrUrl =  `/stats/statsdetail/${item.toAddress}`;
-            // item.fromAddr = addrHide(item.fromAddress);
-            // item.toAddr = addrHide(item.toAddress);
           });
           this.isHolderLoading = false;
         }).catch(err => {

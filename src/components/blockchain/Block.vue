@@ -191,8 +191,8 @@
               item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
               item.time = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
               item.status = statusType(item.status);
-              item.txUrl = '/transfer/transferdetail/' + item.hash;
-              item.addrUrl = '/stats/statsdetail/' + item.addrUrl;
+              item.txUrl = '/tx/' + item.hash;
+              // item.addrUrl = '/address/' + item.addrUrl;
             });
           }
           this.isTxLoading = false
@@ -224,13 +224,13 @@
       },
       handleCurrentChange(val) {
         this.currentPage = val;
-        this.$router.push ('/blockchain/blockdetail/' + this.heightOrHash + '/' + val);
+        this.$router.push ('/block/' + this.heightOrHash + '/' + val);
         this.page = val;
         this.getTxList()
       },
       handleVdChange(val) {
         this.vdPage = val;
-        this.$router.push ('/blockchain/blockdetail/' + this.heightOrHash + '/' + val);
+        this.$router.push ('/block/' + this.heightOrHash + '/' + val);
         this.page = val;
         this.getTxList()
       },

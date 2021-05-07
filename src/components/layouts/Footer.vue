@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="foot-right">
-          <span>Copyright © 2019 INT.</span>
+          <span>Copyright © 2019-{{year}} INT.</span>
         </div>
       </div>
     </div>
@@ -38,7 +38,12 @@
 
 <script>
     export default {
-        name: "Footer"
+        name: "Footer",
+        data() {
+          return {
+            year: new Date().getFullYear()
+          }
+        },
     }
 </script>
 
@@ -179,7 +184,7 @@
     display: inline-block;
     vertical-align: middle;
   }
-  
+
   .contact .f-line:last-of-type .group:first-of-type a,
   .contact .f-line:last-of-type .group:last-of-type a {
     position: relative;

@@ -173,7 +173,7 @@
             item.delegated = transAmount(item.total_staked - item.self_staked) + ' INT';
             item.totalStaked = transAmount(item.total_staked) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
-            item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
+            item.blockUrl = '/block/' + item.bondHeight + '/1';
           });
           this.isActLoading = false;
         }).catch(err =>{
@@ -192,7 +192,7 @@
             item.delegated = transAmount(item.total_staked - item.self_staked) + ' INT';
             item.totalStaked = transAmount(item.total_staked) + ' INT';
             item.url = '/staking/validatorDetail/' + item.address;
-            item.blockUrl = '/blockchain/blockdetail/' + item.bondHeight + '/1';
+            item.blockUrl = '/block/' + item.bondHeight + '/1';
           });
           this.isCanLoading = false;
         }).catch(err => {

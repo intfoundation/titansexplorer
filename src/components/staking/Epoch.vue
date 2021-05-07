@@ -80,8 +80,8 @@
           this.total = res.data.count;
           this.epochList.forEach((a,index) => {
             a.i = index + 1;
-            a.startBlockUrl = '/blockchain/blockdetail/' + a.start_block + '/1';
-            a.endBlockUrl = '/blockchain/blockdetail/' + a.end_block + '/1';
+            a.startBlockUrl = '/block/' + a.start_block + '/1';
+            a.endBlockUrl = '/block/' + a.end_block + '/1';
             a.startTime = this.$moment(a.start_time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             a.endTime = this.$moment(a.end_time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             a.rewardPerBlcok = a.reward_per_block;

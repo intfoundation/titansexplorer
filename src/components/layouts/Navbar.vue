@@ -10,7 +10,7 @@
             <router-link tag="div" to="/" class="nav-item-f" :class="{'nav-active-f': $route.path === '/'}"><span>Home</span></router-link>
           </li>
           <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/blockchain/g).test($route.path)}"><span>Blockchain</span><i class="nav-icon fas fa-angle-down"></i></div>
+            <div class="nav-item-f" :class="{'nav-active-f': (/(blocks|block|txs|tx|accounts|address)/g).test($route.path)}"><span>Blockchain</span><i class="nav-icon fas fa-angle-down"></i></div>
             <div class="nav-block">
               <router-link v-for="(item,index) in blockNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
@@ -27,12 +27,12 @@
               <router-link v-for="(item,index) in tokensNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
-          <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/transfer/g).test($route.path)}"><span>Transfer</span><i class="nav-icon fas fa-angle-down"></i></div>
-            <div class="nav-block">
-              <router-link v-for="(item,index) in transferNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
-            </div>
-          </li>
+<!--          <li class="m-li">-->
+<!--            <div class="nav-item-f" :class="{'nav-active-f': (/txs/g).test($route.path)}"><span>Transfer</span><i class="nav-icon fas fa-angle-down"></i></div>-->
+<!--            <div class="nav-block">-->
+<!--              <router-link v-for="(item,index) in transferNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
+<!--            </div>-->
+<!--          </li>-->
 <!--          <li class="m-li">-->
 <!--            <div class="nav-item-f" :class="{'nav-active-f': (/asset/g).test($route.path)}"><span>Asset</span><i class="nav-icon fas fa-angle-down"></i></div>-->
 <!--            <div class="nav-block">-->
@@ -65,24 +65,16 @@
           blockNavList: [
             {
               name: 'Blocks',
-              url: '/blockchain/blocks/1'
+              url: '/blocks/1'
             },
-            // {
-            //   name: 'Transactions',
-            //   url: '/transfer/transferlist/1'
-            // },
-            // {
-            //   name: 'Tokens',
-            //   url: '/blockchain/blocks/1'
-            // },
-            // {
-            //   name: 'Accounts',
-            //   url: '/blockchain/blocks/1'
-            // },
-            // {
-            //   name: 'Referendum',
-            //   url: '/blockchain/blocks/1'
-            // },
+            {
+              name: 'Transactions',
+              url: '/txs/1'
+            },
+            {
+              name: 'Accounts',
+              url: '/accounts'
+            },
           ],
           stakingNavList: [
             {
@@ -93,18 +85,6 @@
               name: 'Epochs',
               url: '/staking/epochs/1'
             },
-            // {
-            //   name: 'Staking3',
-            //   url: '/staking/staking1'
-            // },
-            // {
-            //   name: 'Staking4',
-            //   url: '/staking/staking1'
-            // },
-            // {
-            //   name: 'Staking5',
-            //   url: '/staking/staking1'
-            // },
           ],
           tokensNavList: [
             {
@@ -116,11 +96,11 @@
               url: '/tokens-nft/list/1'
             }
           ],
-          transferNavList: [
-            {
-              name: 'Transactions',
-              url: '/transfer/transferlist/1'
-            },
+          // transferNavList: [
+            // {
+            //   name: 'Transactions',
+            //   url: '/transfer/transferlist/1'
+            // },
             // {
             //   name: 'Transfer2',
             //   url: '/transfer/transfer1'
@@ -137,7 +117,7 @@
             //   name: 'Transfer5',
             //   url: '/transfer/transfer1'
             // }
-          ],
+          // ],
           // assetNavList: [
           //   {
           //     name: 'Asset1',
@@ -161,10 +141,10 @@
           //   }
           // ],
           statsNavList: [
-            {
-              name: 'Accounts',
-              url: '/stats/statslist'
-            },
+            // {
+            //   name: 'Accounts',
+            //   url: '/stats/statslist'
+            // },
             {
               name: 'MiningRank',
               url: '/stats/miningrank'
@@ -201,14 +181,14 @@
               if (res.data) {
                 switch (res.data.searchType) {
                   case "address":
-                    this.$router.push('/stats/statsdetail/' + this.keyword);
+                    this.$router.push('/address/' + this.keyword);
                     break;
                   case "height":
                   case "blockHash":
-                    this.$router.push('/blockchain/blockdetail/' + this.keyword + '/1');
+                    this.$router.push('/block/' + this.keyword + '/1');
                     break;
                   case "txHash":
-                    this.$router.push('/transfer/transferdetail/' + this.keyword);
+                    this.$router.push('/tx/' + this.keyword);
                     break;
                   default:
                     this.$router.push('/result/' + this.keyword)

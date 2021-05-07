@@ -1,7 +1,7 @@
 <template>
   <div class="vDetails">
     <div id="box">
-      <div class="vd-t"><span>VALIDATOR DETAILS</span></div>
+      <div class="vd-t"><span>Validator Details</span></div>
       <div class="vd-c">
         <div class="vd-a vd-block">
           <div class="va-addr">
@@ -197,7 +197,7 @@
           this.valInfo = res.data;
           this.valInfo.commission = toDecimal4NoZero(this.valInfo.commission).toString() + '%';
           this.valInfo.uptime = new BigNumber(toDecimal4NoZero(this.valInfo.uptime)).times(100).toNumber() + '%';
-          this.valInfo.url = '/blockchain/blockdetail/' + this.valInfo.bondHeight + '/1';
+          this.valInfo.url = '/block/' + this.valInfo.bondHeight + '/1';
           this.valInfo.voteP = new BigNumber(toDecimal4NoZero(this.valInfo.total_staked/this.valInfo.totalStaked)).times(100).toNumber() + '%';
           this.web = this.valInfo.website;
           this.totalBond = this.valInfo.totalStaked;
@@ -213,7 +213,7 @@
         this.$axios.get('/api/node/delegators',{params:{address:this.addr,pageNo:this.delPage,pageSize:5}}).then(res => {
           this.delList = res.data.list;
           this.delList.forEach(item => {
-            item.url = '/stats/statsdetail/' + item.address;
+            item.url = '/address/' + item.address;
             item.share = new BigNumber(toDecimal4NoZero(item.deposit_proxied_balance/this.totalStaked)).times(100).toNumber() + '%';
             item.amount = transAmount(item.deposit_proxied_balance);
           });
@@ -230,8 +230,8 @@
           this.powerList.forEach(item => {
             item.amount = transAmount(item.value);
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
-            item.txUrl = '/transfer/transferdetail/' + item.hash;
-            item.heightUrl = '/blockchain/blockdetail/' + item.blockNumber + '/1';
+            item.txUrl = '/tx/' + item.hash;
+            item.heightUrl = '/block/' + item.blockNumber + '/1';
           });
           this.powerTotal = res.data.count;
           this.isPowerLoading = false;
@@ -245,7 +245,7 @@
           this.propList = res.data.list;
           this.propTotal = res.data.count;
           this.propList.forEach(item => {
-            item.url = '/blockchain/blockdetail/' + item.number + '/1';
+            item.url = '/block/' + item.number + '/1';
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           });
           this.isPropLoading = false;

@@ -86,7 +86,7 @@
           this.total = res.data.count;
           this.blockList = res.data.list;
           this.blockList.forEach(item => {
-            item.url = '/blockchain/blockdetail/' + item.number + '/1';
+            item.url = '/block/' + item.number + '/1';
             item.addrUrl = '/staking/validatorDetail/' + item.miner;
             item.createTime = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.passTime = '> ' + formatPassTime(item.timestamp,Date.now());
@@ -100,7 +100,7 @@
       handleCurrentChange(val) {
         this.isLoading = true;
         this.currentPage = val;
-        this.$router.push ('/blockchain/blocks/' + val);
+        this.$router.push ('/blocks/' + val);
         this.page = val;
         this.getBlockList()
       },

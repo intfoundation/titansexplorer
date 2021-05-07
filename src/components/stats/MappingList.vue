@@ -80,7 +80,7 @@
           this.currentPage = res.data.list.pageInfo.current;
           this.mappingList.forEach((a,index) => {
             a.i = index + 1;
-            a.int4Url = '/stats/statsdetail/' + a.int4_address;
+            a.int4Url = '/address/' + a.int4_address;
             a.amount = transAmount(a.num);
             a.time = this.$moment(a.mp_time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
           });

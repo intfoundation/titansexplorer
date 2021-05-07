@@ -62,7 +62,7 @@
           <div class="h-l">
             <div class="h-up">
               <div class="h-t"><i class="h-logo hl-block"></i><span>Blocks</span></div>
-              <router-link tag="div" to="/blockchain/blocks/1" class="h-view"><span>View All</span></router-link>
+              <router-link tag="div" to="/blocks/1" class="h-view"><span>View All</span></router-link>
             </div>
             <div class="hl-down">
               <ul class="hl-ul">
@@ -82,7 +82,7 @@
           <div class="h-r">
             <div class="h-up">
               <div class="h-t"><i class="h-logo hl-trans"></i><span>Transactions</span></div>
-              <router-link tag="div" to="/transfer/transferlist/1" class="h-view"><span>View All</span></router-link>
+              <router-link tag="div" to="/txs/1" class="h-view"><span>View All</span></router-link>
             </div>
             <div class="hl-down">
               <ul class="hl-ul">
@@ -319,8 +319,8 @@
       getHeight() {
         this.$axios.get('/api/block/height').then(res => {
           this.blockInfo = res.data;
-          this.blockInfo.addrUrl = '/stats/statsdetail/' + res.data.miner;
-          this.blockInfo.blockUrl = '/blockchain/blockdetail/' + res.data.number + '/1';
+          this.blockInfo.addrUrl = '/address/' + res.data.miner;
+          this.blockInfo.blockUrl = '/block/' + res.data.number + '/1';
           res.data.miner = res.data.miner.slice(0,5) + '...' + res.data.miner.slice(-5);
           this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
         }).catch(err => {
@@ -437,7 +437,7 @@
           this.blockList.forEach(item => {
             item.createTime = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.passTime = formatPassTime(item.timestamp,Date.now());
-            item.url = '/blockchain/blockdetail/' + item.number + '/1';
+            item.url = '/block/' + item.number + '/1';
           });
         }).catch(err => {
           console.log(err);
@@ -450,7 +450,7 @@
             item.passTime = formatPassTime(item.timestamp,Date.now());
             item.fee = item.gasUsed * item.gasPrice;
             item.fee = new BigNumber(item.fee).dividedBy(Math.pow(10, 18)).toNumber();
-            item.url = '/transfer/transferdetail/'+ item.transactionHash;
+            item.url = '/tx/'+ item.transactionHash;
           })
         }).catch(err => {
           console.log(err);
