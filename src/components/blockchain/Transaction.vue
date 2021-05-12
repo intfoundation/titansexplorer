@@ -40,10 +40,6 @@
               <div class="tg-i">Signer :</div>
               <div class="tg-ii"><span>{{txDetail.fromAddress}}</span></div>
             </div>
-            <div class="tc-group">
-              <div class="tg-i">Memo :</div>
-              <div class="tg-ii"><span>--</span></div>
-            </div>
           </div>
         </div>
       </div>
@@ -60,23 +56,109 @@
               <router-link tag="div" :to="fromUrl" class="tg-ii text-url"><span>{{txDetail.fromAddress}}</span></router-link>
             </div>
             <div class="tc-group">
-              <div class="tg-i">Amount :</div>
-              <div class="tg-ii"><span>{{txDetail.amount}}</span></div>
-            </div>
-            <div class="tc-group">
               <div class="tg-i">To :</div>
               {{txDetail.toAddress === null ? "[Contract&nbsp&nbsp" : ""}}
-              <router-link tag="div" :to="toUrl" class="tg-ii text-url"><span>{{
-                txDetail.toAddress === null ? txDetail.contractAddress : txDetail.toAddress
-                }}</span></router-link>
+              <router-link tag="div" :to="toUrl" class="tg-ii text-url">
+                <span>{{txDetail.toAddress === null ? txDetail.contractAddress : txDetail.toAddress}}</span>
+              </router-link>
               {{txDetail.toAddress === null ? "&nbsp&nbspCreated]" : ""}}
+            </div>
+            <div class="tc-input" v-if="isTokensShow">
+              <div class="tg-i">Tokens Transferred :</div>
+              <div class="tg-ii">
+                <ul>
+                  <li v-for="(t, j) in tokenTxs" :key="j">
+                    <span><b>From </b></span>
+                    <el-tooltip class="text-url" effect="dark" :content="t._from" placement="top">
+                      <router-link tag="span" :to="'/address/' + t._from" ><span>{{t._from.slice(0, 20) + "..."}}</span></router-link>
+                    </el-tooltip>
+                    <span><b>To </b></span>
+                    <el-tooltip class="text-url" effect="dark" :content="t._to" placement="top">
+                      <router-link tag="span" :to="'/address/' + t._to"><span>{{t._to.slice(0, 20) + "..."}}</span></router-link>
+                    </el-tooltip>
+                    <span><b>For </b></span>
+                    <span>{{t._value}}</span>
+                    <el-tooltip class="text-url" effect="dark" :content="t.token" placement="top">
+                      <router-link tag="span" :to="'/address/' + t.token" class="text-url"><span>{{t.name + ' (' + t.symbol + ')'}}</span></router-link>
+                    </el-tooltip>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="tc-group">
+              <div class="tg-i">Value :</div>
+              <div class="tg-ii"><span>{{txDetail.value}}</span></div>
+            </div>
+            <div class="tc-group">
+              <div class="tg-i">Nonce :</div>
+              <div class="tg-ii"><span>{{txDetail.nonce}}</span></div>
+            </div>
+            <div class="tc-input" v-if="isTxInputShow">
+              <div class="tg-i">Input Data :</div>
+              <div class="tg-ii">
+                <textarea class="tg-input" name="inputdata" id="inputdata" rows="10">{{txDetail.input}}</textarea>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="tx-input" v-if="isTxInputShow">
-        <div class="td-t">Transaction Input</div>
-        <div class="td-c"><span>{{txDetail.unlockInput}}</span></div>
+      <div class="tx-logs" v-if="isEventLogsShow" v-loading="isInfoLoading">
+        <div class="td-t">Transaction Event Logs</div>
+        <div class="td-c">
+          <template v-for="(val, i) in txDetail.logs">
+            <div class="event-log" >
+              <div class="event-index">
+                <span>{{parseInt(val.logIndex, 16)}}</span>
+              </div>
+              <div class="event-body">
+                <ul>
+                  <li class="event-item">
+                    <div class="event-t">
+                      <b>Address</b>
+                    </div>
+                    <div class="event-c">
+                      <router-link tag="span" :to="'/address/' + val.address" class="text-url"><span>{{val.address}}</span></router-link>
+                    </div>
+                  </li>
+                  <li class="event-item">
+                    <div class="event-t">
+                      Name
+                    </div>
+                    <div class="event-c">
+                      <span></span>
+                    </div>
+                  </li>
+                  <li class="event-item">
+                    <div class="event-t">
+                      Topics
+                    </div>
+                    <div class="event-c">
+                      <ul>
+                        <li v-for="(item, index) in val.topics" :key="index">
+                          <div class="topic-t">
+                            <span>{{index}}</span>
+                          </div>
+                          <div class="topic-c">
+                            <span>{{item}}</span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="event-item">
+                    <div class="event-t">
+                      Data
+                    </div>
+                    <div class="event-c">
+                      <span>{{val.data}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <hr v-if="(i < txDetail.logs.length - 1)">
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -89,12 +171,16 @@
     data() {
       return {
         hash: this.$route.params.hash,
-        txDetail: {},
+        txDetail: {
+        },
+        tokenTxs: [],
         blockUrl: '',
         fromUrl: '',
         toUrl: '',
-        isTxInputShow: false,
-        isInfoLoading: true
+        isTxInputShow: true,
+        isInfoLoading: true,
+        isTokensShow: false,
+        isEventLogsShow: true,
       }
     },
     created() {
@@ -103,20 +189,44 @@
     mounted() {
 
     },
+    watch:{
+      tokenTxs: function () {
+        this.isTokensShow = this.tokenTxs.length !== 0;
+      }
+    },
     methods: {
       getTxDetail() {
+        // TODO: 添加 topics name的解析
         this.isInfoLoading = true;
         this.$axios.get('/api/tx/detail',{params:{hash:this.hash}}).then(res => {
-          this.txDetail = res.data;
+          this.txDetail = Object.assign(this.txDetail, res.data);
+          this.txDetail.logs = JSON.parse(this.txDetail.logs);
           this.txDetail.status = statusType(this.txDetail.status);
           this.txDetail.fee = new BigNumber(this.txDetail.gasPrice).times(this.txDetail.gasUsed) + ' INT';
-          this.txDetail.amount = transAmount(this.txDetail.value) + ' INT';
+          this.txDetail.value = transAmount(this.txDetail.value) + ' INT';
           this.txDetail.createTime = this.$moment(this.txDetail.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
           this.blockUrl = '/block/' + this.txDetail.blockNumber + '/1';
           this.fromUrl = '/address/' + this.txDetail.fromAddress;
           this.toUrl = this.txDetail.toAddress === null ? '/address/' + this.txDetail.contractAddress : '/address/' + this.txDetail.toAddress;
-          this.isTxInputShow = this.txDetail.type !== 'Transfer';
+          this.isTxInputShow = this.txDetail.input !== '0x';
+          this.isEventLogsShow = this.txDetail.logs.length !== 0;
+          this.txDetail.events.forEach(async (val, index) => {
+            if (val.event === "Transfer") {
+              let address = this.txDetail.toAddress === null ? this.txDetail.contractAddress : this.txDetail.toAddress;
+              let result = await this.$axios.get('/api/token/list', { params: { pageNo: 1, pageSize: 10, contract: address }});
+              // console.log('result', result);
+              let data = result.data.list[0];
+              let tokenTx = {};
+              tokenTx.name = data.name;
+              tokenTx.symbol = data.symbol;
+              tokenTx.token = data.contract_address;
+              tokenTx = Object.assign(tokenTx, val.returnValues);
+              this.tokenTxs.push(tokenTx);
+            }
+          });
+
+
           this.isInfoLoading = false
         }).catch(err => {
           console.log(err);
@@ -178,6 +288,48 @@
   .tc-c .tc-gas .tg-ii > div {
     display: inline-block;
     vertical-align: middle;
+  }
+
+  .td-c .tc-c .tc-input {
+    /*display: flex;*/
+    padding: 10px 0;
+    /*align-items: center;*/
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 14px;
+  }
+
+  .td-c .tc-c .tc-input:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
+  .tc-c .tc-input .tg-i {
+    float: left;
+    width: 150px;
+    font-weight: 500;
+  }
+
+  .tc-c .tc-input .tg-ii {
+    /*float: left;*/
+    margin-left: 150px;
+  }
+
+  .tg-input {
+    display: block;
+    width: 97%;
+    height: 100%;
+    padding: 10px;
+    color: #1e2022;
+    background-color: #f8f9fa;
+    border: 1px solid #d5dae2;
+    border-radius: 5px;
+  }
+
+  .tg-input:focus {
+    box-shadow: 0 0 25px rgba(52,152,219,.1);
+    border-color: #ed303b;
+    outline: 0;
   }
 
   .tc-gas .tg-tip {
@@ -244,8 +396,8 @@
     margin-bottom: 30px;
   }
 
-  .txDetail .tx-input .td-c {
-    padding: 30px 25px;
+  .txDetail .tx-logs .td-c {
+    padding: 10px 25px;
     background-color: #fff;
     border: 1px solid #e6e6e6;
     border-radius: 4px;
@@ -254,4 +406,57 @@
     line-height: 30px;
     word-break: break-word;
   }
+
+  .tx-logs .td-c .event-log {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .td-c .event-log .event-index {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    color: #00c9a7;
+    background: rgba(0,201,167,.1);
+    border-color: transparent;
+  }
+
+  .event-body .event-item {
+
+  }
+
+  .event-body .event-item .event-t {
+    display: inline-block;
+    width: 100px;
+    margin: 0 5px;
+    text-align: right;
+    vertical-align: top;
+  }
+
+  .event-body .event-item .event-c {
+    display: inline-block;
+    margin: 0 5px;
+  }
+
+  .event-c .topic-t {
+    display: inline-block;
+    text-align: center;
+  }
+
+  .event-c .topic-t span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 2px;
+    color: #77838f;
+    background-color: rgba(119,131,143,.1);
+  }
+
+  .event-c .topic-c {
+    display: inline-block;
+  }
+
 </style>

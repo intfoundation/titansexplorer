@@ -26,17 +26,17 @@
                 <router-link tag="span" :to="scope.row.blockUrl" type="text" class="tl-url">{{scope.row.blockNumber}}</router-link>
               </template>
             </el-table-column>
-            <el-table-column label="From" align="left">
+            <el-table-column label="From" align="left" :show-overflow-tooltip="over">
               <template slot-scope="scope">
                 <router-link tag="span" :to="scope.row.fromUrl" type="text" class="tl-url">{{scope.row.fromAddr}}</router-link>
               </template>
             </el-table-column>
-            <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
-            <el-table-column label="To" align="left">
+            <el-table-column label="To" align="left" :show-overflow-tooltip="over">
               <template slot-scope="scope">
                 <router-link tag="span" :to="scope.row.toUrl" type="text" class="tl-url">{{scope.row.toAddr}}</router-link>
               </template>
             </el-table-column>
+            <el-table-column prop="value" label="Value" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
             <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
             <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
             <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
@@ -90,11 +90,11 @@
           this.txList.forEach(item => {
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.status = statusType(item.status);
-            item.amount = new BigNumber(item.value).dividedBy(Math.pow(10, 18)).toString();
-            item.amount = toDecimal4NoZero(item.value);
-            item.fromAddr = addrHide(item.fromAddress);
-            item.toAddr = item.toAddress === null ? "Contract Creation" : addrHide(item.toAddress);
-            item.amount = transAmount(item.amount);
+            item.value = new BigNumber(item.value).dividedBy(Math.pow(10, 18)).toString();
+            item.value = toDecimal4NoZero(item.value);
+            item.fromAddr = item.fromAddress;
+            item.toAddr = item.toAddress === null ? "Contract Creation" : item.toAddress;
+            item.value = transAmount(item.value);
             item.txUrl = '/tx/' + item.hash;
             item.blockUrl = '/block/' + item.blockNumber + '/1';
             item.toUrl = item.toAddress === null ? '/address/' + item.contractAddress : '/address/' + item.toAddress;
