@@ -165,7 +165,7 @@
             </div>
           </div>
           <div class="stx-c">
-            <div class="stx-pane" v-if="activeName === 0">
+            <div class="stx-pane" v-show="activeName === 0">
               <div class="st-r" v-if="isPageShow">
                 <el-pagination
                   @current-change="handleCurrentChange"
@@ -223,16 +223,126 @@
                 </el-pagination>
               </div>
             </div>
-            <div class="stx-pane" v-if="activeName === 1">
+            <div class="stx-pane" v-show="activeName === 1">
+              <div class="st-r" v-if="isIIP20TxPageShow">
+                <el-pagination
+                  @current-change="handleIIP20Change"
+                  :current-page.sync="IIP20Page.currentPage"
+                  :page-size="IIP20Page.size"
+                  :total="IIP20Page.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+              <el-table :data="iip20Txs" v-loading="isTxLoading">
+                <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Block" align="left" width="100">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="From" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column label="To" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <template v-if="scope.row.toAddress === null">
+                      <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
+                    </template>
+                    <template v-else>
+                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
+                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
+                    {{scope.row.toAddr}}
+                  </span>
+                    </template>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
+                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
+                <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
+              </el-table>
+              <div class="st-r" v-if="isIIP20TxPageShow">
+                <el-pagination
+                  @current-change="handleIIP20Change"
+                  :current-page.sync="IIP20Page.currentPage"
+                  :page-size="IIP20Page.size"
+                  :total="IIP20Page.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+            </div>
+            <div class="stx-pane" v-show="activeName === 2">
+              <div class="st-r" v-if="isIIP721TxPageShow">
+                <el-pagination
+                  @current-change="handleIIP721Change"
+                  :current-page.sync="IIP721Page.currentPage"
+                  :page-size="IIP721Page.size"
+                  :total="IIP721Page.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+              <el-table :data="iip721Txs" v-loading="isTxLoading">
+                <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Block" align="left" width="100">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column label="From" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
+                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column label="To" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <template v-if="scope.row.toAddress === null">
+                      <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
+                    </template>
+                    <template v-else>
+                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
+                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
+                    {{scope.row.toAddr}}
+                  </span>
+                    </template>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
+                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
+                <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
+              </el-table>
+              <div class="st-r" v-if="isIIP721TxPageShow">
+                <el-pagination
+                  @current-change="handleIIP721Change"
+                  :current-page.sync="IIP721Page.currentPage"
+                  :page-size="IIP721Page.size"
+                  :total="IIP721Page.total"
+                  layout="prev, pager, next, jumper"
+                  background>
+                </el-pagination>
+              </div>
+            </div>
+            <div class="stx-pane" v-show="activeName === 3">
 
             </div>
-            <div class="stx-pane" v-if="activeName === 2">
-
-            </div>
-            <div class="stx-pane" v-if="activeName === 3">
-
-            </div>
-            <div class="stx-pane" v-if="activeName === 4">
+            <div class="stx-pane" v-show="activeName === 4">
 
             </div>
           </div>
@@ -262,6 +372,7 @@
         isUnDelLoading: false,
         isReWardLoading: false,
         isTxLoading: false,
+        isTokenTxLoading: false,
         over: true,
         currentPage: 1,
         page: 1,
@@ -298,16 +409,37 @@
         }],
         tokenCount: 0,
         txTagList: ['Transactions', 'IIP20 Token Txs', 'IIP721 Token Txs'],
-        activeName: 0
+        activeName: 0,
+        tokenTxList: [],
+        iip20Txs: [],
+        iip721Txs: [],
+        IIP20Page: {
+          currentPage: 1,
+          page: 1,
+          size: 25,
+          total: 0,
+          isIIP20TxPageShow: false,
+        },
+        IIP721Page: {
+          currentPage: 1,
+          page: 1,
+          size: 25,
+          total: 0,
+          isIIP20TxPageShow: false,
+        },
       }
     },
     created() {
       this.currentPage = +this.page;
       this.getAddrDetail();
       this.getAddrTx();
+      this.getTokenTx();
       this.getTokens(this.addr);
     },
     mounted() {
+
+    },
+    computed: {
 
     },
     watch: {
@@ -326,6 +458,14 @@
             this.getDelReward();
             break;
         }
+      },
+      iip20Txs(val) {
+        this.IIP20Page.isIIP20TxPageShow = val.length > 25;
+        this.IIP20Page.total = val.length;
+      },
+      iip721Txs(val) {
+        this.IIP721Page.isIIP721TxPageShow = val.length > 25;
+        this.IIP721Page.total = val.length;
       },
     },
     methods: {
@@ -396,12 +536,11 @@
       },
 
       getTokenTx() {
-        this.isTxLoading = true;
+        this.isTokenTxLoading = true;
         this.$axios.get('/api/tx/tokentx',{params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
           this.total = res.data.count;
-          this.isPageShow = this.total > 25;
-          this.txList = res.data.list;
-          this.txList.forEach(item => {
+          this.tokenTxList = res.data.list;
+          this.tokenTxList.forEach(item => {
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.status = statusType(item.status);
             item.amount = toDecimal4NoZero(item.value);
@@ -412,8 +551,13 @@
             item.tAddrUrl =  item.toAddress === null ? `/address/${item.contractAddress}` : `/address/${item.toAddress}`;
             item.fromAddr = addrHide(item.fromAddress);
             item.toAddr = item.toAddress === null ? addrHide(item.contractAddress) : addrHide(item.toAddress);
+            if (item.contractType === 1) {
+              this.iip20Txs.push(item);
+            }else if (item.contractType === 2) {
+              this.iip721Txs.push(item)
+            }
           });
-          this.isTxLoading = false;
+          this.isTokenTxLoading = false;
         }).catch(err => {
           console.log(err);
         })
@@ -426,6 +570,21 @@
         this.page = val;
         this.getAddrTx()
       },
+
+      handleIIP20Change(val) {
+        this.isTokenTxLoading = true;
+        this.IIP20Page.currentPage = val;
+        this.IIP20Page.page = val;
+        this.getTokenTx()
+      },
+
+      handleIIP721Change(val) {
+        this.isTokenTxLoading = true;
+        this.IIP721Page.currentPage = val;
+        this.IIP721Page.page = val;
+        this.getTokenTx()
+      },
+
       toAddrDetail(url) {
         this.$router.push(url);
         this.addr = this.$route.params.addr;

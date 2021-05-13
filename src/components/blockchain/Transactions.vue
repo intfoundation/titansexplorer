@@ -94,6 +94,7 @@
             item.value = toDecimal4NoZero(item.value);
             item.fromAddr = item.fromAddress;
             item.toAddr = item.toAddress === null ? "Contract Creation" : item.toAddress;
+            item.type = item.toAddress === null ? "ContractCreation" : item.type;
             item.value = transAmount(item.value);
             item.txUrl = '/tx/' + item.hash;
             item.blockUrl = '/block/' + item.blockNumber + '/1';

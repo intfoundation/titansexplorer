@@ -78,4 +78,12 @@ export default {
     height: 32px;
     line-height: 32px;
   }
+
+  .text-success {
+    color: #67C23A
+  }
+
+  .text-danger {
+    color: #F56C6C
+  }
 </style>

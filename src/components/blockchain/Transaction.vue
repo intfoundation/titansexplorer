@@ -70,11 +70,11 @@
                   <li v-for="(t, j) in tokenTxs" :key="j">
                     <span><b>From </b></span>
                     <el-tooltip class="text-url" effect="dark" :content="t._from" placement="top">
-                      <router-link tag="span" :to="'/address/' + t._from" ><span>{{t._from.slice(0, 20) + "..."}}</span></router-link>
+                      <router-link tag="span" :to="'/address/' + t._from" ><span>{{t._from.toLowerCase().slice(0, 20) + "..."}}</span></router-link>
                     </el-tooltip>
                     <span><b>To </b></span>
                     <el-tooltip class="text-url" effect="dark" :content="t._to" placement="top">
-                      <router-link tag="span" :to="'/address/' + t._to"><span>{{t._to.slice(0, 20) + "..."}}</span></router-link>
+                      <router-link tag="span" :to="'/address/' + t._to"><span>{{t._to.toLowerCase().slice(0, 20) + "..."}}</span></router-link>
                     </el-tooltip>
                     <span><b>For </b></span>
                     <span>{{t._value}}</span>
@@ -125,7 +125,13 @@
                       Name
                     </div>
                     <div class="event-c">
-                      <span></span>
+                      <span>{{val.name + " ("}}</span>
+                      <template v-for="(v, j) in val.inputs">
+                        <span class="text-success">{{v.type}}</span>
+                        <span class="text-danger">{{v.name}}</span>
+                        <span v-if="j < (val.inputs.length - 1)">, </span>
+                      </template>
+                      <span> )</span>
                     </div>
                   </li>
                   <li class="event-item">
@@ -212,6 +218,12 @@
           this.isTxInputShow = this.txDetail.input !== '0x';
           this.isEventLogsShow = this.txDetail.logs.length !== 0;
           this.txDetail.events.forEach(async (val, index) => {
+            this.txDetail.abi.forEach((v, i) => {
+              if (v.type === "event" && v.name === val.event) {
+                this.txDetail.logs[index] = Object.assign(this.txDetail.logs[index], {inputs: v.inputs, name: v.name});
+              }
+            });
+
             if (val.event === "Transfer") {
               let address = this.txDetail.toAddress === null ? this.txDetail.contractAddress : this.txDetail.toAddress;
               let result = await this.$axios.get('/api/token/list', { params: { pageNo: 1, pageSize: 10, contract: address }});
@@ -225,7 +237,6 @@
               this.tokenTxs.push(tokenTx);
             }
           });
-
 
           this.isInfoLoading = false
         }).catch(err => {

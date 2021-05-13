@@ -141,7 +141,7 @@
             </div>
           </div>
           <div class="stx-c">
-            <div class="stx-pane" v-if="activeName === 0">
+            <div class="stx-pane" v-show="activeName === 0">
               <div class="st-r" v-if="isPageShow">
                 <el-pagination
                   @current-change="handleCurrentChange"
@@ -165,8 +165,8 @@
                 </el-table-column>
                 <el-table-column label="From" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
-                    <router-link tag="span"  v-else class="sc-url" :to="scope.row.fAddrUrl">{{scope.row.fromAddr}}</router-link>
+                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddress}}</span>
+                    <router-link tag="span"  v-else class="sc-url" :to="scope.row.fAddrUrl">{{scope.row.fromAddress}}</router-link>
 <!--                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>-->
                   </template>
                 </el-table-column>
@@ -178,14 +178,14 @@
                       <router-link tag="span" class="sc-url" :to="scope.row.tAddrUrl">{{"Contract Creation"}}</router-link>
                     </template>
                     <template v-else>
-                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
-                      <router-link v-else class="sc-url" :to="scope.row.tAddrUrl">{{scope.row.toAddr}}</router-link>
+                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddress}}</span>
+                      <router-link v-else class="sc-url" :to="scope.row.tAddrUrl">{{scope.row.toAddress}}</router-link>
 <!--                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{scope.row.toAddr}}</span>-->
                     </template>
                   </template>
                 </el-table-column>
                 <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="fromAddress" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
                 <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
               </el-table>
@@ -200,7 +200,7 @@
                 </el-pagination>
               </div>
             </div>
-            <div class="stx-pane" v-if="activeName === 1">
+            <div class="stx-pane" v-show="activeName === 1">
               <div class="st-r" v-if="isPageShow">
                 <el-pagination
                   @current-change="handleHolersChange"
@@ -215,8 +215,8 @@
                 <el-table-column prop="i" label="Rank" :key="Math.random()" width="100"></el-table-column>
                 <el-table-column label="Address" align="center" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.address === addr">{{scope.row.address}}</span>
-                    <router-link tag="span"  v-else class="sc-url" :to="scope.row.addrUrl">{{scope.row.address}}</router-link>
+                    <span v-if="scope.row.holderAddress === addr">{{scope.row.holderAddress}}</span>
+                    <router-link v-else tag="span" class="sc-url" :to="scope.row.holderAddrUrl">{{scope.row.holderAddress}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column prop="amount" label="Amount" align="center"></el-table-column>
@@ -233,13 +233,13 @@
                 </el-pagination>
               </div>
             </div>
-            <div class="stx-pane" v-if="activeName === 2">
+            <div class="stx-pane" v-show="activeName === 2">
 
             </div>
-            <div class="stx-pane" v-if="activeName === 3">
+            <div class="stx-pane" v-show="activeName === 3">
 
             </div>
-            <div class="stx-pane" v-if="activeName === 4">
+            <div class="stx-pane" v-show="activeName === 4">
 
             </div>
           </div>
@@ -276,7 +276,7 @@
           // coingecko: 'https://www.coingecko.com/en/coins/int-coin',
         },
         txList: [],
-        isInfoLoading: true,
+        isInfoLoading: false,
         isTxLoading: false,
         isHolderLoading: false,
         over: true,
@@ -308,24 +308,25 @@
       this.currentPage = +this.page;
       this.getTokenInfo();
       this.getTokenTx();
+      this.getTokenHolders();
     },
     mounted() {
 
     },
-    watch: {
-      activeName(val) {
-        switch(val) {
-          case 0:
-            this.getTokenTx();
-            break;
-          case 1:
-            this.getTokenHolders();
-            break;
-          case 2:
-            break;
-        }
-      }
-    },
+    // watch: {
+    //   activeName(val) {
+    //     switch(val) {
+    //       case 0:
+    //         this.getTokenTx();
+    //         break;
+    //       case 1:
+    //         this.getTokenHolders();
+    //         break;
+    //       case 2:
+    //         break;
+    //     }
+    //   }
+    // },
     methods: {
       getTokenInfo() {
         this.isInfoLoading = true;
@@ -371,8 +372,8 @@
           this.holdersList = res.data.list;
           this.holdersList.forEach((val, index) => {
             val.i = ++index;
-            val.address = val.holder_address;
-            val.addrUrl = `/address/${val.holder_address}`;
+            val.holderAddress = val.holder_address;
+            val.holderAddrUrl = `/address/${val.holder_address}`;
             val.percent = res.data.totalSupply == 0 ? 0 : ((val.amount / (res.data.totalSupply) * 100).toFixed(2) + '%');
           });
           this.isHolderLoading = false;
