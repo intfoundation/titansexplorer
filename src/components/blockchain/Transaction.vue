@@ -202,7 +202,6 @@
     },
     methods: {
       getTxDetail() {
-        // TODO: 添加 topics name的解析
         this.isInfoLoading = true;
         this.$axios.get('/api/tx/detail',{params:{hash:this.hash}}).then(res => {
           this.txDetail = Object.assign(this.txDetail, res.data);
@@ -233,6 +232,7 @@
               tokenTx.name = data.name;
               tokenTx.symbol = data.symbol;
               tokenTx.token = data.contract_address;
+              val.returnValues._value = new BigNumber(val.returnValues._value).div(new BigNumber(Math.pow(10, data.decimals))).toString();
               tokenTx = Object.assign(tokenTx, val.returnValues);
               this.tokenTxs.push(tokenTx);
             }

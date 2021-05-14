@@ -32,7 +32,7 @@
               <span>{{scope.row.validators}}</span>/<span>{{scope.row.totalValidators}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="voteP" label="Voting_Power" align="left" width="120"></el-table-column>
+          <el-table-column prop="voteP" label="Voting Power" align="left" width="120"></el-table-column>
           <el-table-column prop="createTime" label="Timestamp" align="left" width="260"></el-table-column>
           <el-table-column prop="passTime" label="Age" align="right" width="180"></el-table-column>
         </el-table>

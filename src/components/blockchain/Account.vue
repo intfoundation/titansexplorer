@@ -224,7 +224,7 @@
               </div>
             </div>
             <div class="stx-pane" v-show="activeName === 1">
-              <div class="st-r" v-if="isIIP20TxPageShow">
+              <div class="st-r" v-if="IIP20Page.isIIP20TxPageShow">
                 <el-pagination
                   @current-change="handleIIP20Change"
                   :current-page.sync="IIP20Page.currentPage"
@@ -270,7 +270,7 @@
                 <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
               </el-table>
-              <div class="st-r" v-if="isIIP20TxPageShow">
+              <div class="st-r" v-if="IIP20Page.isIIP20TxPageShow">
                 <el-pagination
                   @current-change="handleIIP20Change"
                   :current-page.sync="IIP20Page.currentPage"
@@ -282,7 +282,7 @@
               </div>
             </div>
             <div class="stx-pane" v-show="activeName === 2">
-              <div class="st-r" v-if="isIIP721TxPageShow">
+              <div class="st-r" v-if="IIP721Page.isIIP721TxPageShow">
                 <el-pagination
                   @current-change="handleIIP721Change"
                   :current-page.sync="IIP721Page.currentPage"
@@ -328,7 +328,7 @@
                 <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
               </el-table>
-              <div class="st-r" v-if="isIIP721TxPageShow">
+              <div class="st-r" v-if="IIP721Page.isIIP721TxPageShow">
                 <el-pagination
                   @current-change="handleIIP721Change"
                   :current-page.sync="IIP721Page.currentPage"
@@ -362,7 +362,7 @@
         choose: 0,
         addrInfo: {},
         isContract: false,
-        tabList: ['Assets','Delegations','UnDelegations','Delegate Rewards'],
+        tabList: [],
         delList: [],
         unDelList: [],
         delRewardList: [],
@@ -425,7 +425,7 @@
           page: 1,
           size: 25,
           total: 0,
-          isIIP20TxPageShow: false,
+          isIIP721TxPageShow: false,
         },
       }
     },
@@ -497,6 +497,7 @@
               this.addrInfo.tokenTracker = this.addrInfo.contract_type !== 0 ? `${this.addrInfo.name}(${this.addrInfo.symbol})` : "";
               this.addrInfo.tokenTrackerUrl = this.addrInfo.contract_type !== 0 ? `/token/${this.addrInfo.contract_type}` : "";
             }else {
+              this.tabList = ['Assets','Delegations','UnDelegations','Delegate Rewards'];
               this.addrInfo = res.data;
               this.addrInfo.name = this.addrInfo.name === '' ? "/" : this.addrInfo.name;
               this.addrInfo.balance = transAmount(this.addrInfo.balance) + ' INT';
