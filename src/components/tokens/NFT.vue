@@ -3,7 +3,7 @@
     <div id="box">
       <div class="sd-t">
         <div class="sd-t-i">Non-Fungible Token Tracker</div>
-        <div class="sd-t-ii">
+        <div class="sd-t-ii" v-if="isPageShow">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"
@@ -36,7 +36,7 @@
                 <el-table-column prop="transfers" label="Transfers" :key="Math.random()" align="left" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="holders" label="Holders" :key="Math.random()" align="left" :show-overflow-tooltip="true" width="100"></el-table-column>
               </el-table>
-              <div class="sd-t-ii">
+              <div class="sd-t-ii" v-if="isPageShow">
                 <el-pagination
                   @current-change="handleCurrentChange"
                   :current-page.sync="currentPage"
@@ -66,6 +66,7 @@
         page: this.$route.params.page || 1,
         total: 0,
         pageSize: 20,
+        isPageShow: false,
       }
     },
     created() {
@@ -80,6 +81,7 @@
         this.$axios.get('/api/token/list', { params: { pageNo: this.page, pageSize: this.pageSize, type: 2 }}).then( res => {
           this.tokenList = res.data.list;
           this.total = res.data.count;
+          this.isPageShow = this.total > 25;
           this.tokenList.forEach((val, index) => {
             val.i = index + 1;
             val.contract = val.contract_address;
