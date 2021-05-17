@@ -69,15 +69,21 @@
                 <ul>
                   <li v-for="(t, j) in tokenTxs" :key="j">
                     <span><b>From </b></span>
-                    <el-tooltip class="text-url" effect="dark" :content="t._from" placement="top">
-                      <router-link tag="span" :to="'/address/' + t._from" ><span>{{t._from.toLowerCase().slice(0, 20) + "..."}}</span></router-link>
+                    <el-tooltip class="text-url" effect="dark" :content="t[0]" placement="top">
+                      <router-link tag="span" :to="'/address/' + t[0]" ><span>{{t[0].toLowerCase().slice(0, 20) + "..."}}</span></router-link>
                     </el-tooltip>
                     <span><b>To </b></span>
-                    <el-tooltip class="text-url" effect="dark" :content="t._to" placement="top">
-                      <router-link tag="span" :to="'/address/' + t._to"><span>{{t._to.toLowerCase().slice(0, 20) + "..."}}</span></router-link>
+                    <el-tooltip class="text-url" effect="dark" :content="t[1]" placement="top">
+                      <router-link tag="span" :to="'/address/' + t[1]"><span>{{t[1].toLowerCase().slice(0, 20) + "..."}}</span></router-link>
                     </el-tooltip>
                     <span><b>For </b></span>
-                    <span>{{t._value}}</span>
+                    <template v-if="txDetail.contractType === 2">
+                      <span><b>ERC721 TokenId</b></span>
+                      <span>{{"[" + t[2] + "]"}}</span>
+                    </template>
+                    <template v-else>
+                      <span>{{t[2]}}</span>
+                    </template>
                     <el-tooltip class="text-url" effect="dark" :content="t.token" placement="top">
                       <router-link tag="span" :to="'/address/' + t.token" class="text-url"><span>{{t.name + ' (' + t.symbol + ')'}}</span></router-link>
                     </el-tooltip>
@@ -125,13 +131,15 @@
                       Name
                     </div>
                     <div class="event-c">
-                      <span>{{val.name + " ("}}</span>
-                      <template v-for="(v, j) in val.inputs">
-                        <span class="text-success">{{v.type}}</span>
-                        <span class="text-danger">{{v.name}}</span>
-                        <span v-if="j < (val.inputs.length - 1)">, </span>
+                      <template v-if="val.name">
+                        <span>{{val.name + " ("}}</span>
+                        <template v-for="(v, j) in val.inputs">
+                          <span class="text-success">{{v.type}}</span>
+                          <span class="text-danger">{{v.name}}</span>
+                          <span v-if="j < (val.inputs.length - 1)">, </span>
+                        </template>
+                        <span> )</span>
                       </template>
-                      <span> )</span>
                     </div>
                   </li>
                   <li class="event-item">
@@ -232,7 +240,7 @@
               tokenTx.name = data.name;
               tokenTx.symbol = data.symbol;
               tokenTx.token = data.contract_address;
-              val.returnValues._value = new BigNumber(val.returnValues._value).div(new BigNumber(Math.pow(10, data.decimals))).toString();
+              val.returnValues[2] = new BigNumber(val.returnValues[2]).div(new BigNumber(Math.pow(10, data.decimals))).toString() || 0;
               tokenTx = Object.assign(tokenTx, val.returnValues);
               this.tokenTxs.push(tokenTx);
             }
