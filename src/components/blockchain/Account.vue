@@ -527,8 +527,8 @@
             item.blockUrl =  `/block/${item.blockNumber}/1`;
             item.fAddrUrl = `/address/${item.fromAddress}`;
             item.tAddrUrl =  item.toAddress === null ? `/address/${item.contractAddress}` : `/address/${item.toAddress}`;
-            item.fromAddr = addrHide(item.fromAddress);
-            item.toAddr = item.toAddress === null ? addrHide(item.contractAddress) : addrHide(item.toAddress);
+            item.fromAddr = item.fromAddress;
+            item.toAddr = item.toAddress === null ? item.contractAddress : item.toAddress;
           });
           this.isTxLoading = false;
         }).catch(err => {
