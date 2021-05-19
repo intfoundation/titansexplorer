@@ -78,7 +78,7 @@
                     </el-tooltip>
                     <span><b>For </b></span>
                     <template v-if="txDetail.contractType === 2">
-                      <span><b>ERC721 TokenId</b></span>
+                      <span><b>IIP721 TokenId</b></span>
                       <span>{{"[" + t[2] + "]"}}</span>
                     </template>
                     <template v-else>
