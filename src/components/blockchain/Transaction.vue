@@ -432,7 +432,7 @@
   }
 
   .td-c .event-log .event-index {
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     border-radius: 50%;
@@ -442,8 +442,10 @@
     border-color: transparent;
   }
 
-  .event-body .event-item {
-
+  .event-body .event-item:after {
+    content: "";
+    display: block;
+    clear: both;
   }
 
   .event-body .event-item .event-t {
@@ -452,16 +454,20 @@
     margin: 0 5px;
     text-align: right;
     vertical-align: top;
+    float: left;
   }
 
   .event-body .event-item .event-c {
-    display: inline-block;
-    margin: 0 5px;
+    /*display: inline-block;*/
+    /*margin: 0 5px;*/
+    /*float: left;*/
+    margin-left: 120px;
   }
 
   .event-c .topic-t {
     display: inline-block;
     text-align: center;
+
   }
 
   .event-c .topic-t span {
