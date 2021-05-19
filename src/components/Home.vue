@@ -92,7 +92,7 @@
                     <div class="tl-time"><span>> {{item.passTime}}</span></div>
                   </div>
                   <div class="hl-ii">
-                    <div class="tl-type"><span>Transfer</span></div>
+                    <div class="tl-type"><span>{{item.type}}</span></div>
                     <div class="tl-fee"><span>Fee: </span><span>{{item.fee}}</span><span> INT</span></div>
                   </div>
                 </li>
