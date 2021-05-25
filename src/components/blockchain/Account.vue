@@ -31,7 +31,9 @@
                 </div>
                 <div class="sa-group">
                   <div class="sg-i"><span>Token Tracker :</span></div>
-                  <div class="sg-ii"><span>{{addrInfo.tokenTracker}}</span></div>
+                  <div class="sg-ii">
+                    <router-link tag="span" :to="addrInfo.tokenTrackerUrl" type="text" class="sc-url">{{addrInfo.tokenTracker}}</router-link>
+                  </div>
                 </div>
               </template>
               <template v-else>
@@ -495,7 +497,7 @@
               this.addrInfo.creatHash = hideEnd(this.addrInfo.hash);
               this.addrInfo.creatHashUrl = `/tx/${this.addrInfo.hash}`;
               this.addrInfo.tokenTracker = this.addrInfo.contract_type !== 0 ? `${this.addrInfo.name}(${this.addrInfo.symbol})` : "";
-              this.addrInfo.tokenTrackerUrl = this.addrInfo.contract_type !== 0 ? `/token/${this.addrInfo.contract_type}` : "";
+              this.addrInfo.tokenTrackerUrl = this.addrInfo.contract_type !== 0 ? `/token/${this.addrInfo.address}` : "";
             }else {
               this.tabList = ['Assets','Delegations','UnDelegations','Delegate Rewards'];
               this.addrInfo = res.data;
