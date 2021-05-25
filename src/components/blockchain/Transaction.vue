@@ -12,7 +12,7 @@
             </div>
             <div class="tc-group">
               <div class="tg-i">Status :</div>
-              <div class="tg-ii"><span>{{txDetail.status}}</span></div>
+              <div class="tg-ii"><span v-bind:class="{'text-success': txDetail.status === 1, 'text-danger': txDetail.status === 0}">{{txDetail.txStatus}}</span></div>
             </div>
             <div class="tc-group">
               <div class="tg-i">Timestamp :</div>
@@ -195,6 +195,7 @@
         isInfoLoading: true,
         isTokensShow: false,
         isEventLogsShow: true,
+        status: 1,
       }
     },
     created() {
@@ -214,7 +215,7 @@
         this.$axios.get('/api/tx/detail',{params:{hash:this.hash}}).then(res => {
           this.txDetail = Object.assign(this.txDetail, res.data);
           this.txDetail.logs = JSON.parse(this.txDetail.logs);
-          this.txDetail.status = statusType(this.txDetail.status);
+          this.txDetail.txStatus = statusType(this.txDetail.status);
           this.txDetail.fee = new BigNumber(this.txDetail.gasPrice).times(this.txDetail.gasUsed) + ' INT';
           this.txDetail.value = transAmount(this.txDetail.value) + ' INT';
           this.txDetail.createTime = this.$moment(this.txDetail.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
