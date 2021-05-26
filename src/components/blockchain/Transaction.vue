@@ -102,7 +102,8 @@
             <div class="tc-input" v-if="isTxInputShow">
               <div class="tg-i">Input Data :</div>
               <div class="tg-ii">
-                <textarea class="tg-input" name="inputdata" id="inputdata" rows="10">{{txDetail.input}}</textarea>
+                <textarea v-if="showUnlockInput" class="tg-input" name="unlockinputdata" id="unlockinputdata" rows="10">{{txDetail.unlockInput}}</textarea>
+                <textarea  v-else class="tg-input" name="inputdata" id="inputdata" rows="10">{{txDetail.input}}</textarea>
               </div>
             </div>
           </div>
@@ -186,6 +187,7 @@
       return {
         hash: this.$route.params.hash,
         txDetail: {
+          type: "",
         },
         tokenTxs: [],
         blockUrl: '',
@@ -207,6 +209,16 @@
     watch:{
       tokenTxs: function () {
         this.isTokensShow = this.tokenTxs.length !== 0;
+      }
+    },
+    computed: {
+      showUnlockInput: {
+        get: function () {
+          return this.txDetail.type === "Delegate" || this.txDetail.type === "UnDelegate" || this.txDetail.type === "Register" || this.txDetail.type === "UnRegister" || this.txDetail.type === "EditValidator" || this.txDetail.type === "WithdrawReward" || this.txDetail.type === "SetCommission"
+        },
+        set: function () {
+
+        }
       }
     },
     methods: {
