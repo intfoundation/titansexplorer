@@ -33,7 +33,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="voteP" label="Voting Power" align="left" width="120"></el-table-column>
-          <el-table-column prop="createTime" label="Timestamp" align="left" width="260"></el-table-column>
+          <el-table-column prop="createTime" label="Timestamp" align="left" width="200"></el-table-column>
           <el-table-column prop="passTime" label="Age" align="right" width="180"></el-table-column>
         </el-table>
         <div class="b-f">
