@@ -140,32 +140,32 @@
           //     url: '/asset/asset1'
           //   }
           // ],
-          statsNavList: [
-            // {
-            //   name: 'Accounts',
-            //   url: '/stats/statslist'
-            // },
-            {
-              name: 'MiningRank',
-              url: '/stats/miningrank'
-            },
-            {
-              name: 'MappingList',
-              url: '/stats/mappinglist/1'
-            }
-            // {
-            //   name: 'Stats3',
-            //   url: '/stats/stats1'
-            // },
-            // {
-            //   name: 'Stats4',
-            //   url: '/stats/stats1'
-            // },
-            // {
-            //   name: 'Stats5',
-            //   url: '/stats/stats1'
-            // }
-          ],
+          // statsNavList: [
+          //   // {
+          //   //   name: 'Accounts',
+          //   //   url: '/stats/statslist'
+          //   // },
+          //   {
+          //     name: 'MiningRank',
+          //     url: '/stats/miningrank'
+          //   },
+          //   {
+          //     name: 'MappingList',
+          //     url: '/stats/mappinglist/1'
+          //   }
+          //   // {
+          //   //   name: 'Stats3',
+          //   //   url: '/stats/stats1'
+          //   // },
+          //   // {
+          //   //   name: 'Stats4',
+          //   //   url: '/stats/stats1'
+          //   // },
+          //   // {
+          //   //   name: 'Stats5',
+          //   //   url: '/stats/stats1'
+          //   // }
+          // ],
           keyword: ''
         };
       },
