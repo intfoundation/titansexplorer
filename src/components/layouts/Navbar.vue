@@ -39,12 +39,12 @@
 <!--              <router-link v-for="(item,index) in assetNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
 <!--            </div>-->
 <!--          </li>-->
-          <li class="m-li">
-            <div class="nav-item-f" :class="{'nav-active-f': (/stats/g).test($route.path)}"><span>Stats</span><i class="nav-icon fas fa-angle-down"></i></div>
-            <div class="nav-block">
-              <router-link v-for="(item,index) in statsNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
-            </div>
-          </li>
+<!--          <li class="m-li">-->
+<!--            <div class="nav-item-f" :class="{'nav-active-f': (/stats/g).test($route.path)}"><span>Stats</span><i class="nav-icon fas fa-angle-down"></i></div>-->
+<!--            <div class="nav-block">-->
+<!--              <router-link v-for="(item,index) in statsNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
+<!--            </div>-->
+<!--          </li>-->
         </ul>
       </div>
       <div class="search">
