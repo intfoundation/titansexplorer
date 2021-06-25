@@ -33,7 +33,7 @@
                     <router-link tag="span" :to="scope.row.endBlockUrl" class="al-url">{{ scope.row.end_block }}</router-link>
                   </template>
                 </el-table-column>
-                <el-table-column prop="rewardPerBlcok" label="Reward/Block" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
+<!--                <el-table-column prop="rewardPerBlcok" label="Reward/Block" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>-->
               </el-table>
               <div class="sd-t-ii">
                 <el-pagination
@@ -84,7 +84,6 @@
             a.endBlockUrl = '/block/' + a.end_block + '/1';
             a.startTime = this.$moment(a.start_time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             a.endTime = this.$moment(a.end_time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
-            a.rewardPerBlcok = a.reward_per_block;
           });
           this.isActLoading = false;
         }).catch(err =>{
