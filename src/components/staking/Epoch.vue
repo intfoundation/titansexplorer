@@ -33,7 +33,7 @@
                     <router-link tag="span" :to="scope.row.endBlockUrl" class="al-url">{{ scope.row.end_block }}</router-link>
                   </template>
                 </el-table-column>
-<!--                <el-table-column prop="rewardPerBlcok" label="Reward/Block" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>-->
+                <el-table-column prop="validators" label="Validators" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
               </el-table>
               <div class="sd-t-ii">
                 <el-pagination
