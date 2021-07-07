@@ -24,7 +24,7 @@
             <div class="f-f">
               <div class="f-line">
                 <div class="group"><a target="_blank" href="http://tech.intchain.io/"><i class="f-icon fi-sq"></i><span>Community</span></a></div>
-                <div class="group"><a target="_blank" href="https://wallet.intchain.io/index.html"><i class="f-icon fi-qb"></i><span>Wallet</span></a></div>
+                <div class="group"><a target="_blank" :href="`https://${isTestNetwork ? 'test.' : ''}titanswallet.intchain.io`"><i class="f-icon fi-qb"></i><span>Wallet</span></a></div>
               </div>
             </div>
           </div>
@@ -41,9 +41,18 @@
         name: "Footer",
         data() {
           return {
-            year: new Date().getFullYear()
+            year: new Date().getFullYear(),
+            isTestNetwork: true
           }
         },
+        mounted() {
+          this.getLocaction();
+        },
+        methods: {
+          getLocaction() {
+            this.isTestNetwork = window.location.hostname.substr(0, 4) === "test";
+          }
+        }
     }
 </script>
 
