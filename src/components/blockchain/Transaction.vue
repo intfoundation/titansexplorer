@@ -69,20 +69,20 @@
                 <ul>
                   <li v-for="(t, j) in tokenTxs" :key="j">
                     <span><b>From </b></span>
-                    <el-tooltip class="text-url" effect="dark" :content="t[0]" placement="top">
-                      <router-link tag="span" :to="'/address/' + t[0]" ><span>{{t[0].toLowerCase().slice(0, 20) + "..."}}</span></router-link>
+                    <el-tooltip class="text-url address-width" effect="dark" :content="t.fromAddress" placement="top">
+                      <router-link tag="span" :to="'/address/' + t.fromAddress"><span>{{t.fromAddress}}</span></router-link>
                     </el-tooltip>
                     <span><b>To </b></span>
-                    <el-tooltip class="text-url" effect="dark" :content="t[1]" placement="top">
-                      <router-link tag="span" :to="'/address/' + t[1]"><span>{{t[1].toLowerCase().slice(0, 20) + "..."}}</span></router-link>
+                    <el-tooltip class="text-url" effect="dark" :content="t.toAddress" placement="top">
+                      <router-link tag="span" :to="'/address/' + t.toAddress"><span>{{t.toAddress}}</span></router-link>
                     </el-tooltip>
                     <span><b>For </b></span>
-                    <template v-if="txDetail.contractType === 2">
+                    <template v-if="t.contract_type === 2">
                       <span><b>IIP721 TokenId</b></span>
-                      <span>{{"[" + t[2] + "]"}}</span>
+                      <span>{{"[" + t.token_id + "]"}}</span>
                     </template>
                     <template v-else>
-                      <span>{{t[2]}}</span>
+                      <span>{{t.value}}</span>
                     </template>
                     <el-tooltip class="text-url" effect="dark" :content="t.token" placement="top">
                       <router-link tag="span" :to="'/address/' + t.token" class="text-url"><span>{{t.name + ' (' + t.symbol + ')'}}</span></router-link>
@@ -194,7 +194,8 @@
         fromUrl: '',
         toUrl: '',
         isTxInputShow: true,
-        isInfoLoading: true,
+        isInfoLoading: false,
+        isTokenTxLoading: false,
         isTokensShow: false,
         isEventLogsShow: true,
         status: 1,
@@ -202,6 +203,7 @@
     },
     created() {
       this.getTxDetail();
+      this.getTokenTx();
     },
     mounted() {
 
@@ -237,32 +239,59 @@
           this.toUrl = this.txDetail.toAddress === null ? '/address/' + this.txDetail.contractAddress : '/address/' + this.txDetail.toAddress;
           this.isTxInputShow = this.txDetail.input !== '0x';
           this.isEventLogsShow = this.txDetail.logs.length !== 0;
-          this.txDetail.events.forEach(async (val, index) => {
-            this.txDetail.abi.forEach((v, i) => {
-              if (v.type === "event" && v.name === val.event) {
-                this.txDetail.logs[index] = Object.assign(this.txDetail.logs[index], {inputs: v.inputs, name: v.name});
-              }
-            });
 
-            if (val.event === "Transfer") {
-              let address = this.txDetail.toAddress === null ? this.txDetail.contractAddress : this.txDetail.toAddress;
-              let result = await this.$axios.get('/api/token/list', { params: { pageNo: 1, pageSize: 10, contract: address }});
-              // console.log('result', result);
-              let data = result.data.list[0];
-              let tokenTx = {};
-              tokenTx.name = data.name;
-              tokenTx.symbol = data.symbol;
-              tokenTx.token = data.contract_address;
-              val.returnValues[2] = new BigNumber(val.returnValues[2]).div(new BigNumber(Math.pow(10, data.decimals))).toString() || 0;
-              tokenTx = Object.assign(tokenTx, val.returnValues);
-              this.tokenTxs.push(tokenTx);
-            }
-          });
+          for(let e of this.txDetail.events) {
+            this.txDetail.logs.forEach(val => {
+              if (e.logIndex === parseInt(val.logIndex, 16)) {
+                this.txDetail.abi.forEach((v, i) => {
+                  if (v.type === "event" && v.name === val.event) {
+                    val = Object.assign(val, {inputs: v.inputs, name: v.name});
+                  }
+                });
+              }
+            })
+          }
+          // this.txDetail.events.forEach((val, index) => {
+          //   this.txDetail.logs
+          //   this.txDetail.abi.forEach((v, i) => {
+          //     if (v.type === "event" && v.name === val.event) {
+          //       this.txDetail.logs[index] = Object.assign(this.txDetail.logs[index], {inputs: v.inputs, name: v.name});
+          //     }
+          //   });
+          //
+          //   // if (val.event === "Transfer") {
+          //   //   let address = this.txDetail.toAddress === null ? this.txDetail.contractAddress : this.txDetail.toAddress;
+          //   //   let result = await this.$axios.get('/api/token/list', { params: { pageNo: 1, pageSize: 10, contract: address }});
+          //   //   // console.log('result', result);
+          //   //   let data = result.data.list[0];
+          //   //   let tokenTx = {};
+          //   //   tokenTx.name = data.name;
+          //   //   tokenTx.symbol = data.symbol;
+          //   //   tokenTx.token = data.contract_address;
+          //   //   val.returnValues[2] = new BigNumber(val.returnValues[2]).div(new BigNumber(Math.pow(10, data.decimals))).toString() || 0;
+          //   //   tokenTx = Object.assign(tokenTx, val.returnValues);
+          //   //   this.tokenTxs.push(tokenTx);
+          //   // }
+          // });
 
           this.isInfoLoading = false
         }).catch(err => {
           console.log(err);
         })
+      },
+
+      getTokenTx() {
+          this.isTokenTxLoading = true;
+          this.$axios('/api/tx/tokentx', { params: {hash: this.hash}}).then( res => {
+            this.tokenTxs = res.data.list;
+            this.tokenTxs.forEach(item => {
+              item.token = item.token_address;
+            });
+
+            this.isTokenTxLoading = false;
+          }).catch(err => {
+            console.log(err)
+          })
       }
     }
   }
@@ -345,6 +374,10 @@
   .tc-c .tc-input .tg-ii {
     /*float: left;*/
     margin-left: 150px;
+  }
+
+  .tg-ii .address-width {
+    width: 200px;
   }
 
   .tg-input {
