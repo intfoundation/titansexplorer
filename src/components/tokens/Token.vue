@@ -155,12 +155,12 @@
               <el-table :data="txList" v-loading="isTxLoading">
                 <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
+                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.tx_hash}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column label="Block" align="left" width="100">
                   <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
+                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block_number}}</router-link>
                   </template>
                 </el-table-column>
                 <el-table-column label="From" align="left" :show-overflow-tooltip="over">
@@ -170,7 +170,6 @@
 <!--                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>-->
                   </template>
                 </el-table-column>
-                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
                 <el-table-column label="To" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <template v-if="scope.row.toAddress === null">
@@ -184,8 +183,16 @@
                     </template>
                   </template>
                 </el-table-column>
-                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-                <el-table-column prop="fromAddress" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+
+                <el-table-column v-if="contractType === 1" prop="amount" label="Value" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column v-if="contractType === 2" prop="token_id" label="TokenId" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column label="Token" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.tokenUrl" type="text" class="sc-url">{{scope.row.name + '('+ scope.row.symbol +')'}}</router-link>
+                  </template>
+                </el-table-column>
+<!--                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>-->
+<!--                <el-table-column prop="fromAddress" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>-->
                 <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
               </el-table>
@@ -201,7 +208,7 @@
               </div>
             </div>
             <div class="stx-pane" v-show="activeName === 1">
-              <div class="st-r" v-if="isPageShow">
+              <div class="st-r" v-if="holderPage.isPageShow">
                 <el-pagination
                   @current-change="handleHolersChange"
                   :current-page.sync="holderPage.currentPage"
@@ -222,7 +229,7 @@
                 <el-table-column prop="amount" label="Amount" align="center"></el-table-column>
                 <el-table-column prop="percent" label="Percentage" align="center"></el-table-column>
               </el-table>
-              <div class="st-r" v-if="isPageShow">
+              <div class="st-r" v-if="holderPage.isPageShow">
                 <el-pagination
                   @current-change="handleHolersChange"
                   :current-page.sync="holderPage.currentPage"
@@ -279,10 +286,11 @@
         isInfoLoading: false,
         isTxLoading: false,
         isHolderLoading: false,
+        contractType: 1,
         over: true,
         currentPage: 1,
         page: 1,
-        size: 20,
+        size: 25,
         total: 0,
         isPageShow: false,
         tokenList: [{
@@ -299,15 +307,15 @@
         holderPage: {
           currentPage: 1,
           page: 1,
-          size: 20,
+          size: 25,
           total: 0,
+          isPageShow: false
         }
       }
     },
     created() {
       this.currentPage = +this.page;
       this.getTokenInfo();
-      this.getTokenTx();
       this.getTokenHolders();
     },
     mounted() {
@@ -337,12 +345,15 @@
           this.tokenInfo.addrUrl = '/address/' + this.tokenInfo.contract_address;
           this.tokenInfo.price = "$" + this.tokenInfo.price;
           this.isInfoLoading = false;
+          this.contractType = this.tokenInfo.contract_type;
+
+          this.getTokenTx();
         })
       },
 
       getTokenTx() {
         this.isTxLoading = true;
-        this.$axios.get('/api/tx/tokentx', {params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
+        this.$axios.get('/api/tx/tokentx', {params:{address:this.addr, type: this.contractType, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
           this.total = res.data.count;
           this.isPageShow = this.total > 25;
           this.txList = res.data.list;
@@ -351,12 +362,13 @@
             item.status = statusType(item.status);
             item.amount = toDecimal4NoZero(item.value);
             item.amount = transAmount(item.amount);
-            item.txUrl = `/tx/${item.hash}`;
-            item.blockUrl =  `/block/${item.blockNumber}/1`;
+            item.txUrl = `/tx/${item.tx_hash}`;
+            item.blockUrl =  `/block/${item.block_number}/1`;
             item.fAddrUrl = `/address/${item.fromAddress}`;
             item.tAddrUrl =  `/address/${item.toAddress}`;
             item.fromAddr = addrHide(item.fromAddress);
             item.toAddr = addrHide(item.toAddress);
+            item.tokenUrl = `/token/${item.token_address}`;
           });
           this.isTxLoading = false;
         }).catch(err => {
@@ -368,7 +380,7 @@
         this.isHolderLoading = true;
         this.$axios.get('/api/token/holders', {params:{address:this.addr, pageNo:this.holderPage.currentPage, pageSize:this.holderPage.size}}).then(res => {
           this.holderPage.total = res.data.count;
-          this.isPageShow = this.total > 25;
+          this.holderPage.isPageShow = this.total > 25;
           this.holdersList = res.data.list;
           this.holdersList.forEach((val, index) => {
             val.i = ++index;

@@ -189,13 +189,13 @@
                     <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
                   </template>
                 </el-table-column>
+                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
                 <el-table-column label="From" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
                     <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
                 <el-table-column label="To" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <template v-if="scope.row.toAddress === null">
@@ -209,8 +209,8 @@
                     </template>
                   </template>
                 </el-table-column>
-                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="amount" label="Value" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+<!--                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>-->
                 <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
               </el-table>
@@ -239,21 +239,20 @@
               <el-table :data="iip20Txs" v-loading="isTxLoading">
                 <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
+                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.tx_hash}}</router-link>
                   </template>
                 </el-table-column>
-                <el-table-column label="Block" align="left" width="100">
-                  <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
-                  </template>
-                </el-table-column>
+<!--                <el-table-column label="Block" align="left" width="100">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.block_number}}</router-link>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
                 <el-table-column label="From" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
                     <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
                 <el-table-column label="To" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <template v-if="scope.row.toAddress === null">
@@ -267,8 +266,14 @@
                     </template>
                   </template>
                 </el-table-column>
-                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="amount" label="Value" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column label="Token" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.tokenUrl" type="text" class="sc-url">{{scope.row.name + '('+ scope.row.symbol +')'}}</router-link>
+                  </template>
+                </el-table-column>
+<!--                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>-->
+<!--                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>-->
                 <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
               </el-table>
@@ -297,21 +302,20 @@
               <el-table :data="iip721Txs" v-loading="isTxLoading">
                 <el-table-column label="TxHash" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.transactionHash}}</router-link>
+                    <router-link tag="span" :to="scope.row.txUrl" type="text" class="sc-url">{{scope.row.tx_hash}}</router-link>
                   </template>
                 </el-table-column>
-                <el-table-column label="Block" align="left" width="100">
-                  <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>
-                  </template>
-                </el-table-column>
+<!--                <el-table-column label="Block" align="left" width="100">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    <router-link tag="span" :to="scope.row.blockUrl" type="text" class="sc-url">{{scope.row.blockNumber}}</router-link>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
                 <el-table-column label="From" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
                     <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="amount" label="Amount" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
                 <el-table-column label="To" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
                     <template v-if="scope.row.toAddress === null">
@@ -325,8 +329,15 @@
                     </template>
                   </template>
                 </el-table-column>
-                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
-                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>
+                <el-table-column prop="amount" label="Value" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column prop="token_id" label="TokenId" align="left" width="120" :show-overflow-tooltip="over"></el-table-column>
+                <el-table-column label="Token" align="left" :show-overflow-tooltip="over">
+                  <template slot-scope="scope">
+                    <router-link tag="span" :to="scope.row.tokenUrl" type="text" class="sc-url">{{scope.row.name + '('+ scope.row.symbol +')'}}</router-link>
+                  </template>
+                </el-table-column>
+<!--                <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>-->
+<!--                <el-table-column prop="fromAddr" label="Signer" :show-overflow-tooltip="over" align="left"></el-table-column>-->
                 <el-table-column prop="status" label="Status" align="left" width="100"></el-table-column>
                 <el-table-column prop="time" label="Timestamp" align="right" width="220"></el-table-column>
               </el-table>
@@ -374,7 +385,8 @@
         isUnDelLoading: false,
         isReWardLoading: false,
         isTxLoading: false,
-        isTokenTxLoading: false,
+        isIIP20TokenTxLoading: false,
+        isIIP721TokenTxLoading: false,
         over: true,
         currentPage: 1,
         page: 1,
@@ -435,7 +447,8 @@
       this.currentPage = +this.page;
       this.getAddrDetail();
       this.getAddrTx();
-      this.getTokenTx();
+      this.getIIP20TokenTx();
+      this.getIIP721TokenTx();
       this.getTokens(this.addr);
     },
     mounted() {
@@ -460,15 +473,7 @@
             this.getDelReward();
             break;
         }
-      },
-      iip20Txs(val) {
-        this.IIP20Page.isIIP20TxPageShow = val.length > 25;
-        this.IIP20Page.total = val.length;
-      },
-      iip721Txs(val) {
-        this.IIP721Page.isIIP721TxPageShow = val.length > 25;
-        this.IIP721Page.total = val.length;
-      },
+      }
     },
     methods: {
       getAddrDetail() {
@@ -524,9 +529,9 @@
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.status = statusType(item.status);
             item.amount = toDecimal4NoZero(item.value);
-            item.amount = transAmount(item.amount);
+            item.amount = transAmount(item.amount) + " INT";
             item.txUrl = `/tx/${item.hash}`;
-            item.blockUrl =  `/block/${item.blockNumber}/1`;
+            item.blockUrl =  `/block/${item.block_number}/1`;
             item.fAddrUrl = `/address/${item.fromAddress}`;
             item.tAddrUrl =  item.toAddress === null ? `/address/${item.contractAddress}` : `/address/${item.toAddress}`;
             item.fromAddr = item.fromAddress;
@@ -538,29 +543,51 @@
         })
       },
 
-      getTokenTx() {
-        this.isTokenTxLoading = true;
-        this.$axios.get('/api/tx/tokentx',{params:{address:this.addr, pageNo:this.currentPage, pageSize:this.size}}).then(res => {
-          this.total = res.data.count;
-          this.tokenTxList = res.data.list;
-          this.tokenTxList.forEach(item => {
+      getIIP20TokenTx() {
+        this.isIIP20TokenTxLoading = true;
+        this.$axios.get('/api/tx/tokentx',{params:{address:this.addr, type:1, pageNo:this.IIP20Page.currentPage, pageSize:this.IIP20Page.size}}).then(res => {
+          this.IIP20Page.total = res.data.count;
+          this.IIP20Page.isIIP20TxPageShow = res.data.count > 25;
+          this.iip20Txs = res.data.list;
+          this.iip20Txs.forEach(item => {
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.status = statusType(item.status);
             item.amount = toDecimal4NoZero(item.value);
             item.amount = transAmount(item.amount);
-            item.txUrl = `/tx/${item.hash}`;
-            item.blockUrl =  `/block/${item.blockNumber}/1`;
+            item.txUrl = `/tx/${item.tx_hash}`;
+            item.blockUrl =  `/block/${item.block_number}/1`;
             item.fAddrUrl = `/address/${item.fromAddress}`;
-            item.tAddrUrl =  item.toAddress === null ? `/address/${item.contractAddress}` : `/address/${item.toAddress}`;
+            item.tAddrUrl = `/address/${item.toAddress}`;
             item.fromAddr = item.fromAddress;
-            item.toAddr = item.toAddress === null ? item.contractAddress : item.toAddress;
-            if (item.contractType === 1) {
-              this.iip20Txs.push(item);
-            }else if (item.contractType === 2) {
-              this.iip721Txs.push(item)
-            }
+            item.toAddr = item.toAddress;
+            item.tokenUrl = `/token/${item.token_address}`;
           });
-          this.isTokenTxLoading = false;
+          this.isIIP20TokenTxLoading = false;
+        }).catch(err => {
+          console.log(err);
+        })
+      },
+
+      getIIP721TokenTx() {
+        this.isIIP721TokenTxLoading = true;
+        this.$axios.get('/api/tx/tokentx',{params:{address:this.addr, type:2, pageNo:this.IIP20Page.currentPage, pageSize:this.IIP20Page.size}}).then(res => {
+          this.IIP20Page.total = res.data.count;
+          this.IIP721Page.isIIP721TxPageShow = res.data.count > 25;
+          this.iip721Txs = res.data.list;
+          this.iip721Txs.forEach(item => {
+            item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
+            item.status = statusType(item.status);
+            item.amount = toDecimal4NoZero(item.value);
+            item.amount = transAmount(item.amount);
+            item.txUrl = `/tx/${item.tx_hash}`;
+            item.blockUrl =  `/block/${item.block_number}/1`;
+            item.fAddrUrl = `/address/${item.fromAddress}`;
+            item.tAddrUrl = `/address/${item.toAddress}`;
+            item.fromAddr = item.fromAddress;
+            item.toAddr = item.toAddress;
+            item.tokenUrl = `/token/${item.token_address}`;
+          });
+          this.isIIP721TokenTxLoading = false;
         }).catch(err => {
           console.log(err);
         })
@@ -575,17 +602,17 @@
       },
 
       handleIIP20Change(val) {
-        this.isTokenTxLoading = true;
+        this.isIIP20TokenTxLoading = true;
         this.IIP20Page.currentPage = val;
         this.IIP20Page.page = val;
-        this.getTokenTx()
+        this.getIIP20TokenTx()
       },
 
       handleIIP721Change(val) {
-        this.isTokenTxLoading = true;
+        this.isIIP721TokenTxLoading = true;
         this.IIP721Page.currentPage = val;
         this.IIP721Page.page = val;
-        this.getTokenTx()
+        this.getIIP721TokenTx()
       },
 
       toAddrDetail(url) {
