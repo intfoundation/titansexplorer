@@ -230,7 +230,7 @@
         this.$axios.get('/api/node/delegatorTx',{params:{address:this.addr,pageNo:this.powerPage,pageSize:5}}).then(res => {
           this.powerList = res.data.list;
           this.powerList.forEach(item => {
-            item.amount = transAmount(item.value);
+            item.amount = item.type === "UnDelegate" ? transAmount(new BigNumber(`0x${JSON.parse(item.unlockInput).amount}`, 16).dividedBy(new BigNumber(Math.pow(10, 18)))) : transAmount(item.value);
             item.time = this.$moment(item.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
             item.txUrl = '/tx/' + item.hash;
             item.heightUrl = '/block/' + item.blockNumber + '/1';
