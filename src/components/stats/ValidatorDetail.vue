@@ -214,7 +214,7 @@
           this.delList = res.data.list;
           this.delList.forEach(item => {
             item.url = '/address/' + item.address;
-            let amount = this.valInfo.active === 1 ? item.deposit_proxied_balance : item.proxied_balance;
+            let amount = this.valInfo.active === 2 ? item.deposit_proxied_balance : item.proxied_balance;
 
             item.share = new BigNumber(toDecimal4NoZero(amount/this.totalStaked)).times(100).toNumber() + '%';
             item.amount = transAmount(amount);
