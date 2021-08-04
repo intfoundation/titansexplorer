@@ -449,7 +449,7 @@
           this.transList.forEach(item => {
             item.passTime = formatPassTime(item.timestamp,Date.now());
             item.fee = item.gasUsed * item.gasPrice;
-            item.fee = new BigNumber(item.fee).dividedBy(Math.pow(10, 18)).toNumber();
+            item.fee = new BigNumber(item.fee).toNumber().toFixed(3);
             item.url = '/tx/'+ item.transactionHash;
           })
         }).catch(err => {
