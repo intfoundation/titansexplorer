@@ -53,6 +53,7 @@
                   <div class="bgt-tx">
                     <div><span>Reward: </span><span>{{block.blockReward}}</span></div>
                     <div><span>Tx Fee: </span><span>{{block.blockFee}}</span></div>
+                    <div><span>Half of the tx fee was burnt to 0x0000000000000000000000000000000000000001</span></div>
                   </div>
                 </div>
               </div>
