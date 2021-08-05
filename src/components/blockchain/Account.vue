@@ -638,6 +638,7 @@
           // console.log('delegations', res.data)
           this.delList.forEach((v, i) => {
             v.addUrl = `/address/${v.candidate}`;
+            v.amount = v.active === 1 ? transAmount(v.proxied_balance) : transAmount(v.deposit_proxied_balance);
           });
         }).catch(err => {
           console.log(err);
