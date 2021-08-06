@@ -85,7 +85,7 @@
                       <span>{{t.value}}</span>
                     </template>
                     <el-tooltip class="text-url" effect="dark" :content="t.token" placement="top">
-                      <router-link tag="span" :to="'/address/' + t.token" class="text-url"><span>{{t.name + ' (' + t.symbol + ')'}}</span></router-link>
+                      <router-link tag="span" :to="'/address/' + t.token" class="text-url"><span><img src="../../assets/token-logo.png" width="15" style="vertical-align: middle;" alt=""> </span> <span>{{ t.name + ' (' + t.symbol + ')'}}</span></router-link>
                     </el-tooltip>
                   </li>
                 </ul>
