@@ -222,7 +222,7 @@
                 <el-table-column prop="i" label="Rank" :key="Math.random()" width="100"></el-table-column>
                 <el-table-column label="Address" align="center" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.holderAddress === addr">{{scope.row.holderAddress}}</span>
+                    <span v-if="scope.row.holderAddress.toLowerCase() === addr.toLowerCase()">{{scope.row.holderAddress}}</span>
                     <router-link v-else tag="span" class="sc-url" :to="scope.row.holderAddrUrl">{{scope.row.holderAddress}}</router-link>
                   </template>
                 </el-table-column>
