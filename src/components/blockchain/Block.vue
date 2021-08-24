@@ -189,7 +189,7 @@
           if (this.isTxShow) {
             this.txList.forEach((item,index) => {
               item.i = index + 1;
-              item.fee = new BigNumber(item.gasUsed).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
+              item.fee = new BigNumber(item.gasUsed).multipliedBy(new BigNumber(item.gasPrice)).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
               item.time = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
               item.status = statusType(item.status);
               item.txUrl = '/tx/' + item.hash;

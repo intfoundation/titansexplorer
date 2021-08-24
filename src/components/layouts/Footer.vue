@@ -50,7 +50,7 @@
         },
         methods: {
           getLocaction() {
-            this.isTestNetwork = window.location.hostname.substr(0, 4) === "test";
+            this.isTestNetwork = window.location.hostname.substr(0, 4) === "test" || window.location.hostname.substr(0, 4) === "loca";
           }
         }
     }

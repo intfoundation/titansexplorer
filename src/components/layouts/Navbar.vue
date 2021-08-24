@@ -166,7 +166,7 @@
           //   //   url: '/stats/stats1'
           //   // }
           // ],
-          keyword: ''
+          keyword: '',
         };
       },
       created() {
@@ -203,7 +203,7 @@
           } else {
             this.keyword = '';
           }
-        }
+        },
       }
     }
 </script>
