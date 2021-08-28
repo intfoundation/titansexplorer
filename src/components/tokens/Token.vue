@@ -380,7 +380,7 @@
         this.isHolderLoading = true;
         this.$axios.get('/api/token/holders', {params:{address:this.addr, type: this.contractType, pageNo:this.holderPage.currentPage, pageSize:this.holderPage.size}}).then(res => {
           this.holderPage.total = res.data.count;
-          this.holderPage.isPageShow = this.total > 25;
+          this.holderPage.isPageShow = this.holderPage.total > 25;
           this.holdersList = res.data.list;
           this.holdersList.forEach((val, index) => {
             val.i = ++index;
