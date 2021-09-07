@@ -86,4 +86,19 @@ export default {
   .text-danger {
     color: #F56C6C
   }
+
+  .el-button {
+    border: none;
+    padding: 2px;
+  }
+
+  .el-button:focus {
+    color: #ed303b;
+    background-color: #ffffff;
+  }
+
+  .el-button:hover {
+    color: #ed303b;
+    background-color: #ffffff;
+  }
 </style>

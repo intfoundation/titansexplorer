@@ -32,30 +32,50 @@
               <div class="bg-ii"><span style="color: #ed303b">{{block.txns}}</span></div>
             </div>
             <div class="bi-group bi-gas">
-              <div class="bg-i">Gas Used :</div>
+              <div class="bg-i">Gas Limit :</div>
               <div class="bg-ii">
-                <div><span>{{block.gasUsed}}</span></div>
-                <div class="bg-tip">
-                  <div class="bgt-icon"></div>
-                  <div class="bgt-tx">
-                    <div><span>Gas Limit: </span><span>{{block.gasLimit}}</span></div>
-                    <div><span>Gas Used: </span><span>{{block.gasUsed}}</span></div>
-                  </div>
-                </div>
+                <div><span>{{block.gasLimit}}</span></div>
+<!--                <div class="bg-tip">-->
+<!--                  <div class="bgt-icon"></div>-->
+<!--                  <div class="bgt-tx">-->
+<!--                    <div><span>Gas Limit: </span><span>{{block.gasLimit}}</span></div>-->
+<!--                    <div><span>Gas Used: </span><span>{{block.gasUsed}}</span></div>-->
+<!--                  </div>-->
+<!--                </div>-->
               </div>
             </div>
             <div class="bi-group bi-gas">
-              <div class="bg-i">Block reward :</div>
+              <div class="bg-i">Gas Used :</div>
               <div class="bg-ii">
-                <div><span>{{block.reward}}</span></div>
-                <div class="bg-tip">
-                  <div class="bgt-icon"></div>
-                  <div class="bgt-tx">
-                    <div><span>Reward: </span><span>{{block.blockReward}}</span></div>
-                    <div><span>Tx Fee: </span><span>{{block.blockFee}}</span></div>
-                    <div><span>Half of the tx fee was burnt to 0x0000000000000000000000000000000000000001</span></div>
-                  </div>
+                <div><span>{{block.gasUsed}}</span></div>
+              </div>
+            </div>
+            <div class="bi-group bi-gas">
+              <div class="bg-i">Block Reward :</div>
+              <div class="bg-ii">
+                <div><span>{{block.reward}}</span>
+                  <span> (</span>
+                  <el-tooltip class="item" effect="dark" content="Block Reward" placement="bottom">
+                    <el-button>{{block.blockReward}}</el-button>
+                  </el-tooltip>
+                  <span>+</span>
+                  <el-tooltip class="item" effect="dark" content="Tx Fees" placement="bottom">
+                    <el-button>{{block.blockFee}}</el-button>
+                  </el-tooltip>
+                  <span>-</span>
+                  <el-tooltip class="item" effect="dark" content="Burnt Fees (0x0000000000000000000000000000000000000001)" placement="bottom">
+                    <el-button>{{block.blockFee / 2}}</el-button>
+                  </el-tooltip>
+                  <span>)</span>
                 </div>
+<!--                <div class="bg-tip">-->
+<!--                  <div class="bgt-icon"></div>-->
+<!--                  <div class="bgt-tx">-->
+<!--                    <div><span>Reward: </span><span>{{block.blockReward}}</span></div>-->
+<!--                    <div><span>Tx Fee: </span><span>{{block.blockFee}}</span></div>-->
+<!--                    <div><span>Half of the tx fee was burnt to 0x0000000000000000000000000000000000000001</span></div>-->
+<!--                  </div>-->
+<!--                </div>-->
               </div>
             </div>
             <div class="bi-group">
@@ -174,7 +194,7 @@
           this.voteP = new BigNumber(this.voteP).times(100).toNumber() + '%';
           this.block.createTime = this.$moment(this.block.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           this.block.url = '/staking/validatorDetail/' + this.block.miner;
-          this.block.reward = toDecimal4NoZero(this.block.blockReward + this.block.blockFee) + ' INT';
+          this.block.reward = toDecimal4NoZero(this.block.blockReward + this.block.blockFee / 2) + ' INT';
           this.isInfoLoading = false;
         }).catch(err => {
           console.log(err);
@@ -189,7 +209,7 @@
           if (this.isTxShow) {
             this.txList.forEach((item,index) => {
               item.i = index + 1;
-              item.fee = new BigNumber(item.gasUsed).multipliedBy(new BigNumber(item.gasPrice)).dividedBy(Math.pow(10, 18)).toNumber() + 'INT';
+              item.fee = new BigNumber(item.gasUsed).multipliedBy(new BigNumber(item.gasPrice)) + ' INT';
               item.time = this.$moment().utc().format('YYYY-MM-DD hh:mm:ss') + '+UTC';
               item.status = statusType(item.status);
               item.txUrl = '/tx/' + item.hash;
