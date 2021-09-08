@@ -88,17 +88,17 @@ export default {
   }
 
   .el-button {
-    border: none;
-    padding: 2px;
+    border: none!important;
+    padding: 2px!important;
   }
 
   .el-button:focus {
-    color: #ed303b;
-    background-color: #ffffff;
+    color: #ed303b!important;
+    background-color: #ffffff!important;
   }
 
   .el-button:hover {
-    color: #ed303b;
-    background-color: #ffffff;
+    color: #ed303b!important;
+    background-color: #ffffff!important;
   }
 </style>
