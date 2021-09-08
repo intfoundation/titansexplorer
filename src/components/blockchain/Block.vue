@@ -58,14 +58,16 @@
                   <el-tooltip class="item" effect="dark" content="Block Reward" placement="bottom">
                     <el-button>{{block.blockReward}}</el-button>
                   </el-tooltip>
-                  <span>+</span>
-                  <el-tooltip class="item" effect="dark" content="Tx Fees" placement="bottom">
-                    <el-button>{{block.blockFee}}</el-button>
-                  </el-tooltip>
-                  <span>-</span>
-                  <el-tooltip class="item" effect="dark" content="Burnt Fees (0x0000000000000000000000000000000000000001)" placement="bottom">
-                    <el-button>{{block.blockFee / 2}}</el-button>
-                  </el-tooltip>
+                  <template v-if="block.blockFee !== 0">
+                    <span>+</span>
+                    <el-tooltip class="item" effect="dark" content="Tx Fees" placement="bottom">
+                      <el-button>{{block.blockFee}}</el-button>
+                    </el-tooltip>
+                    <span>-</span>
+                    <el-tooltip class="item" effect="dark" content="Burnt Fees (0x0000000000000000000000000000000000000001)" placement="bottom">
+                      <el-button>{{block.blockFee / 2}}</el-button>
+                    </el-tooltip>
+                  </template>
                   <span>)</span>
                 </div>
 <!--                <div class="bg-tip">-->
