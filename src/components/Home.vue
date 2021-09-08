@@ -35,12 +35,30 @@
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Staked APY</span></div>
             <div class="hb-num"><span>{{stakedApy}}</span></div>
-            <div class="hb-data"><span>{{rewardAnnual}} / {{totalStake}}</span></div>
+<!--            <div class="hb-data"><span>{{rewardAnnual}} / {{totalStake}}</span></div>-->
+            <div class="hb-data">
+              <el-tooltip class="item" effect="dark" content="Block Reward Per Year (Not Including Tx Fees)" placement="bottom">
+                <el-button style="font-size: 12px; color: #666; font-weight: 400">{{rewardAnnual}}</el-button>
+              </el-tooltip>
+              <span>/</span>
+              <el-tooltip class="item" effect="dark" content="Total Staked INT" placement="bottom">
+                <el-button style="font-size: 12px; color: #666; font-weight: 400">{{totalStake}}</el-button>
+              </el-tooltip>
+            </div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Staked INT</span></div>
             <div class="hb-num"><span>{{stakedPer}}</span></div>
-            <div class="hb-data"><span>{{totalStake}} / {{totalBalance}}</span></div>
+<!--            <div class="hb-data"><span>{{totalStake}} / {{totalBalance}}</span></div>-->
+            <div class="hb-data">
+              <el-tooltip class="item" effect="dark" content="Total Staked INT" placement="bottom">
+                <el-button style="font-size: 12px; color: #666; font-weight: 400">{{totalStake}}</el-button>
+              </el-tooltip>
+              <span>/</span>
+              <el-tooltip class="item" effect="dark" content="Total Supply INT" placement="bottom">
+                <el-button style="font-size: 12px; color: #666; font-weight: 400">{{totalBalance}}</el-button>
+              </el-tooltip>
+            </div>
           </div>
         </div>
         <div class="h-chart">
