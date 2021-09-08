@@ -18,19 +18,24 @@
             <div class="hb-data"><span>Left Blocks: <span class="hb-tps">{{currentEpoch.end_block - blockInfo.number}}</span></span></div>
           </div>
           <div class="hb-box">
-            <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Price</span></div>
-            <div class="hb-num"><span>${{INTPrice}}</span></div>
-            <div class="hb-data"><span>{{INTPTime}}</span></div>
-          </div>
-          <div class="hb-box">
             <div class="hb-t"><img src="../assets/BlackTime.png" class="hb-icon"/><span>Avg Block Time</span></div>
             <div class="hb-num"><span>{{avgTime}} s</span></div>
             <div class="hb-data"><span>Last 100 Blocks</span></div>
           </div>
           <div class="hb-box">
+            <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Price</span></div>
+            <div class="hb-num"><span>${{INTPrice}}</span></div>
+            <div class="hb-data"><span>{{INTPTime}}</span></div>
+          </div>
+          <div class="hb-box">
             <div class="hb-t"><img src="../assets/VotingPower.png" class="hb-icon"/><span>Voting Power</span></div>
             <div class="hb-num"><span>{{votingPower}}</span></div>
             <div class="hb-data"><span>{{validators}}/{{totalValidators}} Validators</span></div>
+          </div>
+          <div class="hb-box">
+            <div class="hb-t"><img src="../assets/Transactions2.png" class="hb-icon"/><span>Staked APY</span></div>
+            <div class="hb-num"><span>{{stakedApy}}</span></div>
+            <div class="hb-data"><span>{{rewardAnnual}} / {{totalStake}}</span></div>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Group.png" class="hb-icon"/><span>Staked INT</span></div>
@@ -131,6 +136,8 @@
         totalStake: '',
         totalBalance: '',
         stakedPer: '',
+        stakedApy: '',
+        rewardAnnual: '20M',
         maxYTxn: 0,
         maxYPrice: 0,
         minYPrice: 0,
@@ -340,6 +347,9 @@
           this.totalBalance = res.data.balance + this.totalStake;
           this.stakedPer = new BigNumber(this.totalStake).div(new BigNumber(this.totalBalance)).toNumber();
           this.stakedPer = new BigNumber(toDecimal4NoZero(this.stakedPer)).times(100).toNumber() + '%';
+
+          this.stakedApy = new BigNumber(20000000).div(new BigNumber(this.totalStake)).toNumber();
+          this.stakedApy = new BigNumber(toDecimal4NoZero(this.stakedApy)).times(100).toNumber() + '%';
           this.totalStake = nFormatter(this.totalStake,2);
           this.totalBalance = nFormatter(this.totalBalance,2);
         }).catch(err => {
@@ -357,7 +367,7 @@
         })
       },
       getINTPrice() { //获取当前INT价格
-        this.INTPTime = this.$moment().utc().format('YYYY-MM-DD HH:mm') + '+UTC';
+        this.INTPTime = this.$moment().utc().format('MM-DD HH:mm') + '+UTC';
         this.$axios.get('/api/wallet/getIntPtice').then(res => {
           this.INTPrice = res.data;
           this.INTPrice = toDecimal4NoZero(this.INTPrice);
@@ -483,7 +493,7 @@
   .home .h-block {
     display: flex;
     justify-content: space-between;
-    padding: 32px 40px;
+    padding: 32px 20px;
     /*width: 100%;*/
     box-shadow:0 4px 8px 0 rgba(230,230,230,0.6);
     border-radius:4px;
@@ -492,10 +502,10 @@
   }
 
   .home .h-block .hb-box {
-    padding-top: 18px;
-    padding-left: 20px;
-    width: 160px;
-    height: 120px;
+    padding-top: 15px;
+    padding-left: 10px;
+    width: 145px;
+    height: 110px;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
     background-color: #fff;
@@ -559,7 +569,7 @@
   }
 
   .h-block .hb-box .hb-data {
-    width: 145px;
+    width: 125px;
     font-size: 12px;
     color: #666;
     white-space: nowrap;
