@@ -19,23 +19,39 @@
               <div class="tg-ii"><span>{{txDetail.passTime}} ({{txDetail.createTime}})</span></div>
             </div>
             <div class="tc-group">
-              <div class="tg-i">Fee :</div>
+              <div class="tg-i">Tx Fee :</div>
               <div class="tg-ii"><span>{{txDetail.fee}}</span></div>
             </div>
-            <div class="tc-group tc-gas">
-              <div class="tg-i">Gas Used :</div>
-              <div class="tg-ii">
-                <div><span>{{txDetail.gasUsed}}</span></div>
-                <div class="tg-tip">
-                  <div class="tgt-icon"></div>
-                  <div class="tgt-tx">
-                    <div><span>Gas Limit: </span><span>{{txDetail.gas}}</span></div>
-                    <div><span>Gas Price: </span><span>{{txDetail.gasPrice}} INT</span></div>
-                    <div><span>Gas Used: </span><span>{{txDetail.gasUsed}}</span></div>
-                  </div>
-                </div>
-              </div>
+            <div class="tc-group">
+              <div class="tg-i">Gas Limit :</div>
+              <div class="tg-ii"><span>{{txDetail.gas}}</span></div>
             </div>
+            <div class="tc-group">
+              <div class="tg-i">Gas Price :</div>
+              <div class="tg-ii"><span>{{txDetail.gasPrice}} INT</span></div>
+            </div>
+            <div class="tc-group">
+              <div class="tg-i">Gas Used :</div>
+              <div class="tg-ii"><span>{{txDetail.gasUsed}}</span></div>
+            </div>
+            <div class="tc-group">
+              <div class="tg-i">Burnt Fee :</div>
+              <div class="tg-ii"><span>{{txDetail.fee / 2}}</span></div>
+            </div>
+<!--            <div class="tc-group tc-gas">-->
+<!--              <div class="tg-i">Gas Used :</div>-->
+<!--              <div class="tg-ii">-->
+<!--                <div><span>{{txDetail.gasUsed}}</span></div>-->
+<!--                <div class="tg-tip">-->
+<!--                  <div class="tgt-icon"></div>-->
+<!--                  <div class="tgt-tx">-->
+<!--                    <div><span>Gas Limit: </span><span>{{txDetail.gas}}</span></div>-->
+<!--                    <div><span>Gas Price: </span><span>{{txDetail.gasPrice}} INT</span></div>-->
+<!--                    <div><span>Gas Used: </span><span>{{txDetail.gasUsed}}</span></div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
             <div class="tc-group">
               <div class="tg-i">Signer :</div>
               <div class="tg-ii"><span>{{txDetail.fromAddress}}</span></div>
