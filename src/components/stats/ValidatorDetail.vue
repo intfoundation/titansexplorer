@@ -36,10 +36,12 @@
               <div class="vai-i">Uptime</div>
               <div class="vai-ii">{{valInfo.uptime}}</div>
             </div>
-            <div class="vai-group">
-              <div class="vai-i">Voting Power</div>
-              <div class="vai-ii">{{valInfo.voteP}} ({{totalStaked}} INT)</div>
-            </div>
+            <template v-if="valInfo.active == 2">
+              <div class="vai-group">
+                <div class="vai-i">Voting Power</div>
+                <div class="vai-ii">{{valInfo.voteP}} ({{totalStaked}} INT)</div>
+              </div>
+            </template>
             <div class="vai-group">
               <div class="vai-i">Bonded Height</div>
               <router-link tag="div" :to="valInfo.url" class="vai-ii vai-url" v-if="valInfo.url">{{valInfo.bondHeight}}</router-link>
