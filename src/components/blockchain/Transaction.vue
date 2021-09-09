@@ -20,7 +20,7 @@
             </div>
             <div class="tc-group">
               <div class="tg-i">Tx Fee :</div>
-              <div class="tg-ii"><span>{{txDetail.fee}}</span></div>
+              <div class="tg-ii"><span>{{txDetail.fee}} INT</span></div>
             </div>
             <div class="tc-group">
               <div class="tg-i">Gas Limit :</div>
@@ -36,7 +36,7 @@
             </div>
             <div class="tc-group">
               <div class="tg-i">Burnt Fee :</div>
-              <div class="tg-ii"><span>{{txDetail.fee / 2}}</span></div>
+              <div class="tg-ii"><span>{{txDetail.fee / 2}} INT</span></div>
             </div>
 <!--            <div class="tc-group tc-gas">-->
 <!--              <div class="tg-i">Gas Used :</div>-->
@@ -246,7 +246,7 @@
           this.txDetail = Object.assign(this.txDetail, res.data);
           this.txDetail.logs = JSON.parse(this.txDetail.logs);
           this.txDetail.txStatus = statusType(this.txDetail.status);
-          this.txDetail.fee = new BigNumber(this.txDetail.gasPrice).times(this.txDetail.gasUsed) + ' INT';
+          this.txDetail.fee = new BigNumber(this.txDetail.gasPrice).times(this.txDetail.gasUsed);
           this.txDetail.value = transAmount(this.txDetail.value) + ' INT';
           this.txDetail.createTime = this.$moment(this.txDetail.timestamp).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           this.txDetail.passTime = formatPassTime(this.txDetail.timestamp,Date.now());
