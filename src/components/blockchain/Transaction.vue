@@ -256,6 +256,11 @@
           this.isTxInputShow = this.txDetail.input !== '0x';
           this.isEventLogsShow = this.txDetail.logs.length !== 0;
 
+          if (this.txDetail.type === "UnDelegate" || this.txDetail.type === "WithdrawReward") {
+            this.txDetail.unlockInput = JSON.parse(this.txDetail.unlockInput);
+            this.txDetail.unlockInput.amount = new BigNumber("0x" + this.txDetail.unlockInput.amount).dividedBy(Math.pow(10, 18)).toNumber()
+          }
+
           for(let e of this.txDetail.events) {
             this.txDetail.logs.forEach(val => {
               if (e.logIndex === parseInt(val.logIndex, 16)) {
