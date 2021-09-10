@@ -83,7 +83,7 @@
               <el-table :data="delList" max-height="800" v-loading="isDelLoading">
                 <el-table-column label="Address" align="left">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.candidate === addr">{{scope.row.candidate}}</span>
+                    <span v-if="scope.row.candidate.toLowerCase() === addr.toLowerCase()">{{scope.row.candidate}}</span>
                     <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.candidate}}</span>
                   </template>
                 </el-table-column>
@@ -114,7 +114,7 @@
               <el-table :data="unDelList" max-height="800" v-loading="isUnDelLoading">
                 <el-table-column label="Address" align="left" width="450">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.candidate === addr">{{scope.row.candidate}}</span>
+                    <span v-if="scope.row.candidate.toLowerCase() === addr.toLowerCase()">{{scope.row.candidate}}</span>
                     <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.candidate}}</span>
                   </template>
                 </el-table-column>
@@ -141,7 +141,7 @@
               <el-table :data="delRewardList" max-height="800" v-loading="isReWardLoading">
                 <el-table-column label="Address" align="left">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.candidate === addr">{{scope.row.candidate}}</span>
+                    <span v-if="scope.row.candidate.toLowerCase() === addr.toLowerCase()">{{scope.row.candidate}}</span>
                     <span v-else class="sc-url" @click="toAddrDetail(scope.row.addUrl)">{{scope.row.candidate}}</span>
                   </template>
                 </el-table-column>
@@ -192,7 +192,7 @@
                 <el-table-column prop="type" label="TxType" align="left" :show-overflow-tooltip="over"  width="120"></el-table-column>
                 <el-table-column label="From" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddr}}</span>
+                    <span v-if="scope.row.fromAddress.toLowerCase() === addr.toLowerCase()">{{scope.row.fromAddr}}</span>
                     <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>
                   </template>
                 </el-table-column>
@@ -202,7 +202,7 @@
                       <span class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{"Contract Creation"}}</span>
                     </template>
                     <template v-else>
-                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddr}}</span>
+                      <span v-if="scope.row.toAddress.toLowerCase() === addr.toLowerCase()">{{scope.row.toAddr}}</span>
                       <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">
                     {{scope.row.toAddr}}
                   </span>

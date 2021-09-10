@@ -165,7 +165,7 @@
                 </el-table-column>
                 <el-table-column label="From" align="left" :show-overflow-tooltip="over">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.fromAddress === addr">{{scope.row.fromAddress}}</span>
+                    <span v-if="scope.row.fromAddress.toLowerCase() === addr.toLowerCase()">{{scope.row.fromAddress}}</span>
                     <router-link tag="span"  v-else class="sc-url" :to="scope.row.fAddrUrl">{{scope.row.fromAddress}}</router-link>
 <!--                    <span v-else class="sc-url" @click="toAddrDetail(scope.row.fAddrUrl)">{{scope.row.fromAddr}}</span>-->
                   </template>
@@ -177,7 +177,7 @@
                       <router-link tag="span" class="sc-url" :to="scope.row.tAddrUrl">{{"Contract Creation"}}</router-link>
                     </template>
                     <template v-else>
-                      <span v-if="scope.row.toAddress === addr">{{scope.row.toAddress}}</span>
+                      <span v-if="scope.row.toAddress.toLowerCase() === addr.toLowerCase()">{{scope.row.toAddress}}</span>
                       <router-link v-else class="sc-url" :to="scope.row.tAddrUrl">{{scope.row.toAddress}}</router-link>
 <!--                      <span v-else class="sc-url" @click="toAddrDetail(scope.row.tAddrUrl)">{{scope.row.toAddr}}</span>-->
                     </template>
