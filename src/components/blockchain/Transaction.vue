@@ -258,7 +258,7 @@
 
           if (this.txDetail.type === "UnDelegate" || this.txDetail.type === "WithdrawReward") {
             this.txDetail.unlockInput = JSON.parse(this.txDetail.unlockInput);
-            this.txDetail.unlockInput.amount = new BigNumber("0x" + this.txDetail.unlockInput.amount).dividedBy(Math.pow(10, 18)).toNumber() + " INT"
+            this.txDetail.unlockInput.amount = new BigNumber("0x" + this.txDetail.unlockInput.amount).dividedBy(Math.pow(10, 18)).toNumber() + ' INT'
           }
 
           for(let e of this.txDetail.events) {
