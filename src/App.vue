@@ -87,6 +87,10 @@ export default {
     color: #F56C6C
   }
 
+  .text-warning {
+    color: #E6A23C
+  }
+
   .el-button {
     border: none!important;
     padding: 2px!important;

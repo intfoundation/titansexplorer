@@ -39,12 +39,12 @@
 <!--              <router-link v-for="(item,index) in assetNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
 <!--            </div>-->
 <!--          </li>-->
-<!--          <li class="m-li">-->
-<!--            <div class="nav-item-f" :class="{'nav-active-f': (/stats/g).test($route.path)}"><span>Stats</span><i class="nav-icon fas fa-angle-down"></i></div>-->
-<!--            <div class="nav-block">-->
-<!--              <router-link v-for="(item,index) in statsNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>-->
-<!--            </div>-->
-<!--          </li>-->
+          <li class="m-li">
+            <div class="nav-item-f" :class="{'nav-active-f': (/stats/g).test($route.path)}"><span>Stats</span><i class="nav-icon fas fa-angle-down"></i></div>
+            <div class="nav-block">
+              <router-link v-for="(item,index) in statsNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
+            </div>
+          </li>
         </ul>
       </div>
       <div class="search">
@@ -140,32 +140,32 @@
           //     url: '/asset/asset1'
           //   }
           // ],
-          // statsNavList: [
-          //   // {
-          //   //   name: 'Accounts',
-          //   //   url: '/stats/statslist'
-          //   // },
-          //   {
-          //     name: 'MiningRank',
-          //     url: '/stats/miningrank'
-          //   },
-          //   {
-          //     name: 'MappingList',
-          //     url: '/stats/mappinglist/1'
-          //   }
-          //   // {
-          //   //   name: 'Stats3',
-          //   //   url: '/stats/stats1'
-          //   // },
-          //   // {
-          //   //   name: 'Stats4',
-          //   //   url: '/stats/stats1'
-          //   // },
-          //   // {
-          //   //   name: 'Stats5',
-          //   //   url: '/stats/stats1'
-          //   // }
-          // ],
+          statsNavList: [
+            // {
+            //   name: 'Accounts',
+            //   url: '/stats/statslist'
+            // },
+            // {
+            //   name: 'MiningRank',
+            //   url: '/stats/miningrank'
+            // },
+            // {
+            //   name: 'MappingList',
+            //   url: '/stats/mappinglist/1'
+            // },
+            {
+              name: 'Bridge',
+              url: '/stats/bridgelist/1'
+            },
+            // {
+            //   name: 'Stats4',
+            //   url: '/stats/stats1'
+            // },
+            // {
+            //   name: 'Stats5',
+            //   url: '/stats/stats1'
+            // }
+          ],
           keyword: '',
         };
       },

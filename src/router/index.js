@@ -17,6 +17,7 @@ import ValidatorDetail from '@/components/stats/ValidatorDetail'
 import Epochs from '@/components/staking/Epoch'
 import MiningRank from '@/components/stats/MiningRank'
 import MappingList from '@/components/stats/MappingList'
+import BridgeList from '@/components/stats/BridgeList'
 import Result from '@/components/Oops'
 import Tokens from '@/components/tokens/Tokens'
 import NFT from '@/components/tokens/NFT'
@@ -97,10 +98,15 @@ export default new Router({
           name: 'MiningRank',
           component: MiningRank
         },
+        // {
+        //   path: '/stats/mappinglist/:page',
+        //   name: 'MappingList',
+        //   component: MappingList
+        // },
         {
-          path: '/stats/mappinglist/:page',
-          name: 'MappingList',
-          component: MappingList
+          path: '/stats/bridgelist/:page',
+          name: 'BridgeList',
+          component: BridgeList
         },
 
 
