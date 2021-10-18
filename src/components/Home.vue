@@ -346,7 +346,7 @@
           this.blockInfo = res.data;
           this.blockInfo.addrUrl = '/address/' + res.data.miner;
           this.blockInfo.blockUrl = '/block/' + res.data.number + '/1';
-          res.data.miner = res.data.miner.slice(0,5) + '...' + res.data.miner.slice(-5);
+          res.data.miner = res.data.miner.slice(0,6) + '...' + res.data.miner.slice(-4);
           this.blockInfo.name = res.data.nodeName ? res.data.nodeName : res.data.miner;
         }).catch(err => {
           console.log(err);

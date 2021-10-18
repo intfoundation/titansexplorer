@@ -13,21 +13,34 @@
             background>
           </el-pagination>
         </div>
+<!--        <el-input-->
+<!--          class="sd-t-iii"-->
+<!--          placeholder="Hash or address"-->
+<!--          suffix-icon="el-icon-search"-->
+<!--          v-model="searchKey"-->
+<!--        >-->
+<!--        </el-input>-->
       </div>
       <div class="sd-c">
         <div class="sc-asset">
           <div class="sa-c">
             <div class="sa-block">
+              <div class="sd-t-iii">
+                <input type="text" placeholder="Hash / Address" v-model="searchKey" @keyup.enter="searchBridge">
+                <!--          <i class="el-icon-search"></i>-->
+              </div>
               <el-table :data="bridgeList" v-loading="isActLoading">
-                <el-table-column prop="i" label="#" :key="Math.random()" align="center" width="40" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column label="Address" :key="Math.random()" align="center" :show-overflow-tooltip="true">
+                <el-table-column prop="i" label="#" align="center" width="40" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column label="Address" align="center">
                   <template slot-scope="scope">
-                    <router-link tag="span" :to="scope.row.formUrl" class="al-url">{{ scope.row.from_address }}</router-link>
+                    <el-tooltip effect="dark" :content="scope.row.from_address" placement="top">
+                      <router-link tag="span" :to="scope.row.formUrl" class="al-url">{{ scope.row.from_address.substring(0, 6) + '...' + scope.row.from_address.substr(-4) }}</router-link>
+                    </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column prop="coin" label="Token" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column prop="value" label="Amount" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column label="From" align="center" :key="Math.random()" :show-overflow-tooltip="true">
+                <el-table-column prop="coin" label="Token" align="center" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="value" label="Amount" align="center" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column label="From" align="center" width="260">
                   <template slot-scope="scope">
                     <el-tooltip v-if="scope.row.fromChainUrl" class="item" effect="dark" :content="scope.row.hash" placement="top-end">
                       <a :href="scope.row.fromChainUrl" :class="{'al-url': scope.row.hash}" target="_blank">{{ scope.row.fromChain }}</a>
@@ -36,7 +49,7 @@
                     <a v-else>{{ scope.row.fromChain }}</a>
                   </template>
                 </el-table-column>
-                <el-table-column label="To" align="center" :key="Math.random()" :show-overflow-tooltip="true">
+                <el-table-column label="To" align="center" width="260">
                   <template slot-scope="scope">
                     <el-tooltip v-if="scope.row.toChainUrl" class="item" effect="dark" :content="scope.row.ex_hash" placement="top-start">
                       <a :href="scope.row.toChainUrl" :class="{'al-url': scope.row.ex_hash}" target="_blank">{{ scope.row.toChain }}</a>
@@ -46,12 +59,12 @@
                   </template>
                 </el-table-column>
 <!--                <el-table-column prop="txStatus" label="Status" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>-->
-                <el-table-column label="Status" :key="Math.random()" align="center" :show-overflow-tooltip="true">
+                <el-table-column label="Status" align="center" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     <span v-bind:class="{'text-success': scope.row.status === 2}">{{scope.row.txStatus}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="time" label="Time" :key="Math.random()" align="center" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="time" label="Time" align="center" :show-overflow-tooltip="true"></el-table-column>
               </el-table>
               <div class="sd-t-ii">
                 <el-pagination
@@ -77,6 +90,7 @@
     name: "bridgelist",
     data() {
       return {
+        searchKey: '',
         bridgeList: [],
         isActLoading: false,
         currentPage: 1,
@@ -91,16 +105,16 @@
     created() {
     },
     mounted() {
-      this.getActiveVdList();
-      // this.getBridgeTimer();
+      this.getBridgeList();
+      this.getBridgeTimer();
     },
     destroyed() {
       clearInterval(this.timer)
     },
     methods: {
-      getActiveVdList () {
+      getBridgeList (searchPage) {
         this.isActLoading = true;
-        this.$axios.get('/api/bridge/list',{params:{ pageNo:this.page, pageSize:this.pageSize }}).then(res => {
+        this.$axios.get('/api/bridge/list',{params:{ pageNo: searchPage ? searchPage : this.page, pageSize:this.pageSize, searchKey: this.searchKey }}).then(res => {
           this.bridgeList = res.data.list;
           this.total = res.data.count;
           this.currentPage = +this.page;
@@ -110,40 +124,40 @@
             a.txStatus = a.status === 2 ? "Success" : "Pending";
             switch (a.direction) {
               case 1:
-                a.fromChain = "INT Chain";
                 a.fromChainUrl = a.hash ? this.intExUrl + a.hash : "";
-                a.toChain = "Ethereum";
+                a.fromChain = a.hash ? `INT Chain (${a.hash.substring(0, 6)}...${a.hash.substr(-4)})` : "INT Chain";
                 a.toChainUrl = a.ex_hash ? this.ethExUrl + a.ex_hash : "";
+                a.toChain = a.ex_hash ? `Ethereum (${a.ex_hash.substring(0, 6)}...${a.ex_hash.substr(-4)})` : "Ethereum";
                 break;
               case 2:
-                a.fromChain = "Ethereum";
                 a.fromChainUrl = a.hash ? this.ethExUrl + a.hash : "";
-                a.toChain = "INT Chain";
+                a.fromChain = a.hash ? `Ethereum (${a.hash.substring(0, 6)}...${a.hash.substr(-4)})` : "Ethereum";
                 a.toChainUrl = a.ex_hash ? this.intExUrl + a.ex_hash : "";
+                a.toChain = a.ex_hash ? `INT Chain (${a.ex_hash.substring(0, 6)}...${a.ex_hash.substr(-4)})` : "INT Chain";
                 break;
               case 3:
-                a.fromChain = "INT Chain";
                 a.fromChainUrl = a.hash ? this.intExUrl + a.hash : "";
-                a.toChain = "Binance Smart Chain";
+                a.fromChain = a.hash ? `INT Chain (${a.hash.substring(0, 6)}...${a.hash.substr(-4)})` : "INT Chain";
                 a.toChainUrl = a.ex_hash ? this.bscExUrl + a.ex_hash : "";
+                a.toChain = a.ex_hash ? `Binance Smart Chain (${a.ex_hash.substring(0, 6)}...${a.ex_hash.substr(-4)})` : "Binance Smart Chain";
                 break;
               case 4:
-                a.fromChain = "Binance Smart Chain";
                 a.fromChainUrl = a.hash ? this.bscExUrl + a.hash : "";
-                a.toChain = "INT Chain";
+                a.fromChain = a.hash ? `Binance Smart Chain (${a.hash.substring(0, 6)}...${a.hash.substr(-4)})` : "Binance Smart Chain";
                 a.toChainUrl = a.ex_hash ? this.intExUrl + a.ex_hash : "";
+                a.toChain = a.ex_hash ? `INT Chain (${a.ex_hash.substring(0, 6)}...${a.ex_hash.substr(-4)})` : "INT Chain";
                 break;
               case 5:
-                a.fromChain = "Ethereum";
                 a.fromChainUrl = a.hash ? this.ethExUrl + a.hash : "";
-                a.toChain = "Binance Smart Chain";
+                a.fromChain = a.hash ? `Ethereum (${a.hash.substring(0, 6)}...${a.hash.substr(-4)})` : "Ethereum";
                 a.toChainUrl = a.ex_hash ? this.bscExUrl + a.ex_hash : "";
+                a.toChain = a.ex_hash ? `Binance Smart Chain (${a.ex_hash.substring(0, 6)}...${a.ex_hash.substr(-4)})` : "Binance Smart Chain";
                 break;
               case 6 :
-                a.fromChain = "Binance Smart Chain";
                 a.fromChainUrl = a.hash ? this.bscExUrl + a.hash : "";
-                a.toChain = "Ethereum";
+                a.fromChain = a.hash ? `Binance Smart Chain (${a.hash.substring(0, 6)}...${a.hash.substr(-4)})` : "Binance Smart Chain";
                 a.toChainUrl = a.ex_hash ? this.ethExUrl + a.ex_hash : "";
+                a.toChain = a.ex_hash ? `Ethereum (${a.ex_hash.substring(0, 6)}...${a.ex_hash.substr(-4)})` : "Ethereum";
                 break;
               default:
                 a.fromChain = "";
@@ -161,10 +175,16 @@
         })
       },
 
+      searchBridge () {
+        console.log('search bridge list');
+        const searchPage = 1;
+        this.getBridgeList(searchPage);
+      },
+
       getBridgeTimer () {
         this.timer = setInterval(() => {
-          this.getActiveVdList()
-        }, 5000)
+          this.getBridgeList()
+        }, 10000)
       },
 
       handleCurrentChange(val) {
@@ -172,7 +192,7 @@
         this.currentPage = val;
         this.$router.push ('/stats/bridgelist/' + val);
         this.page = val;
-        this.getActiveVdList()
+        this.getBridgeList()
       },
     }
   }
@@ -185,22 +205,42 @@
   }
 
   .sDetail .sd-t {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*align-items: flex-end;*/
+    line-height: 48px;
     margin-bottom: 10px;
   }
   .sDetail .sd-t .sd-t-i {
+    display: inline-block;
     font-size: 24px;
     font-weight: bold;
     line-height: 24px;
   }
 
   .sd-t-ii {
+    display: inline-block;
+    float: right;
     height: 45px;
-    padding: 8px 0 10px;
+
+    margin-top: 8px;
     text-align: right;
   }
+
+  .sd-t-iii {
+    float: right;
+    display: inline-block;
+  }
+
+  .sd-t-iii > input {
+    width: 400px;
+    height: 30px;
+    padding-left: 20px;
+    outline: none;
+    border:1px solid #dddddd;
+    border-radius: 5px;
+  }
+
   .sDetail .sc-asset {
     margin-bottom: 30px;
     background-color: #fff;
