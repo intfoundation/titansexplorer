@@ -432,7 +432,7 @@
         this.$axios.get('/api/node/list').then(res => {
           let top10Power = 0;
           for (let i in res.data) {
-            res.data[i].addr = res.data[i].address.slice(0,5) + '...' + res.data[i].address.slice(-5);
+            res.data[i].addr = res.data[i].address.slice(0,6) + '...' + res.data[i].address.slice(-4);
             res.data[i].name = res.data[i].moniker ? res.data[i].moniker: res.data[i].addr;
             res.data[i].power = res.data[i].voting_power / this.voteStake;
             res.data[i].param = {

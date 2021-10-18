@@ -26,7 +26,7 @@
                 <el-table-column label="Token" align="left" :key="Math.random()" width="400">
                   <template slot-scope="scope">
 <!--                    <span>{{ scope.row.name }}</span>-->
-                    <span><img src="../../assets/token-logo.png" width="30" style="vertical-align: middle;" alt=""></span>
+                    <span><img src="../../assets/token-logo.png" width="26" style="vertical-align: middle;" alt=""></span>
                     <router-link tag="span" :to="'/token/' + scope.row.contract" class="al-url">{{scope.row.name + ' (' + scope.row.symbol + ')'}}</router-link>
                   </template>
                 </el-table-column>
