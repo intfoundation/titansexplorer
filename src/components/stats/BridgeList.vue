@@ -64,7 +64,7 @@
                     <span v-bind:class="{'text-success': scope.row.status === 2}">{{scope.row.txStatus}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="time" label="Time" align="center" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="time" label="Time" width="200" align="center"></el-table-column>
               </el-table>
               <div class="sd-t-ii">
                 <el-pagination
