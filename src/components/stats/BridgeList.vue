@@ -166,7 +166,7 @@
             }
 
             a.amount = transAmount(a.num);
-            a.time = this.$moment(a.mp_time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
+            a.time = this.$moment(a.time).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC'
           });
           this.isActLoading = false;
         }).catch(err =>{
