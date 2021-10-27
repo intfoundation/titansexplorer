@@ -26,7 +26,7 @@
           <div class="sa-c">
             <div class="sa-block">
               <div class="sd-t-iii">
-                <input type="text" placeholder="Hash / Address" v-model="searchKey" @keyup.enter="searchBridge">
+                <input type="text" placeholder="Exchange Address / Hash" v-model="searchKey" @keyup.enter="searchBridge">
                 <!--          <i class="el-icon-search"></i>-->
               </div>
               <el-table :data="bridgeList" v-loading="isActLoading">
@@ -106,7 +106,6 @@
     },
     mounted() {
       this.getBridgeList();
-      this.getBridgeTimer();
     },
     destroyed() {
       clearInterval(this.timer)
@@ -181,11 +180,11 @@
         this.getBridgeList(searchPage);
       },
 
-      getBridgeTimer () {
-        this.timer = setInterval(() => {
-          this.getBridgeList()
-        }, 10000)
-      },
+      // getBridgeTimer () {
+      //   this.timer = setInterval(() => {
+      //     this.getBridgeList()
+      //   }, 10000)
+      // },
 
       handleCurrentChange(val) {
         this.isActLoading = true;
@@ -233,11 +232,11 @@
   }
 
   .sd-t-iii > input {
-    width: 400px;
+    width: 500px;
     height: 30px;
     padding-left: 20px;
     outline: none;
-    border:1px solid #dddddd;
+    border:1px solid #ed303b;
     border-radius: 5px;
   }
 
