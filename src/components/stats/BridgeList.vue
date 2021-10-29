@@ -97,9 +97,9 @@
         page: this.$route.params.page || 1,
         total: 0,
         pageSize: 20,
-        intExUrl: "https://test.titansexplorer.intchain.io/tx/",
-        ethExUrl: "https://ropsten.etherscan.io/tx/",
-        bscExUrl: "https://testnet.bscscan.com/tx/",
+        intExUrl: "https://titansexplorer.intchain.io/tx/",
+        ethExUrl: "https://etherscan.io/tx/",
+        bscExUrl: "https://bscscan.com/tx/",
       }
     },
     created() {
