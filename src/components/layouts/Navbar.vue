@@ -45,6 +45,13 @@
               <router-link v-for="(item,index) in statsNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
             </div>
           </li>
+          <li class="m-li">
+            <div class="nav-item-f" :class="{'nav-active-f': (/more/g).test($route.path)}"><span>More</span><i class="nav-icon fas fa-angle-down"></i></div>
+              <!-- <router-link tag="div" to="/more" class="nav-item-f"><span>More</span></router-link> -->
+            <div class="nav-block">
+              <router-link v-for="(item,index) in moreNavList" :key="index" tag="div" :to="item.url" class="nav-item-s">{{item.name}}</router-link>
+            </div>
+          </li>
         </ul>
       </div>
       <div class="search">
@@ -165,6 +172,12 @@
             //   name: 'Stats5',
             //   url: '/stats/stats1'
             // }
+          ],
+          moreNavList: [
+            {
+              name: "Verify Contract",
+              url: '/verifyContract'
+            }
           ],
           keyword: '',
         };

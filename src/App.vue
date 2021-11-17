@@ -105,4 +105,69 @@ export default {
     color: #ed303b!important;
     background-color: #ffffff!important;
   }
+
+  /* more */
+  .el-form-item{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .el-form-item__label{
+    color: #6c757e;
+  }
+
+  .md-input .el-input__inner, .md-select .el-input--suffix .el-input__inner {
+    width: 685px !important;
+    height: 42px;
+    padding: 10px 12px !important;
+  }
+
+  .el-form-item:last-child{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .el-form-item__content:last-child .el-button{
+    height: 42px;
+    padding: 12px 16px !important;
+  }
+
+/* verify */
+
+  .el-collapse-item__header{
+    margin: 0 14px;
+    font-size: 14px;
+  }
+
+  .el-collapse-item__content{
+    padding-bottom: 10px;
+    font-size: 14px;
+  }
+
+  .ad-input .el-input__inner{
+    height: 32px;
+  }
+
+
+  .op-selest .el-input.is-disabled .el-input__inner{
+    width: 223px !important;
+  }
+  
+  .compiler-input .el-input--suffix .el-input__inner{
+    width: 470px;
+  }
+
+  .el-input__suffix{
+    top:4px;
+  }
+
+  .el-input__suffix .el-input__suffix-inner{
+    display: block;
+    margin-top: -6px;
+  }
+
+  /* con */
+
 </style>

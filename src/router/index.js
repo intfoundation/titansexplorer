@@ -22,6 +22,10 @@ import Result from '@/components/Oops'
 import Tokens from '@/components/tokens/Tokens'
 import NFT from '@/components/tokens/NFT'
 import Token from '@/components/tokens/Token'
+import More from '@/components/more/More'
+import Verify from '@/components/more/Verify'
+import Format from '@/components/more/Format'
+// import RawFormat from '@/components/more/RawFormat'
 
 Vue.use(Router);
 
@@ -158,6 +162,27 @@ export default new Router({
           path: '/result/:result',
           name: 'Result',
           component: Result
+        },
+
+        {
+          path: '/verifyContract',
+          name: 'More',
+          component: More,
+        },
+        {
+          path: '/verifyContract/:address',
+          name: 'More',
+          component: More,
+        },
+        {
+          path: '/verifyContractSolc/Verify/:address/:compileType/:compileVersion/:linceseType/:',
+          name: 'Verify',
+          component: Verify
+        },
+        {
+          path:'exportAbi/:address/:format',
+          name: 'format',
+          component: Format
         }
       ]
     }

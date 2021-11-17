@@ -352,11 +352,182 @@
                 </el-pagination>
               </div>
             </div>
-            <div class="stx-pane" v-show="activeName === 3">
+            <div class="stx-pane" v-if="activeName === 3">
+              <div v-if="showContent">
+                <el-container class="el-contract">
+                <el-header style="height:100px">  
+                   <div>
+                      <i class="el-icon-warning"></i>
+                      <span> Are you the contract creator? 
+                      
+                        <router-link style="color:#3498db ; font-weight: bolder" :to="verifyUrl">Verify and Publish</router-link>
+                        your contract source code today!</span>
+                    </div>
+                    <el-row class="c-row">
+                      <el-button type="warning" class="c-button">Decompile ByteCode </el-button>
+                      <el-button type="warning" class="c-button">Switch to Opcodes View</el-button>
+                      <el-button type="info" class="c-button">Similar Contracts</el-button>
+                    </el-row>
+                  </el-header>
+                <el-main class="c-main">
+                  <textarea name="text" rows="10" cols="141" class="wordwrap">1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa
+                  </textarea>
+                </el-main>
+              </el-container>
+              </div>
+
+              <div v-show="showVerify">
+              <el-container class="contract-body">
+                <el-header class="con-header">
+                  <div class="csc-t">
+                     <el-row style="margin-top: 6px">
+                      <el-button class="con-button">Code</el-button>
+                      <el-button class="con-button">Read Contract</el-button>
+                      <el-button class="con-button">Write Contract</el-button>
+                    </el-row>
+                  </div>
+                </el-header>
+                <el-main>
+                  <template>
+                    <div class="csc-v">
+                      <p><i class="el-icon-success" style="font-size: 14px ; color: #00c9a7 ; margin-right: 4px"></i><strong>Contract Source Code Verified</strong><span style="color: #77838f ; margin-left: 4px">(Exact Match)</span></p>
+                      <i class="el-icon-warning" style="font-size: 22px ; color: #db9a04"></i>
+                    </div>
+
+                    <div class="exact">
+                      <div class="exact-l">
+                        <span style="margin-right: 58px">Contract Name:</span>
+                        <strong>{{addrInfo.name}}</strong>
+                        <el-divider></el-divider>
+                        <span style="margin-right: 50px">Compiler Version</span>
+                        <strong>{{addrInfo.contract.compiler.name}}</strong>
+                      </div>
+                      <div class="exact-r">
+                        <span style="margin-right: 50px">Optimization Enabled:</span>
+                        <span><strong style="margin-right: 4px">{{addrInfo.contract.optimization}}</strong>with<strong style="margin:0 4px">{{addrInfo.contract.optimizer}}</strong>runs</span>
+                        <el-divider></el-divider>
+                        <span style="margin-right: 86px">Compiler Version</span>
+                        <span><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong><a style="color: #3498db">license</a></span>
+                      </div>
+                    </div>       
+                  </template> 
+
+                  <template>
+                    <div class="csc-s">
+                      <p><i class="far fa-file-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Source Code</strong><span style="color: #77838f ; margin-left: 4px">(Solidity)</span></p>
+                      <!-- 隐藏 -->
+                      <div style="display:none; margin-top: 10px">
+                        <el-dropdown class="csc-i">
+                          <el-button type="primary" style="background-color: #77838f">
+                            Outline<i class="el-icon-arrow-down el-icon--right"></i>
+                          </el-button>
+                          <el-dropdown-menu slot="dropdown" class="csc-m">
+                            <el-dropdown-item>a</el-dropdown-item>
+                            <el-dropdown-item>b</el-dropdown-item>
+                            <el-dropdown-item>c</el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-dropdown class="csc-i" style="margin-left: 5px"> 
+                          <el-button type="primary" style="background-color: #77838f">
+                            More Options<i class="el-icon-arrow-down el-icon--right"></i>
+                          </el-button>
+                          <el-dropdown-menu slot="dropdown" class="csc-m">
+                            <el-dropdown-item>a</el-dropdown-item>
+                            <el-dropdown-item>b</el-dropdown-item>
+                            <el-dropdown-item>c</el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
+                      </div>
+                      <!-- 如果让隐藏部分显示出来 删除这些代码 放开下面注释部分 -->
+                      <div class="c-icon">
+                        <!-- 复制textarea内容 -->
+                      <el-tooltip content="Copy source code to clipboaed" placement="top">
+                        <a><i class="el-icon-copy-document"></i></a>
+                      </el-tooltip>
+                      <!-- 复制地址栏链接 -->
+                      <el-tooltip content="Generate Permalink" placement="top">
+                        <a class="copy-url" @click="copyUrl" :data-clipboard-text="url"><i class="el-icon-link"></i></a>
+                      </el-tooltip>  
+                      <!-- 切换文本域大小 -->
+                      <el-tooltip  content="Toggle Fullscrent" placement="top">
+                        <!-- <a><i class="el-icon-full-screen"></i></a> -->
+                        <a @click="changeIts" :style="{display:iconsDisplay}"><i class="el-icon-full-screen" ></i></a>
+                      </el-tooltip>
+                        <a @click="changeIts" :style="{display:activesDisplay}"><i class="fa fa-compress" ></i></a>
+                    </div>
+
+                    </div>
+                    <!-- <div class="c-icon"></div> -->
+                    <textarea :class="[isActives? 'active':'actives']"></textarea>
+                  </template> 
+
+                <!-- Export ABI -->
+                  <template>
+                    <div class="csc-s">
+                      <p><i class="fa fa-tasks text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract ABI</strong></p>
+                      <div  style="margin-top: 10px" class="cab-a">
+                        <el-dropdown style="csc-i">
+                          <el-button  type="primary" style="background-color: #77838f">
+                            Export ABI<i class="el-icon-arrow-down el-icon--right"></i>
+                          </el-button>
+                          <el-dropdown-menu slot="dropdown" class="csc-m-abi">
+                            <el-dropdown-item>
+                              <router-link :to='jsonUrl'><span>JSON Format</span></router-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                              <router-link :to='rawUrl'><span>RAW/Text Format</span></router-link>
+                              </el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
+                        <div class="ca-icon">
+                          <!-- 复制文本内容 -->
+                          <el-tooltip content="Copy source code to clipboaed" placement="top">
+                            <a :plain="true" class="copy-text" @click="copy" data-clipboard-target="#foo"><i class="el-icon-copy-document"></i></a>
+                          </el-tooltip>
+                          <!-- 切换文本域大小 -->
+                          <el-tooltip content="Toggle Fullscrent" placement="top">
+                            <a @click="changeIt" :style="{display:iconDisplay}"><i class="el-icon-full-screen" ></i></a>
+                          </el-tooltip>
+                            <a @click="changeIt" :style="{display:activeDisplay}"><i class="fa fa-compress" ></i></a>
+                        </div>
+                      </div>
+                    </div>
+                    <textarea id="foo" v-model="addrInfo.contract.contract_code" :class="[isActive? 'change':'changes']" >{{addrInfo.contract.contract_code}}</textarea>
+                  </template> 
+
+                  <!-- Contract Creation Code -->
+                  <template>
+                    <div class="csc-s">
+                      <p><i class="fa fa-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Creation Code</strong></p>
+                      <div style="margin-top: 10px" class="code-s">
+                        <div style="display:none"><a href="/">Decompile ByteCode<i class="el-icon-share" style="margin-left: 4px"></i></a></div>
+                        <div style="display:none"><a href="/" style="margin-left: 5px">Switch To Opcodes View</a></div>
+                      </div>
+                    </div>
+                    <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.contract.code.byte_code}}</textarea>
+                  </template> 
+
+                  <!-- Deployed ByteCode Sourcemap -->
+                   <template>
+                    <div class="csc-s">
+                      <p><i class="far fa-map text-secondary mr-1" style="margin-right: 4px"></i><strong>Deployed ByteCode Sourcemap</strong></p>
+                    </div>
+                    <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.contract.code.source_map}}</textarea>
+                  </template> 
+                  <template>
+                    <div class="s-s" style="display: none;">
+                      <p><i class="fas fa-chess-board text-secondary mr-1" style="margin-right: 4px"></i><strong>Swarm Source</strong></p>
+                    </div>
+                    <pre  class="ace-dawn" style="margin-top: 5px; height:64px; display: none;"></pre>
+                  </template> 
+                </el-main>
+              </el-container>
+
+              </div>
+              
 
             </div>
             <div class="stx-pane" v-show="activeName === 4">
-
             </div>
           </div>
         </div>
@@ -367,6 +538,7 @@
 
 <script>
   import BigNumber from 'bignumber.js'
+  import Clipboard from 'clipboard'
   export default {
     name: "StatsDetail",
     data() {
@@ -441,6 +613,20 @@
           total: 0,
           isIIP721TxPageShow: false,
         },
+        verifyUrl: "",
+        showContent:false,
+        showVerify:false,
+        isActive: true,
+        activeDisplay: 'none',
+        iconDisplay:'block',
+        isActive: true,
+        activesDisplay: 'none',
+        iconsDisplay:'block',
+        isActives: true,
+        url:'',
+        jsonUrl:'',
+        rawUrl:''
+
       }
     },
     created() {
@@ -448,8 +634,9 @@
       this.getAddrDetail();
       this.getAddrTx();
       this.getIIP20TokenTx();
-      this.getIIP721TokenTx();
+      this.getIIP721TokenTx(); 
       this.getTokens(this.addr);
+      this.url = window.location.href
     },
     mounted() {
 
@@ -478,9 +665,11 @@
     methods: {
       getAddrDetail() {
         this.isInfoLoading = true;
-        this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
+        this.$axios.get('http://192.168.0.99:6660/api/account/detail',{params:{address:this.addr}}).then(res => {
           // console.log('api account detail', res.data);
+          
           this.addrInfo = res.data;
+          console.log(res.data.contract);
           let keys = Object.keys(res.data);
           if (keys.length === 0) {
             this.addrInfo.address = this.addr;
@@ -503,6 +692,26 @@
               this.addrInfo.creatHashUrl = `/tx/${this.addrInfo.hash}`;
               this.addrInfo.tokenTracker = this.addrInfo.contract_type !== 0 ? `${this.addrInfo.name}(${this.addrInfo.symbol})` : "";
               this.addrInfo.tokenTrackerUrl = this.addrInfo.contract_type !== 0 ? `/token/${this.addrInfo.address}` : "";
+              // 
+              this.verifyUrl = `/verifyContract/${this.addrInfo.address}`;
+              this.jsonUrl = `/exportAbi/${this.addrInfo.address}/json`;
+              this.rawUrl = `/exportAbi/${this.addrInfo.address}/raw`;
+              this.addrInfo.name = this.addrInfo.name;
+              this.addrInfo.contract.compiler.name = this.addrInfo.contract.compiler.name;
+              this.addrInfo.contract.optimization = this.addrInfo.contract.optimization === 0? 'no' : 'yes' ;
+              this.addrInfo.contract.optimizer = this.addrInfo.contract.optimizer;
+              this.addrInfo.contract.contract_code = this.addrInfo.contract.contract_code;
+              this.addrInfo.contract.code.byte_code = this.addrInfo.contract.code.byte_code;
+              this.addrInfo.contract.code.source_map = this.addrInfo.contract.code.source_map;
+              if(res.data.contract.verify === 1){
+                // this.showContent = true; 
+                this.showVerify = true
+              }else{
+                // this.showVerify = true
+                this.showContent = true; 
+
+
+              }
             }else {
               this.tabList = ['Assets','Delegations','UnDelegations','Delegate Rewards'];
               this.addrInfo = res.data;
@@ -725,7 +934,75 @@
       onTokenChange(val) {
         // console.log('token change', val)
         this.$router.push(`/token/${val}`);
-      }
+      },
+
+      // 点击全选textarea内容
+      copy(){
+        let _this = this;
+        var clipboard = new Clipboard('.copy-text')
+         clipboard.on('success', function(e) { 
+          // console.log('Action:', e.action);
+          // console.log('Text:', e.text);
+          _this.$message.success("Copy successfully")
+          e.clearSelection();
+          clipboard.destroy();
+        });
+        //失败回调
+        clipboard.on('error', function(e) {
+            // console.error('Action:', e.action);
+            // console.error('Trigger:', e.trigger);
+          _this.$message.error("This browser does not support automatic copy")
+          clipboard.destroy();
+        });
+        },
+
+      // 放大缩小功能
+      changeIt: function() {
+        this.isActive = !this.isActive;
+        if (this.isActive == true) {
+          this.activeDisplay = 'none';
+          this.iconDisplay = 'block'
+          
+        } else {
+          this.activeDisplay = 'block';
+          this.iconDisplay = 'none'
+        }
+      },
+
+      // 复制浏览器地址
+      copyUrl(){
+        let _this = this;
+        let clipboard = new Clipboard(".copy-url");
+        console.log(this.url,111);
+        clipboard.on("success", e => {
+          // console.log('aaaaa',e.text)
+          _this.$message.success("Copy successfully")
+          // 释放内存
+          clipboard.destroy();
+        });
+        clipboard.on("error", e => {
+          // 不支持复制，提示根据自己项目实际使用的UI来写
+          _this.$message.error("This browser does not support automatic copy")
+          // 释放内存
+          clipboard.destroy();
+        });
+      },
+
+      changeIts: function() {
+        this.isActives = !this.isActives;
+        if (this.isActives == true) {
+          this.activesDisplay = 'none';
+          this.iconsDisplay = 'block'
+          
+        } else {
+          this.activesDisplay = 'block';
+          this.iconsDisplay = 'none'
+        }
+      },
+
+
+ 
+      
     }
   }
 </script>
@@ -890,4 +1167,206 @@
   .sg-ii .sg-sl {
     width: 350px;
   }
+  
+  .el-contract{
+    color: #12161c;
+    line-height: 60px;
+    font-size: 14px;
+  }
+
+  .c-button{
+    padding: 6px 12px !important;
+
+  }
+  .c-row{
+    margin-top: -10px;
+  }
+
+  .c-main {
+    color: #333;
+    line-height: 160px;
+    margin-top: -10px;
+  }
+
+  .wordwrap{
+    height: 240px;
+    color: #12161c;
+    background-color: #f8f9fa;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .con-header{
+    color: #333;
+    line-height: 60px;
+  }
+
+  .con-button{
+      padding: 6px 12px !important;
+      border: 1px solid #d5dae2 !important;
+  }
+
+  .el-main {
+    color: #12161c;
+    font-size: 14px;
+  }
+
+  .csc-v{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .exact{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 26px;
+
+  }
+  
+  .exact-l , .exact-r{
+    width: 579px;
+  }
+
+  .exact-l{
+    margin-right: 50px ;
+  } 
+
+  .csc-s{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 26px;
+  }
+
+  .el-dropdown {
+    vertical-align: top;
+  }
+  .csc-s .el-button{
+    padding: 6px 12px !important;
+  }
+  .el-dropdown + .el-dropdown {
+    margin-left: 15px;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+
+  .csc-i{
+    position: relative;
+    margin-left: 5px;
+  }
+
+  .csc-m-abi{
+    width: 144px;
+    height: 74px;
+    padding: 16px 0;
+    /* animation-duration: 300ms; */
+  }
+
+  .csc-m-abi span{
+    font-size: 12px;
+    color: #1e2022;
+  }
+
+  .c-icon{
+    display: flex;
+    justify-content: flex-end!important
+  }
+
+  .c-icon a{
+    width: 26px;
+    height: 26px;
+    background-color: #77838f;
+    margin-right: 5px;
+    border-radius: 5px;
+  }
+
+  .c-icon a i{
+    color: #fff;
+    font-size: 16px;
+    margin: 5px 0 0 5px ;
+  }
+  .ace-dawn{
+    background-color: #F9F9F9;
+    color: #080808;
+    margin-top: 5px;
+  }
+
+  .cab-a{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .ca-icon{
+    /* margin-left: 5px; */
+    display: flex;
+  }
+
+   .ca-icon a{
+    width: 26px;
+    height: 26px;
+    background-color: #77838f;
+    border-radius: 4px;
+  }
+
+  .ca-icon .copy-text{
+    margin: 0 5px;
+  }
+
+  .ca-icon a i{
+    color: #fff;
+    font-size: 16px;
+    margin: 5px 0 0 5px ;
+  }
+
+  .code-s{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .code-s a{
+    color: #fff;
+    background-color: #db9a04;
+    border-radius: 4px;
+    padding: 6px 12px;
+  }
+
+  textarea{
+    width: 1208px;
+    border: none;
+  }
+
+  .active{
+    height: 400px;
+    background-color: #F9F9F9;
+    color: #080808;
+    margin-top: 5px;
+  }
+
+  .actives{
+    height: auto;
+    background-color: #F9F9F9;
+    color: #080808;
+    margin-top: 5px;
+  }
+
+  .change{
+    background-color: #F9F9F9;
+    color: #080808;
+    margin-top: 5px;
+    height: 200px;
+  }
+
+  .changes{
+    background-color: #F9F9F9;
+    color: #080808;
+    margin-top: 5px;
+    height: 400px;
+  }
+
+
+
+
+
 </style>
