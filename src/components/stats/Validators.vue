@@ -26,7 +26,7 @@
                     <router-link tag="span" :to="scope.row.url" class="al-url">{{scope.row.addr}}</router-link>
                   </template>
                 </el-table-column>
-                <el-table-column prop="commission" label="Commission" :key="Math.random()" align="left" width="100" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="commission" label="Commission" :key="Math.random()" align="left" width="120" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="voteP" label="Voting Power" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="uptime" label="Uptime" align="left" width="80" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="selfStaked" label="Self Staked" align="left" :key="Math.random()" :show-overflow-tooltip="true"></el-table-column>
