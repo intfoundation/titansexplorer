@@ -703,7 +703,7 @@
               this.addrInfo.contract.contract_code = this.addrInfo.contract.contract_code;
               this.addrInfo.contract.code.byte_code = this.addrInfo.contract.code.byte_code;
               this.addrInfo.contract.code.source_map = this.addrInfo.contract.code.source_map;
-              if(res.data.contract.verify === 1){
+              if(res.data.contract.verify === 0){
                 // this.showContent = true; 
                 this.showVerify = true
               }else{
