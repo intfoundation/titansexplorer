@@ -185,7 +185,7 @@ export default {
         return;
       }
 
-      const url = `/verifyContractSolc/${this.address}/${this.compilerType}/${this.compilerVersion}/${this.licenseType}`;
+      const url = `/verifyContractSolc/${this.address}/${this.compilerType}/${this.compilerVersion}/${this.linceseType}`;
       this.$router.push(url);
     },
 

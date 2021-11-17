@@ -458,7 +458,7 @@
 
                     </div>
                     <!-- <div class="c-icon"></div> -->
-                    <textarea :class="[isActives? 'active':'actives']"></textarea>
+                    <textarea v-model="addrInfo.contract.contract_code" :class="[isActives? 'active':'actives']">{{addrInfo.contract.contract_code}}</textarea>
                   </template> 
 
                 <!-- Export ABI -->
@@ -492,7 +492,7 @@
                         </div>
                       </div>
                     </div>
-                    <textarea id="foo" v-model="addrInfo.contract.contract_code" :class="[isActive? 'change':'changes']" >{{addrInfo.contract.contract_code}}</textarea>
+                    <textarea id="foo" v-model="addrInfo.contract.abi" :class="[isActive? 'change':'changes']" >{{addrInfo.contract.abi}}</textarea>
                   </template> 
 
                   <!-- Contract Creation Code -->
@@ -700,10 +700,11 @@
               this.addrInfo.contract.compiler.name = this.addrInfo.contract.compiler.name;
               this.addrInfo.contract.optimization = this.addrInfo.contract.optimization === 0? 'no' : 'yes' ;
               this.addrInfo.contract.optimizer = this.addrInfo.contract.optimizer;
+              this.addrInfo.contract.abi = this.addrInfo.contract.abi;
               this.addrInfo.contract.contract_code = this.addrInfo.contract.contract_code;
               this.addrInfo.contract.code.byte_code = this.addrInfo.contract.code.byte_code;
               this.addrInfo.contract.code.source_map = this.addrInfo.contract.code.source_map;
-              if(res.data.contract.verify === 0){
+              if(res.data.contract.verify === 1){
                 // this.showContent = true; 
                 this.showVerify = true
               }else{
@@ -1257,7 +1258,7 @@
   }
 
   .csc-m-abi{
-    width: 144px;
+    width: 156px;
     height: 74px;
     padding: 16px 0;
     /* animation-duration: 300ms; */
@@ -1265,7 +1266,7 @@
 
   .csc-m-abi span{
     font-size: 12px;
-    color: #1e2022;
+    color: #6c757e;
   }
 
   .c-icon{

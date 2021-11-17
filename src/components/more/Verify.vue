@@ -267,7 +267,7 @@ export default {
     return {
       address: this.$route.params.address,
       compileVersion: this.$route.params.compileVersion,
-      licenseType: this.$route.params.licenseType,
+      linceseType: this.$route.params.linceseType,
       value:" ",
       activeNames: ["1"],
       // 
@@ -287,13 +287,11 @@ export default {
       compiler: [],
       license: [],
       evm:"",
-      compilerVersion: "",
-      licenseType: "",
       compilerItem: "",
       licenseTypeItem:"",
-      optimization:"no",
+      optimization: 0,
       optimizer: "200",
-      evmVersion:"default (compiler defaults)",
+      evmVersion:"",
       nododata:"",
       solFile:""
     };
@@ -352,6 +350,18 @@ export default {
             type:"warning"
           })
         }
+        if(this.solFile===""){
+          this.$message({
+            message:"Please select file",
+            type:"warning"
+          })
+        }
+        if(this.evmVersion===""){
+          this.$message({
+            message:"Please select EVM Version",
+            type:"warning"
+          })
+        }
 
         // 提交的数据
         const data = {
@@ -387,8 +397,8 @@ export default {
             let index = this.compiler.findIndex(item => item.id == this.$route.params.compileVersion);
             this.compilerItem = this.compiler[index].id;
 
-            let e = this.license.findIndex(item => item.id == this.$route.params.licenseType);
-            this.licenseTypeItem = this.license[index].id
+            let e = this.license.findIndex(item => item.id == this.$route.params.linceseType);
+            this.licenseTypeItem = this.license[e].id
           })
         .catch((err) => {
           console.log(err);
