@@ -167,7 +167,12 @@ export default {
     display: block;
     margin-top: -6px;
   }
-
-  /* con */
+  .el-collapse-item__wrap{
+    border-top: 1px solid rgba(0,0,0,.125);
+    padding: 15px 0 0 15px;
+  }
+  .el-collapse-item__header{
+    border-bottom: none;
+  }
 
 </style>

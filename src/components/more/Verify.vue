@@ -267,7 +267,7 @@ export default {
     return {
       address: this.$route.params.address,
       compileVersion: this.$route.params.compileVersion,
-      linceseType: this.$route.params.linceseType,
+      licenseType: this.$route.params.licenseType,
       value:" ",
       activeNames: ["1"],
       // 
@@ -397,7 +397,7 @@ export default {
             let index = this.compiler.findIndex(item => item.id == this.$route.params.compileVersion);
             this.compilerItem = this.compiler[index].id;
 
-            let e = this.license.findIndex(item => item.id == this.$route.params.linceseType);
+            let e = this.license.findIndex(item => item.id == this.$route.params.licenseType);
             this.licenseTypeItem = this.license[e].id
           })
         .catch((err) => {

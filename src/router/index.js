@@ -175,7 +175,7 @@ export default new Router({
           component: More,
         },
         {
-          path: '/verifyContractSolc/:address/:compileType/:compileVersion/:linceseType',
+          path: '/verifyContractSolc/:address/:compileType/:compileVersion/:licenseType',
           name: 'Verify',
           component: Verify
         },

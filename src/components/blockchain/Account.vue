@@ -381,151 +381,326 @@
                 <el-header class="con-header">
                   <div class="csc-t">
                      <el-row style="margin-top: 6px">
-                      <el-button class="con-button">Code</el-button>
-                      <el-button class="con-button">Read Contract</el-button>
-                      <el-button class="con-button">Write Contract</el-button>
+                      <el-button class="con-button" @click="cur = 0" :class="{iscur : cur == 0}">Code</el-button>
+                      <el-button class="con-button" @click="cur = 1" :class="{iscur : cur == 1}">Read Contract</el-button>
+                      <el-button class="con-button" @click="cur = 2" :class="{iscur : cur == 2}">Write Contract</el-button>
                     </el-row>
                   </div>
                 </el-header>
                 <el-main>
-                  <template>
-                    <div class="csc-v">
-                      <p><i class="el-icon-success" style="font-size: 14px ; color: #00c9a7 ; margin-right: 4px"></i><strong>Contract Source Code Verified</strong><span style="color: #77838f ; margin-left: 4px">(Exact Match)</span></p>
-                      <i class="el-icon-warning" style="font-size: 22px ; color: #db9a04"></i>
-                    </div>
-
-                    <div class="exact">
-                      <div class="exact-l">
-                        <span style="margin-right: 58px">Contract Name:</span>
-                        <strong>{{addrInfo.name}}</strong>
-                        <el-divider></el-divider>
-                        <span style="margin-right: 50px">Compiler Version</span>
-                        <strong>{{addrInfo.contract.compiler.name}}</strong>
+                  <div class="blocks blocks1" v-show=" cur == 0">
+                    <template>
+                      <div class="csc-v">
+                        <p><i class="el-icon-success" style="font-size: 14px ; color: #00c9a7 ; margin-right: 4px"></i><strong>Contract Source Code Verified</strong><span style="color: #77838f ; margin-left: 4px">(Exact Match)</span></p>
+                        <i class="el-icon-warning" style="font-size: 22px ; color: #db9a04"></i>
                       </div>
-                      <div class="exact-r">
-                        <span style="margin-right: 50px">Optimization Enabled:</span>
-                        <span><strong style="margin-right: 4px">{{addrInfo.contract.optimization}}</strong>with<strong style="margin:0 4px">{{addrInfo.contract.optimizer}}</strong>runs</span>
-                        <el-divider></el-divider>
-                        <span style="margin-right: 86px">Compiler Version</span>
-                        <span><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong><a style="color: #3498db">license</a></span>
+
+                      <div class="exact">
+                        <div class="exact-l">
+                          <span style="margin-right: 58px">Contract Name:</span>
+                          <strong>{{addrInfo.name}}</strong>
+                          <el-divider></el-divider>
+                          <span style="margin-right: 50px">Compiler Version</span>
+                          <strong>{{addrInfo.contract.compiler.name}}</strong>
+                        </div>
+                        <div class="exact-r">
+                          <span style="margin-right: 50px">Optimization Enabled:</span>
+                          <span><strong style="margin-right: 4px">{{addrInfo.contract.optimization}}</strong>with<strong style="margin:0 4px">{{addrInfo.contract.optimizer}}</strong>runs</span>
+                          <el-divider></el-divider>
+                          <span style="margin-right: 86px">Compiler Version</span>
+                          <span><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong><a style="color: #3498db">license</a></span>
+                        </div>
+                      </div>       
+                    </template> 
+
+                    <template>
+                      <div class="csc-s">
+                        <p><i class="far fa-file-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Source Code</strong><span style="color: #77838f ; margin-left: 4px">(Solidity)</span></p>
+                        <!-- 隐藏 -->
+                        <div style="display:none; margin-top: 10px">
+                          <el-dropdown class="csc-i">
+                            <el-button type="primary" style="background-color: #77838f">
+                              Outline<i class="el-icon-arrow-down el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown" class="csc-m">
+                              <el-dropdown-item>a</el-dropdown-item>
+                              <el-dropdown-item>b</el-dropdown-item>
+                              <el-dropdown-item>c</el-dropdown-item>
+                            </el-dropdown-menu>
+                          </el-dropdown>
+                          <el-dropdown class="csc-i" style="margin-left: 5px"> 
+                            <el-button type="primary" style="background-color: #77838f">
+                              More Options<i class="el-icon-arrow-down el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown" class="csc-m">
+                              <el-dropdown-item>a</el-dropdown-item>
+                              <el-dropdown-item>b</el-dropdown-item>
+                              <el-dropdown-item>c</el-dropdown-item>
+                            </el-dropdown-menu>
+                          </el-dropdown>
+                        </div>
+                        <!-- 如果让隐藏部分显示出来 删除这些代码 放开下面注释部分 -->
+                        <div class="c-icon">
+                          <!-- 复制textarea内容 -->
+                        <el-tooltip content="Copy source code to clipboaed" placement="top">
+                          <a><i class="el-icon-copy-document"></i></a>
+                        </el-tooltip>
+                        <!-- 复制地址栏链接 -->
+                        <el-tooltip content="Generate Permalink" placement="top">
+                          <a class="copy-url" @click="copyUrl" :data-clipboard-text="url"><i class="el-icon-link"></i></a>
+                        </el-tooltip>  
+                        <!-- 切换文本域大小 -->
+                        <el-tooltip  content="Toggle Fullscrent" placement="top">
+                          <a @click="changeIts" :style="{display:iconsDisplay}"><i class="el-icon-full-screen" ></i></a>
+                        </el-tooltip>
+                          <a @click="changeIts" :style="{display:activesDisplay}"><i class="fa fa-compress" ></i></a>
                       </div>
-                    </div>       
-                  </template> 
 
-                  <template>
-                    <div class="csc-s">
-                      <p><i class="far fa-file-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Source Code</strong><span style="color: #77838f ; margin-left: 4px">(Solidity)</span></p>
-                      <!-- 隐藏 -->
-                      <div style="display:none; margin-top: 10px">
-                        <el-dropdown class="csc-i">
-                          <el-button type="primary" style="background-color: #77838f">
-                            Outline<i class="el-icon-arrow-down el-icon--right"></i>
-                          </el-button>
-                          <el-dropdown-menu slot="dropdown" class="csc-m">
-                            <el-dropdown-item>a</el-dropdown-item>
-                            <el-dropdown-item>b</el-dropdown-item>
-                            <el-dropdown-item>c</el-dropdown-item>
-                          </el-dropdown-menu>
-                        </el-dropdown>
-                        <el-dropdown class="csc-i" style="margin-left: 5px"> 
-                          <el-button type="primary" style="background-color: #77838f">
-                            More Options<i class="el-icon-arrow-down el-icon--right"></i>
-                          </el-button>
-                          <el-dropdown-menu slot="dropdown" class="csc-m">
-                            <el-dropdown-item>a</el-dropdown-item>
-                            <el-dropdown-item>b</el-dropdown-item>
-                            <el-dropdown-item>c</el-dropdown-item>
-                          </el-dropdown-menu>
-                        </el-dropdown>
                       </div>
-                      <!-- 如果让隐藏部分显示出来 删除这些代码 放开下面注释部分 -->
-                      <div class="c-icon">
-                        <!-- 复制textarea内容 -->
-                      <el-tooltip content="Copy source code to clipboaed" placement="top">
-                        <a><i class="el-icon-copy-document"></i></a>
-                      </el-tooltip>
-                      <!-- 复制地址栏链接 -->
-                      <el-tooltip content="Generate Permalink" placement="top">
-                        <a class="copy-url" @click="copyUrl" :data-clipboard-text="url"><i class="el-icon-link"></i></a>
-                      </el-tooltip>  
-                      <!-- 切换文本域大小 -->
-                      <el-tooltip  content="Toggle Fullscrent" placement="top">
-                        <!-- <a><i class="el-icon-full-screen"></i></a> -->
-                        <a @click="changeIts" :style="{display:iconsDisplay}"><i class="el-icon-full-screen" ></i></a>
-                      </el-tooltip>
-                        <a @click="changeIts" :style="{display:activesDisplay}"><i class="fa fa-compress" ></i></a>
-                    </div>
+                      <!-- <div class="c-icon"></div> -->
+                      <textarea v-model="addrInfo.contract_code" :class="[isActives? 'active':'actives']">{{addrInfo.contract_code}}</textarea>
+                    </template> 
 
-                    </div>
-                    <!-- <div class="c-icon"></div> -->
-                    <textarea v-model="addrInfo.contract.contract_code" :class="[isActives? 'active':'actives']">{{addrInfo.contract.contract_code}}</textarea>
-                  </template> 
-
-                <!-- Export ABI -->
-                  <template>
-                    <div class="csc-s">
-                      <p><i class="fa fa-tasks text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract ABI</strong></p>
-                      <div  style="margin-top: 10px" class="cab-a">
-                        <el-dropdown style="csc-i">
-                          <el-button  type="primary" style="background-color: #77838f">
-                            Export ABI<i class="el-icon-arrow-down el-icon--right"></i>
-                          </el-button>
-                          <el-dropdown-menu slot="dropdown" class="csc-m-abi">
-                            <el-dropdown-item>
-                              <router-link :to='jsonUrl'><span>JSON Format</span></router-link>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                              <router-link :to='rawUrl'><span>RAW/Text Format</span></router-link>
+                  <!-- Export ABI -->
+                    <template>
+                      <div class="csc-s">
+                        <p><i class="fa fa-tasks text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract ABI</strong></p>
+                        <div  style="margin-top: 10px" class="cab-a">
+                          <el-dropdown style="csc-i">
+                            <el-button  type="primary" style="background-color: #77838f">
+                              Export ABI<i class="el-icon-arrow-down el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown" class="csc-m-abi">
+                              <el-dropdown-item>
+                                <router-link :to='jsonUrl'><span>JSON Format</span></router-link>
                               </el-dropdown-item>
-                          </el-dropdown-menu>
-                        </el-dropdown>
-                        <div class="ca-icon">
-                          <!-- 复制文本内容 -->
-                          <el-tooltip content="Copy source code to clipboaed" placement="top">
-                            <a :plain="true" class="copy-text" @click="copy" data-clipboard-target="#foo"><i class="el-icon-copy-document"></i></a>
-                          </el-tooltip>
-                          <!-- 切换文本域大小 -->
-                          <el-tooltip content="Toggle Fullscrent" placement="top">
-                            <a @click="changeIt" :style="{display:iconDisplay}"><i class="el-icon-full-screen" ></i></a>
-                          </el-tooltip>
-                            <a @click="changeIt" :style="{display:activeDisplay}"><i class="fa fa-compress" ></i></a>
+                              <el-dropdown-item>
+                                <router-link :to='rawUrl'><span>RAW/Text Format</span></router-link>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                          </el-dropdown>
+                          <div class="ca-icon">
+                            <!-- 复制文本内容 -->
+                            <el-tooltip content="Copy source code to clipboaed" placement="top">
+                              <a :plain="true" class="copy-text" @click="copy" data-clipboard-target="#foo"><i class="el-icon-copy-document"></i></a>
+                            </el-tooltip>
+                            <!-- 切换文本域大小 -->
+                            <el-tooltip content="Toggle Fullscrent" placement="top">
+                              <a @click="changeIt" :style="{display:iconDisplay}"><i class="el-icon-full-screen" ></i></a>
+                            </el-tooltip>
+                              <a @click="changeIt" :style="{display:activeDisplay}"><i class="fa fa-compress" ></i></a>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <textarea id="foo" v-model="addrInfo.contract.abi" :class="[isActive? 'change':'changes']" >{{addrInfo.contract.abi}}</textarea>
-                  </template> 
+                      <textarea id="foo" v-model="addrInfo.contract.abi" :class="[isActive? 'change':'changes']" >{{addrInfo.contract.abi}}</textarea>
+                    </template> 
 
-                  <!-- Contract Creation Code -->
-                  <template>
-                    <div class="csc-s">
-                      <p><i class="fa fa-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Creation Code</strong></p>
-                      <div style="margin-top: 10px" class="code-s">
-                        <div style="display:none"><a href="/">Decompile ByteCode<i class="el-icon-share" style="margin-left: 4px"></i></a></div>
-                        <div style="display:none"><a href="/" style="margin-left: 5px">Switch To Opcodes View</a></div>
+                    <!-- Contract Creation Code -->
+                    <template>
+                      <div class="csc-s">
+                        <p><i class="fa fa-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Creation Code</strong></p>
+                        <div style="margin-top: 10px" class="code-s">
+                          <div style="display:none"><a href="/">Decompile ByteCode<i class="el-icon-share" style="margin-left: 4px"></i></a></div>
+                          <div style="display:none"><a href="/" style="margin-left: 5px">Switch To Opcodes View</a></div>
+                        </div>
                       </div>
-                    </div>
-                    <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.contract.code.byte_code}}</textarea>
-                  </template> 
+                      <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.byte_code}}</textarea>
+                    </template> 
 
-                  <!-- Deployed ByteCode Sourcemap -->
-                   <template>
-                    <div class="csc-s">
-                      <p><i class="far fa-map text-secondary mr-1" style="margin-right: 4px"></i><strong>Deployed ByteCode Sourcemap</strong></p>
+                    <!-- Deployed ByteCode Sourcemap -->
+                    <template>
+                      <div class="csc-s">
+                        <p><i class="far fa-map text-secondary mr-1" style="margin-right: 4px"></i><strong>Deployed ByteCode Sourcemap</strong></p>
+                      </div>
+                      <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.source_map}}</textarea>
+                    </template> 
+
+                    <template>
+                      <div class="s-s" style="display: none;">
+                        <p><i class="fas fa-chess-board text-secondary mr-1" style="margin-right: 4px"></i><strong>Swarm Source</strong></p>
+                      </div>
+                      <pre  class="ace-dawn" style="margin-top: 5px; height:64px; display: none;"></pre>
+                    </template> 
+                  </div>
+                  <!-- Read Contract -->
+                  <div class="read-contract" v-show=" cur == 1">
+                    <div class="read-flex">
+                      <p>
+                        <i class="far fa-file-alt text-secondary mr-1"></i>
+                         Read Contract Information
+                      </p>
+                      <a href="/" style="color: #3498db">[Reset]</a>
                     </div>
-                    <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.contract.code.source_map}}</textarea>
-                  </template> 
-                  <template>
-                    <div class="s-s" style="display: none;">
-                      <p><i class="fas fa-chess-board text-secondary mr-1" style="margin-right: 4px"></i><strong>Swarm Source</strong></p>
+                    <el-collapse v-model="activeNames" @change="handleChange">
+                      <el-collapse-item title="1. _decimals " name="1">
+                        <div>18 <i><span>uint8</span></i></div>
+                      </el-collapse-item>
+                      <el-collapse-item title="2. _name " name="2">
+                        <div>Internet Node Token <i><span>string</span></i></div>
+                      </el-collapse-item>
+                      <el-collapse-item title="3. _symbol" name="3">
+                        <div>INT <i><span>string</span></i></div>
+                      </el-collapse-item>
+                      <el-collapse-item title="4. allowance " name="4">
+                        <div>
+                          <div class="all-flex">
+                            <label>owner (address)</label>
+                            <input type="text" placeholder="owner (address)" class="from-control">
+                          </div>
+                          <div class="all-flex">
+                            <label>spender (address)</label>
+                            <input type="text" placeholder="spender (address)" class="from-control">
+                          </div>
+                          <button class="all-btn">Query</button>
+                          <div class="warning-info"><i>uint256</i> <span style="color: #ed303b">Error: Invalid number of parameters for "balanceOf". Got 0 expected 2!</span></div>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="5. balanceOf " name="5">
+                        <div>
+                          <div class="all-flex">
+                            <label>account (address)</label>
+                            <input type="text" placeholder="account (address)" class="from-control">
+                          </div>
+                          <button class="all-btn">Query</button>
+                          <div class="warning-info"><i>uint256</i> <span style="color: #ed303b">Error: Invalid number of parameters for "balanceOf". Got 0 expected 1!</span></div>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="6. decimals" name="6">
+                        <div>18 <i><span>uint8</span></i></div>
+                      </el-collapse-item>
+                        <el-collapse-item title="7. getOwner" name="7">
+                        <div> <a href="/">0x4ffaabd945aaa70c0bcbe947caac7b8d9bb87728</a> <i><span>address</span></i></div>
+                      </el-collapse-item>
+                       <el-collapse-item title="8. name" name="8">
+                        <div>Internet Node Token <i><span>string</span></i></div>
+                      </el-collapse-item>
+                      <el-collapse-item title="9. owner" name="9">
+                        <div> <a href="/">0x4ffaabd945aaa70c0bcbe947caac7b8d9bb87728</a> <i><span>address</span></i></div>
+                      </el-collapse-item>
+                      <el-collapse-item title="10. symbol" name="10">
+                        <div> INT <i><span>string</span></i></div>
+                      </el-collapse-item>
+                      <el-collapse-item title="11. totalSupply " name="11">
+                        <div> <a href="/">0x4ffaabd945aaa70c0bcbe947caac7b8d9bb87728</a> <i><span>uint256</span></i></div>
+                      </el-collapse-item>
+                    </el-collapse>
+                  </div>
+
+                  <div class="write-contract" v-show=" cur == 2">
+                    <div class="write-flex">
+                      <p>
+                        <i class="fa fa-circle text-danger mr-1"></i>
+                        <a href="/" style="color: #3498db">Connect to Web3</a> 
+                      </p>
+                      <a href="/" style="color: #3498db">[Reset]</a>
                     </div>
-                    <pre  class="ace-dawn" style="margin-top: 5px; height:64px; display: none;"></pre>
-                  </template> 
+                    <el-collapse v-model="activeNames" @change="handleChange">
+                      <el-collapse-item title="1. approve" name="1">
+                        <div>
+                          <div class="all-flex">
+                            <label>spender (address)</label>
+                            <input type="text" placeholder="spender (address)" class="from-control">
+                          </div>
+                          <div class="all-flex">
+                            <label>amount (uint256)</label>
+                            <input type="text" placeholder="amount (uint256)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                        <el-collapse-item title="2. burn" name="2">
+                        <div>
+                          <div class="all-flex">
+                            <label>amount (uint256)</label>
+                            <input type="text" placeholder="amount (uint256)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="3. decreaseAllowance" name="3">
+                        <div>
+                          <div class="all-flex">
+                            <label>spender (address)</label>
+                            <input type="text" placeholder="spender (address)" class="from-control">
+                          </div>
+                          <div class="all-flex">
+                            <label>subtractedValue (uint256) </label>
+                            <input type="text" placeholder="subtractedValue (uint256)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="4. increaseAllowance" name="4">
+                        <div>
+                          <div class="all-flex">
+                            <label>spender (address)</label>
+                            <input type="text" placeholder="spender (address)" class="from-control">
+                          </div>
+                          <div class="all-flex">
+                            <label>addedValue (uint256) </label>
+                            <input type="text" placeholder="addedValue (uint256)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="5. mint" name="5">
+                        <div>
+                          <div class="all-flex">
+                            <label>amount (uint256)</label>
+                            <input type="text" placeholder="amount (uint256)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="6. renounceOwnership" name="6">
+                        <div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="7. transfer" name="7">
+                        <div>
+                          <div class="all-flex">
+                            <label>recipient (address)</label>
+                            <input type="text" placeholder="recipient (address)" class="from-control">
+                          </div>
+                          <div class="all-flex">
+                            <label>amount (uint256)</label>
+                            <input type="text" placeholder="amount (uint256)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="8. transferFrom" name="8">
+                        <div>
+                          <div class="all-flex">
+                            <label>sender (address)</label>
+                            <input type="text" placeholder="sender (address)" class="from-control">
+                          </div>
+                          <div class="all-flex">
+                            <label>recipient (address)</label>
+                            <input type="text" placeholder="recipient (address)" class="from-control">
+                          </div>
+                           <div class="all-flex">
+                            <label>amount (uint256)</label>
+                            <input type="text" placeholder="amount (uint256)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                      <el-collapse-item title="9. transferOwnership" name="9">
+                        <div>
+                          <div class="all-flex">
+                            <label>newOwner (address)</label>
+                            <input type="text" placeholder="newOwner (address)" class="from-control">
+                          </div>
+                          <button class="all-btn">Write</button>
+                        </div>
+                      </el-collapse-item>
+                    </el-collapse>
+                  </div>
                 </el-main>
               </el-container>
-
               </div>
-              
-
             </div>
             <div class="stx-pane" v-show="activeName === 4">
             </div>
@@ -616,7 +791,7 @@
         verifyUrl: "",
         showContent:false,
         showVerify:false,
-        isActive: true,
+        // isActive: true,
         activeDisplay: 'none',
         iconDisplay:'block',
         isActive: true,
@@ -625,8 +800,9 @@
         isActives: true,
         url:'',
         jsonUrl:'',
-        rawUrl:''
-
+        rawUrl:'',
+        cur: 0,
+        activeNames: ['1'],
       }
     },
     created() {
@@ -701,9 +877,9 @@
               this.addrInfo.contract.optimization = this.addrInfo.contract.optimization === 0? 'no' : 'yes' ;
               this.addrInfo.contract.optimizer = this.addrInfo.contract.optimizer;
               this.addrInfo.contract.abi = this.addrInfo.contract.abi;
-              this.addrInfo.contract.contract_code = this.addrInfo.contract.contract_code;
-              this.addrInfo.contract.code.byte_code = this.addrInfo.contract.code.byte_code;
-              this.addrInfo.contract.code.source_map = this.addrInfo.contract.code.source_map;
+              this.addrInfo.contract_code = this.addrInfo.contract.contract_code;
+              this.addrInfo.byte_code = this.addrInfo.contract.code.byte_code;
+              this.addrInfo.source_map = this.addrInfo.contract.code.source_map;
               if(res.data.contract.verify === 1){
                 // this.showContent = true; 
                 this.showVerify = true
@@ -1001,9 +1177,10 @@
         }
       },
 
-
- 
-      
+      handleChange(val) {
+        console.log(val);
+      }
+  
     }
   }
 </script>
@@ -1366,7 +1543,57 @@
     height: 400px;
   }
 
+  /* read-contract */
+  
+  .read-contract .el-collapse, .write-contract .el-collapse{
+    border: none;
+  }
+  .read-contract .el-collapse .el-collapse-item, .write-contract .el-collapse .el-collapse-item{
+    border: 1px solid rgba(0,0,0,.125);
+    margin: 10px;
+    border-radius: 5px;
+  }
+  .read-flex, .write-flex{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 15px;
+  }
 
+  .all-flex{
+    display: flex;
+    flex-direction: column;
+    padding-right: 15px;
+  }
+
+  .from-control{
+    height: 20px;
+    padding: 5px 10px;
+    margin: 6px 0 13px 0;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+  }
+  
+  .all-btn{
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+  .warning-info{
+    margin-top: 10px;
+  }
+  
+  .write-contract .all-btn{
+    background-color: #007bff;
+    color: #fff;
+    opacity: .65
+  }
+
+  .iscur{
+    color: #ed303b !important;
+    border: 1px solid #ed303b !important;
+  }
 
 
 
