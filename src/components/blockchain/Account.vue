@@ -355,11 +355,11 @@
             <div class="stx-pane" v-if="activeName === 3">
               <div v-if="showContent">
                 <el-container class="el-contract">
-                <el-header style="height:100px">  
+                <el-header style="height:100px">
                    <div>
                       <i class="el-icon-warning"></i>
-                      <span> Are you the contract creator? 
-                      
+                      <span> Are you the contract creator?
+
                         <router-link style="color:#3498db ; font-weight: bolder" :to="verifyUrl">Verify and Publish</router-link>
                         your contract source code today!</span>
                     </div>
@@ -410,8 +410,8 @@
                           <span style="margin-right: 86px">Compiler Version</span>
                           <span><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong><a style="color: #3498db">license</a></span>
                         </div>
-                      </div>       
-                    </template> 
+                      </div>
+                    </template>
 
                     <template>
                       <div class="csc-s">
@@ -428,7 +428,7 @@
                               <el-dropdown-item>c</el-dropdown-item>
                             </el-dropdown-menu>
                           </el-dropdown>
-                          <el-dropdown class="csc-i" style="margin-left: 5px"> 
+                          <el-dropdown class="csc-i" style="margin-left: 5px">
                             <el-button type="primary" style="background-color: #77838f">
                               More Options<i class="el-icon-arrow-down el-icon--right"></i>
                             </el-button>
@@ -448,7 +448,7 @@
                         <!-- 复制地址栏链接 -->
                         <el-tooltip content="Generate Permalink" placement="top">
                           <a class="copy-url" @click="copyUrl" :data-clipboard-text="url"><i class="el-icon-link"></i></a>
-                        </el-tooltip>  
+                        </el-tooltip>
                         <!-- 切换文本域大小 -->
                         <el-tooltip  content="Toggle Fullscrent" placement="top">
                           <a @click="changeIts" :style="{display:iconsDisplay}"><i class="el-icon-full-screen" ></i></a>
@@ -459,7 +459,7 @@
                       </div>
                       <!-- <div class="c-icon"></div> -->
                       <textarea v-model="addrInfo.contract_code" :class="[isActives? 'active':'actives']">{{addrInfo.contract_code}}</textarea>
-                    </template> 
+                    </template>
 
                   <!-- Export ABI -->
                     <template>
@@ -493,7 +493,7 @@
                         </div>
                       </div>
                       <textarea id="foo" v-model="addrInfo.contract.abi" :class="[isActive? 'change':'changes']" >{{addrInfo.contract.abi}}</textarea>
-                    </template> 
+                    </template>
 
                     <!-- Contract Creation Code -->
                     <template>
@@ -505,7 +505,7 @@
                         </div>
                       </div>
                       <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.byte_code}}</textarea>
-                    </template> 
+                    </template>
 
                     <!-- Deployed ByteCode Sourcemap -->
                     <template>
@@ -513,14 +513,14 @@
                         <p><i class="far fa-map text-secondary mr-1" style="margin-right: 4px"></i><strong>Deployed ByteCode Sourcemap</strong></p>
                       </div>
                       <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.source_map}}</textarea>
-                    </template> 
+                    </template>
 
                     <template>
                       <div class="s-s" style="display: none;">
                         <p><i class="fas fa-chess-board text-secondary mr-1" style="margin-right: 4px"></i><strong>Swarm Source</strong></p>
                       </div>
                       <pre  class="ace-dawn" style="margin-top: 5px; height:64px; display: none;"></pre>
-                    </template> 
+                    </template>
                   </div>
                   <!-- Read Contract -->
                   <div class="read-contract" v-show=" cur == 1">
@@ -590,7 +590,8 @@
                     <div class="write-flex">
                       <p>
                         <i class="fa fa-circle text-danger mr-1"></i>
-                        <a href="/" style="color: #3498db">Connect to Web3</a> 
+<!--                        <a href="/" style="color: #3498db">Connect to Web3</a>-->
+                        <button id="connectButton" @click=requestAccount>Connect to Web3</button>
                       </p>
                       <a href="/" style="color: #3498db">[Reset]</a>
                     </div>
@@ -803,6 +804,10 @@
         rawUrl:'',
         cur: 0,
         activeNames: ['1'],
+
+        currentChainId: '',
+        chainId: '0x7ff',
+        testChainId: '0x800',
       }
     },
     created() {
@@ -810,7 +815,7 @@
       this.getAddrDetail();
       this.getAddrTx();
       this.getIIP20TokenTx();
-      this.getIIP721TokenTx(); 
+      this.getIIP721TokenTx();
       this.getTokens(this.addr);
       this.url = window.location.href
     },
@@ -843,7 +848,7 @@
         this.isInfoLoading = true;
         this.$axios.get('http://192.168.0.99:6660/api/account/detail',{params:{address:this.addr}}).then(res => {
           // console.log('api account detail', res.data);
-          
+
           this.addrInfo = res.data;
           console.log(res.data.contract);
           let keys = Object.keys(res.data);
@@ -868,7 +873,7 @@
               this.addrInfo.creatHashUrl = `/tx/${this.addrInfo.hash}`;
               this.addrInfo.tokenTracker = this.addrInfo.contract_type !== 0 ? `${this.addrInfo.name}(${this.addrInfo.symbol})` : "";
               this.addrInfo.tokenTrackerUrl = this.addrInfo.contract_type !== 0 ? `/token/${this.addrInfo.address}` : "";
-              // 
+              //
               this.verifyUrl = `/verifyContract/${this.addrInfo.address}`;
               this.jsonUrl = `/exportAbi/${this.addrInfo.address}/json`;
               this.rawUrl = `/exportAbi/${this.addrInfo.address}/raw`;
@@ -881,11 +886,11 @@
               this.addrInfo.byte_code = this.addrInfo.contract.code.byte_code;
               this.addrInfo.source_map = this.addrInfo.contract.code.source_map;
               if(res.data.contract.verify === 1){
-                // this.showContent = true; 
+                // this.showContent = true;
                 this.showVerify = true
               }else{
                 // this.showVerify = true
-                this.showContent = true; 
+                this.showContent = true;
 
 
               }
@@ -1117,7 +1122,7 @@
       copy(){
         let _this = this;
         var clipboard = new Clipboard('.copy-text')
-         clipboard.on('success', function(e) { 
+         clipboard.on('success', function(e) {
           // console.log('Action:', e.action);
           // console.log('Text:', e.text);
           _this.$message.success("Copy successfully")
@@ -1139,7 +1144,7 @@
         if (this.isActive == true) {
           this.activeDisplay = 'none';
           this.iconDisplay = 'block'
-          
+
         } else {
           this.activeDisplay = 'block';
           this.iconDisplay = 'none'
@@ -1170,7 +1175,7 @@
         if (this.isActives == true) {
           this.activesDisplay = 'none';
           this.iconsDisplay = 'block'
-          
+
         } else {
           this.activesDisplay = 'block';
           this.iconsDisplay = 'none'
@@ -1179,8 +1184,36 @@
 
       handleChange(val) {
         console.log(val);
-      }
-  
+      },
+
+      async requestAccount () {
+        this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
+        try {
+          if (this.currentChainId !== this.chainId && this.currentChainId !== this.testChainId && this.currentChainId !== '0x1' && this.currentChainId !== '0x38') {
+            // console.log('navbar request account', this.currentChainId)
+            this.connectAccount();
+          } else {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`
+          }
+
+        } catch (e) {
+          console.log('request accounts error:', e);
+        }
+      },
+      async connectAccount () {
+        // console.log("navbar connect account", this.currentChainId)
+        try {
+          if (this.currentChainId !== this.chainId  && this.currentChainId !== this.testChainId && this.currentChainId !== "0x1" && this.currentChainId !== "0x38") {
+            this.address = this.$t('wrongNetwork');
+          }else {
+            const accounts = await ethereum.request({ method: 'eth_accounts' });
+            this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`;
+          }
+        } catch (e) {
+          console.log('request accounts error:', e);
+        }
+      },
     }
   }
 </script>
@@ -1345,7 +1378,7 @@
   .sg-ii .sg-sl {
     width: 350px;
   }
-  
+
   .el-contract{
     color: #12161c;
     line-height: 60px;
@@ -1401,14 +1434,14 @@
     margin-top: 26px;
 
   }
-  
+
   .exact-l , .exact-r{
     width: 579px;
   }
 
   .exact-l{
     margin-right: 50px ;
-  } 
+  }
 
   .csc-s{
     display: flex;
@@ -1502,7 +1535,7 @@
     display: flex;
     justify-content: space-between;
   }
-  
+
   .code-s a{
     color: #fff;
     background-color: #db9a04;
@@ -1544,7 +1577,7 @@
   }
 
   /* read-contract */
-  
+
   .read-contract .el-collapse, .write-contract .el-collapse{
     border: none;
   }
@@ -1572,7 +1605,7 @@
     border: 1px solid #ced4da;
     border-radius: 5px;
   }
-  
+
   .all-btn{
     background-color: #f8f9fa;
     border: 1px solid #ced4da;
@@ -1583,7 +1616,7 @@
   .warning-info{
     margin-top: 10px;
   }
-  
+
   .write-contract .all-btn{
     background-color: #007bff;
     color: #fff;
