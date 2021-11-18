@@ -401,7 +401,7 @@
                           <strong>{{addrInfo.name}}</strong>
                           <el-divider></el-divider>
                           <span style="margin-right: 50px">Compiler Version</span>
-                          <strong>{{addrInfo.contract.compiler.name}}</strong>
+                          <strong>{{addrInfo.compiler_name}}</strong>
                         </div>
                         <div class="exact-r">
                           <span style="margin-right: 50px">Optimization Enabled:</span>
@@ -877,14 +877,14 @@
               this.verifyUrl = `/verifyContract/${this.addrInfo.address}`;
               this.jsonUrl = `/exportAbi/${this.addrInfo.address}/json`;
               this.rawUrl = `/exportAbi/${this.addrInfo.address}/raw`;
-              this.addrInfo.name = this.addrInfo.name;
-              this.addrInfo.contract.compiler.name = this.addrInfo.contract.compiler.name;
+              this.addrInfo.name = this.addrInfo.name ? this.addrInfo.name : '';
+              this.addrInfo.compiler_name = this.addrInfo.contract.compiler ? this.addrInfo.contract.compiler.name : '';
               this.addrInfo.contract.optimization = this.addrInfo.contract.optimization === 0? 'no' : 'yes' ;
-              this.addrInfo.contract.optimizer = this.addrInfo.contract.optimizer;
-              this.addrInfo.contract.abi = this.addrInfo.contract.abi;
-              this.addrInfo.contract_code = this.addrInfo.contract.contract_code;
-              this.addrInfo.byte_code = this.addrInfo.contract.code.byte_code;
-              this.addrInfo.source_map = this.addrInfo.contract.code.source_map;
+              // this.addrInfo.contract.optimizer = this.addrInfo.contract.optimizer;
+              this.addrInfo.contract.abi = this.addrInfo.contract.abi ? this.addrInfo.contract.abi : '';
+              this.addrInfo.contract_code = this.addrInfo.contract.contract_code ? this.addrInfo.contract.contract_code : '';
+              this.addrInfo.byte_code = this.addrInfo.contract.code ? this.addrInfo.contract.code.byte_code : '';
+              this.addrInfo.source_map = this.addrInfo.contract.code ? this.addrInfo.contract.code.source_map : '';
               if(res.data.contract.verify === 1){
                 // this.showContent = true;
                 this.showVerify = true
