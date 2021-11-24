@@ -455,7 +455,6 @@
                             </el-tooltip>
                             <a @click="changeIts" :style="{display:activesDisplay}"><i class="fa fa-compress" ></i></a>
                           </div>
-
                         </div>
                         <!-- <div class="c-icon"></div> -->
                         <textarea id="loo" v-model="addrInfo.contract_code" :class="[isActives? 'active':'actives']">{{addrInfo.contract_code}}</textarea>
@@ -514,7 +513,6 @@
                         </div>
                         <textarea class="ace-dawn" style="margin-top: 5px; height:200px">{{addrInfo.source_map}}</textarea>
                       </template>
-
                       <template>
                         <div class="s-s" style="display: none;">
                           <p><i class="fas fa-chess-board text-secondary mr-1" style="margin-right: 4px"></i><strong>Swarm Source</strong></p>
@@ -528,24 +526,26 @@
                         <p>
                           <i class="far fa-file-alt text-secondary mr-1"></i>
                           Read Contract Information
-
                         </p>
-                        <a href="/" style="color: #3498db">[Reset]</a>
+                        <a @click="readReset" style="color: #3498db">[Reset]</a>
                       </div>
                       <el-collapse v-model="activeNames" @change="handleChange" v-for="(read, r) in reads" :key="r">
                         <el-collapse-item :title="read.full_name" :name="read.id"  >
                           <div v-if="read.inputs == '' ? true : false">{{read.value}}<i><span style="margin-left:5px">{{read.type}}</span></i></div>
                           <div v-if="read.inputs == '' ? false : true">
-                            <div v-for="(item , index) in read.inputs" :key=index>
+                            <div v-for="(item,index) in read.inputs" :key='index'>
                               <div class="all-flex">
                                 <label>{{item.name}}</label>
-                                <input type="text" v-model="item.value" :placeholder="item.name" class="from-control" id="input">
-
-                                <!-- <input type="text" v-model="addressInfo" :placeholder="item" class="from-control"> -->
+                                <input  type="text" v-model="item.value" :placeholder="item.name" class="from-control" id="input" >
                               </div>
                             </div>
                             <button class="all-btn" @click="spanshow(r)">Query</button>
-                            <div class="warning-info"><i>uint256</i> <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">Error: Invalid number of parameters for "{{read.name}}". Got 0 expected {{read.inputs.length}}!</span></div>
+                            <div class="warning-info">
+                              <span  style="margin-right:5px" v-if='read.value ? true : false '>{{read.value}}</span>
+                              <i>uint256</i>
+                              <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">Error: Invalid number of parameters for "{{read.name}}".expected {{read.inputs.length}}!</span>
+                              <span v-if="invalidAddr" style="color: #ed303b; margin-left:5px"> Error: invalid address</span>
+                            </div>
                           </div>
                         </el-collapse-item>
                       </el-collapse>
@@ -559,106 +559,17 @@
                         </p>
                         <a href="/" style="color: #3498db">[Reset]</a>
                       </div>
-                      <el-collapse v-model="activeNames" @change="handleChange">
-                        <el-collapse-item title="1. approve" name="1">
-                          <div>
+                      <el-collapse v-model="activeNames" @change="handleChange" v-for="(write,n) in writes" :key="n">
+                        <el-collapse-item :title="write.full_name">
+                          <div v-for="(items,index) in write.inputs" :key="index">
                             <div class="all-flex">
-                              <label>spender (address)</label>
-                              <input type="text" placeholder="spender (address)" class="from-control">
+                              <label>{{items.name}}</label>
+                              <input type="text" v-model="items.value" :placeholder="items.name" class="from-control">
                             </div>
-                            <div class="all-flex">
-                              <label>amount (uint256)</label>
-                              <input type="text" placeholder="amount (uint256)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
                           </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="2. burn" name="2">
-                          <div>
-                            <div class="all-flex">
-                              <label>amount (uint256)</label>
-                              <input type="text" placeholder="amount (uint256)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
-                          </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="3. decreaseAllowance" name="3">
-                          <div>
-                            <div class="all-flex">
-                              <label>spender (address)</label>
-                              <input type="text" placeholder="spender (address)" class="from-control">
-                            </div>
-                            <div class="all-flex">
-                              <label>subtractedValue (uint256) </label>
-                              <input type="text" placeholder="subtractedValue (uint256)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
-                          </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="4. increaseAllowance" name="4">
-                          <div>
-                            <div class="all-flex">
-                              <label>spender (address)</label>
-                              <input type="text" placeholder="spender (address)" class="from-control">
-                            </div>
-                            <div class="all-flex">
-                              <label>addedValue (uint256) </label>
-                              <input type="text" placeholder="addedValue (uint256)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
-                          </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="5. mint" name="5">
-                          <div>
-                            <div class="all-flex">
-                              <label>amount (uint256)</label>
-                              <input type="text" placeholder="amount (uint256)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
-                          </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="6. renounceOwnership" name="6">
-                          <div>
-                            <button class="all-btn">Write</button>
-                          </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="7. transfer" name="7">
-                          <div>
-                            <div class="all-flex">
-                              <label>recipient (address)</label>
-                              <input type="text" placeholder="recipient (address)" class="from-control">
-                            </div>
-                            <div class="all-flex">
-                              <label>amount (uint256)</label>
-                              <input type="text" placeholder="amount (uint256)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
-                          </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="8. transferFrom" name="8">
-                          <div>
-                            <div class="all-flex">
-                              <label>sender (address)</label>
-                              <input type="text" placeholder="sender (address)" class="from-control">
-                            </div>
-                            <div class="all-flex">
-                              <label>recipient (address)</label>
-                              <input type="text" placeholder="recipient (address)" class="from-control">
-                            </div>
-                            <div class="all-flex">
-                              <label>amount (uint256)</label>
-                              <input type="text" placeholder="amount (uint256)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
-                          </div>
-                        </el-collapse-item>
-                        <el-collapse-item title="9. transferOwnership" name="9">
-                          <div>
-                            <div class="all-flex">
-                              <label>newOwner (address)</label>
-                              <input type="text" placeholder="newOwner (address)" class="from-control">
-                            </div>
-                            <button class="all-btn">Write</button>
+                          <button class="all-btn">Write</button>
+                          <div class="warning-info">
+                            <span v-if="write.spanInfo">Error: invalid address</span>
                           </div>
                         </el-collapse-item>
                       </el-collapse>
@@ -773,7 +684,7 @@ export default {
       testChainId: '0x800',
       reads:[],
       inputs:[],
-      // error: 'none',
+      invalidAddr:false
     }
   },
   created() {
@@ -846,12 +757,12 @@ export default {
             this.addrInfo.name = this.addrInfo.name ? this.addrInfo.name : '';
             this.addrInfo.compiler_name = this.addrInfo.contract.compiler ? this.addrInfo.contract.compiler.name : '';
             this.addrInfo.contract.optimization = this.addrInfo.contract.optimization === 0? 'no' : 'yes' ;
-            // this.addrInfo.contract.optimizer = this.addrInfo.contract.optimizer;
             this.addrInfo.contract.abi = this.addrInfo.contract.abi ? this.addrInfo.contract.abi : '';
             this.addrInfo.contract_code = this.addrInfo.contract.contract_code ? this.addrInfo.contract.contract_code : '';
             this.addrInfo.byte_code = this.addrInfo.contract.code ? this.addrInfo.contract.code.byte_code : '';
             this.addrInfo.source_map = this.addrInfo.contract.code ? this.addrInfo.contract.code.source_map : '';
             this.reads = this.addrInfo.contract.read_contract ? this.addrInfo.contract.read_contract : '';
+            this.writes = this.addrInfo.contract.write_contract ? this.addrInfo.contract.write_contract : '';
             if(res.data.contract.verify === 1){
               // this.showContent = true;
               this.showVerify = true
@@ -1167,34 +1078,59 @@ export default {
 
     // read
     spanshow(r){
-      console.log(this.reads[r]);
-      console.log(r);
-      // let that = event.currentTarget.parentElement;
-      // let prev = that.querySelector('input');
-      // console.log(that);
-      // console.log(prev);
+      // console.log(this.reads[r]);
+      // console.log(r);
       if (this.reads[r].inputs && this.reads[r].inputs.length > 0) { //有值
         this.reads[r].spanInfo = false;
         let params = [];
         for (let input of this.reads[r].inputs) {
           params.push(input.value);
-          console.log(input.value);
-          if (!input.value) {
+          let num = input.value
+          if (!num) {
             this.reads[r].spanInfo = true; //显示提示
+            this.reads[r].value = "";
+            break;
+          }else {
+            if(num=/^(?![0-9]+$)(?![a-zA-Z]+$)[a-zA-Z0-9]{42}$/.test(num)){
+              this.invalidAddr = false;
+            }else{
+              this.invalidAddr = true;
+              break;
+            }
           }
         }
         //如果循环完this.spanInfo还是false说明input都有值
-        if (this.reads[r].spanInfo === false) {
-          let abi = this.reads[r].abi;
+        if (this.reads[r].spanInfo === false && this.invalidAddr === false) {
+          let contractAbi = this.reads[r].abi;
           //调用接口
-          console.log('调用接口');
+          const data ={
+            contractAbi: contractAbi,
+            contractAddr: this.addrInfo.address,
+            params: params
+          }
+          this.$axios.post('http://192.168.0.99:6660/api/account/readContract',data).then((res)=>{
+            console.log(res);
+            if(res.data.data){
+              this.reads[r].value = res.data.data;
+            }
+          }).catch((err)=>{
+            console.log(err);
+          })
         }
         //判断该按钮对应的input是否有值
-
       } else { //空值
         this.spanInfo = true; //显示提示
       }
     },
+
+    readReset(){
+      // console.log(111);
+    },
+
+
+
+
+
 
 
 
