@@ -1160,7 +1160,7 @@ export default {
               break;
             default:
               this.flag = false;
-              message = "No match type";
+              this.message = "No match type";
           }
 
           if(!flag) {
