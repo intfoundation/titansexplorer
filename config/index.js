@@ -2,11 +2,24 @@
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
 
-const path = require('path')
+const path = require('path');
+// 开发环境
+let dev = require('./dev.env');
 
+// 正式环境
+let pro = require('./prod.env');
+let env = process.env.NODE_ENV || 'dev';
+let configs = {};
+if (env === 'development') {
+  configs = dev;
+} else {
+  configs = pro;
+}
+const config = Object.assign({}, { env }, configs[env]);
 module.exports = {
-    dev: {
-
+  env,
+  configs,
+      dev: {
         // Paths
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
@@ -71,6 +84,7 @@ module.exports = {
         // View the bundle analyzer report after build finishes:
         // `npm run build --report`
         // Set to `true` or `false` to always turn it on or off
-        bundleAnalyzerReport: process.env.npm_config_report
+        // bundleAnalyzerReport: process.env.npm_config_report
     }
-}
+
+};

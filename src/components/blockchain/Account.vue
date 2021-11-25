@@ -589,9 +589,9 @@
 <script>
 import BigNumber from 'bignumber.js'
 import Clipboard from 'clipboard'
-// const int4 = require('int4')
 import int4 from "int4.js"
 import _ from 'underscore'
+const cfg = require('../../../config')
 export default {
   name: "StatsDetail",
   data() {
@@ -766,6 +766,9 @@ export default {
             this.addrInfo.source_map = this.addrInfo.contract.code ? this.addrInfo.contract.code.source_map : '';
             this.reads = this.addrInfo.contract.read_contract ? this.addrInfo.contract.read_contract : '';
             this.writes = this.addrInfo.contract.write_contract ? this.addrInfo.contract.write_contract : '';
+
+            this.noParamReadContract(); //无参数的read contract获取
+
             if(res.data.contract.verify === 1){
               // this.showContent = true;
               this.showVerify = true
@@ -1080,7 +1083,7 @@ export default {
     },
 
     // read
-    spanshow(r){
+    async spanshow(r){
       // console.log(this.reads[r]);
       // console.log(r);
       if (this.reads[r].inputs && this.reads[r].inputs.length > 0) { //有值
@@ -1105,20 +1108,24 @@ export default {
         //如果循环完this.spanInfo还是false说明input都有值
         if (this.reads[r].spanInfo === false && this.invalidAddr === false) {
           let contractAbi = this.reads[r].abi;
-          //调用接口
-          const data ={
-            contractAbi: contractAbi,
-            contractAddr: this.addrInfo.address,
-            params: params
+          let result = await this.withParamReadContract(contractAbi, this.addrInfo.address, params);
+          if (result) {
+            this.reads[r].value = result;
           }
-          this.$axios.post('http://192.168.0.99:6660/api/account/readContract',data).then((res)=>{
-            console.log(res);
-            if(res.data.data){
-              this.reads[r].value = res.data.data;
-            }
-          }).catch((err)=>{
-            console.log(err);
-          })
+          //调用接口
+          // const data ={
+          //   contractAbi: contractAbi,
+          //   contractAddr: this.addrInfo.address,
+          //   params: params
+          // }
+          // this.$axios.post('http://192.168.0.99:6660/api/account/readContract',data).then((res)=>{
+          //   console.log(res);
+          //   if(res.data.data){
+          //     this.reads[r].value = res.data.data;
+          //   }
+          // }).catch((err)=>{
+          //   console.log(err);
+          // })
         }
         //判断该按钮对应的input是否有值
       } else { //空值
@@ -1165,16 +1172,107 @@ export default {
 
           if(!flag) {
             this.writes[n].spanInfo = true;
-            return;  
+            return;
           }
         }
       }
- 
+
     },
 
+    //无参数的read contract获取
+    async noParamReadContract() {
+      if (this.reads && this.reads.length > 0) {
+        for (let read of this.reads) {
+          if (read.inputs.length === 0) {
+            let functionSig = int4.abi.methodID(read.abi.name, []).substr(2, 8);
+            let tx = {
+              to: this.addr,
+              data: "0x" + functionSig,
+            }
+            let body = `{"jsonrpc":"2.0","method":"int_call","params":[` + JSON.stringify(tx) + `,"latest"],"id":1}`;
+            let result;
+            try {
+              result = await this.run(body);
+              if (result) {
+                let decodeData = int4.abi.decodeParams([""], [read.type], result);
+                if (read.type === 'uint256' || read.type === 'uint8' || read.type === 'string') {
+                  read.value = decodeData['0'].toString();
+                } else {
+                  read.value = result;
+                }
+              }
+            } catch (e) {
+              console.log("error", e);
+            }
+          }
+        }
+      }
+    },
 
+    //带参数的read contract获取
+    async withParamReadContract(contractAbi, contractAddr, params) {
+      let inputs = contractAbi.inputs;
+      let outputs = contractAbi.outputs;
+      let inputTypes = [];
+      let outputObj = {
+        names: [],
+        types: []
+      };
+      if (inputs && inputs.length > 0) {
+        for (let input of inputs) {
+          inputTypes.push(input.type)
+        }
+      }
 
+      if (outputs && outputs.length > 0) {
+        for (let output of outputs) {
+          outputObj.names.push(output.name);
+          outputObj.types.push(output.type);
+        }
+      }
+      let data = int4.abi.encodeParams(inputTypes, params);
+      let functionSig = int4.abi.methodID(contractAbi.name, inputTypes).substr(2, 8);
+      let tx = {
+        to: contractAddr,
+        data: "0x" + functionSig + data.substring(2)
+      }
+      let body = `{"jsonrpc":"2.0","method":"int_call","params":[` + JSON.stringify(tx) + `,"latest"],"id":1}`
+      try {
+        let result = await this.run(body);
+        let r = int4.abi.decodeParams(outputObj.names, outputObj.types, result);
+        if (outputObj.types && outputObj.types.length > 0) {
+          for (let i = 0; i < outputObj.types.length; i++) {
+            if (outputObj.types[i] === 'uint256' || outputObj.types[i] === 'uint8') {
+              r[i] = r[i].toString();
+            }
+          }
+        }
+        return r[0];
+      } catch (e) {
+          console.log("调用合约失败， error:" + e);
+      }
+    },
 
+    async run(body, url = 'http://101.32.74.50:8555'){
+      url = `http://${cfg.configs.rpcHost}:${cfg.configs.rpcPort}`;
+      let options = {
+        url: url,
+        method: 'POST',
+        headers: { "content-type": "application/json" },
+        data: body,
+      };
+      return await this.$axios(options).then((res)=> {
+        let data = res.data;
+        if (data.result) {
+          // console.log("data", data)
+          return data.result;
+        } else {
+          console.log("error", data)
+        }
+      }).catch((err) => {
+        console.log('err ' + err);
+      })
+    },
 
 
     async requestAccount () {
