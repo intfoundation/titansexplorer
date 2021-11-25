@@ -687,7 +687,8 @@ export default {
       reads:[],
       inputs:[],
       invalidAddr:false,
-      message:''
+      message: '',
+      address: '', //小狐狸地址
     }
   },
   created() {
@@ -1109,7 +1110,7 @@ export default {
         if (this.reads[r].spanInfo === false && this.invalidAddr === false) {
           let contractAbi = this.reads[r].abi;
           let result = await this.withParamReadContract(contractAbi, this.addrInfo.address, params);
-          if (result) {
+          if (result.data) {
             this.reads[r].value = result;
           }
           //调用接口
@@ -1137,10 +1138,11 @@ export default {
 
     },
 
-    writeSub(n){
+    async writeSub(n){
       // console.log(this.writes[n].inputs);
       if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
         this.writes[n].spanInfo = false;
+        let params = [];
         for(let inputBox of this.writes[n].inputs){
           //1. 判断类型 address/uint256/uint8/string/bool
           let flag = false;
@@ -1170,11 +1172,16 @@ export default {
               this.flag = false;
               this.message = "Error:No match type";
           }
-
           if(!flag) {
             this.writes[n].spanInfo = true;
             return;
           }
+          params.push(inputBox.value);
+        }
+        let contractAbi = this.writes[n].abi;
+        let result = await this.WriteContract(contractAbi, this.addrInfo.address, params, '0x85ce6cc31ab08feb27bb1e4054f07e80a66f07d590b9ac1bc4d0aeb7d6bccd4e');
+        if (result) {
+          this.writes[n].value = result;
         }
 
         if(this.writes[n].spanInfo === false){
@@ -1252,9 +1259,167 @@ export default {
             }
           }
         }
-        return r[0];
+        return {
+          data: r[0],
+          message: 'Success'
+        };
       } catch (e) {
-          console.log("调用合约失败， error:" + e);
+        console.log("调用合约失败， error:" + e);
+        return {
+          message: 'Fail',
+        }
+      }
+    },
+
+    //write contract获取
+    async WriteContract(contractAbi, contractAddr, params) {
+      let inputs = contractAbi.inputs;
+      let outputs = contractAbi.outputs;
+      let inputTypes = [];
+      let outputObj = {
+        names: [],
+        types: []
+      };
+      if (inputs && inputs.length > 0) {
+        for (let input of inputs) {
+          inputTypes.push(input.type)
+        }
+      }
+      if (outputs && outputs.length > 0) {
+        for (let output of outputs) {
+          outputObj.names.push(output.name);
+          outputObj.types.push(output.type);
+        }
+      }
+      //如果是转账，要判断余额是否充足
+      if (contractAbi.name === 'transfer' || contractAbi.name === 'transferFrom') {
+        let balance_abi = {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              }
+            ],
+            "name": "balanceOf",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          };
+        let param1 = '';
+        if (contractAbi.name === 'transfer') {
+          //获取该合约地址余额
+          param1 = this.address;
+        } else if (contractAbi.name === 'transferFrom') {
+          //获取第一个参数的合约地址余额
+          param1 = params[0];
+        }
+        let balanceOf = await this.withParamReadContract(balance_abi, this.addrInfo.address, [param1]);
+        let balance = 0;
+        if (balanceOf.data) {
+          balance = balanceOf.data;
+        }
+        console.log('balance ' + balance);
+        console.log('amount: ' + params[params.length - 1]);
+        //用余额和转账金额比较，params数组的最后一个对象是转账金额
+        if (parseInt(balance) < parseInt(params[params.length - 1])) {
+          console.log('余额不足');
+          return {
+            message: 'Insufficient balance'
+          }
+        }
+      }
+      for (let input in inputTypes) {
+        if (inputTypes[input] === 'uint8' || inputTypes[input] === 'uint256') { //是金额，要进行转换
+          params[input] = new BigNumber(params[input]);
+        }
+      }
+      let data = int4.abi.encodeParams(inputTypes, params);
+      let functionSig = int4.abi.methodID(contractAbi.name, inputTypes);
+      let tx = {
+        from: this.address,
+        to: contractAddr,
+        value: "0x0",
+        data: functionSig + data.substring(2)
+      };
+      let gasPrice = await this.getGasPrice();
+      if (gasPrice) {
+        tx.gasPrice = gasPrice;
+      }
+      let gas = await this.getGas(tx);
+      if (gas) {
+        tx.gas = gas;
+      }
+      await ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [tx],
+        }).then((result) => {
+          console.log('hash', result);
+          return {
+            message: 'Success',
+          }
+          // this.$alert("hash:" + result, "success", {
+          //   confirmButtonText: this.$t("confirm"),
+          //   type: "success",
+          // });
+        }).catch((error) => {
+          console.log('tx error', error);
+          return {
+            message: 'Fail',
+          }
+        });
+    },
+
+    //获取gasprice
+    async getGasPrice() {
+      return await ethereum.request({
+          method: 'eth_gasPrice',
+          params: []
+        }).then((result) => {
+          console.log('gasprice', result);
+          return result;
+        }).catch((error) => {
+            console.log('error', error)
+          }
+
+        )
+    },
+
+    //获取gas
+    async getGas(params) {
+      console.log(params);
+      return await ethereum.request({
+          method: 'eth_estimateGas',
+          params: [params],
+        }).then((result) => {
+          console.log('gas', result);
+          return result;
+        }).catch((error) => {
+            console.log('error', error)
+          }
+
+        )
+    },
+
+    async getContractDecimals(contractAddress) {
+      let functionSig = int4.abi.methodID("decimals", []).substr(2, 8);
+      let tx = {
+        to: contractAddress,
+        data: "0x" + functionSig
+      }
+      let body = `{"jsonrpc":"2.0","method":"int_call","params":[` + JSON.stringify(tx) + `,"latest"],"id":1}`
+
+      try{
+        return await this.run(body)
+      }catch (e) {
+        console.log("getContractDecimals error", e);
+        return 0;
       }
     },
 
@@ -1288,9 +1453,10 @@ export default {
           this.connectAccount();
         } else {
           const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-          this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`
+          // this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`;
+          this.address = `${accounts[0]}`;
         }
-
+        console.log('address' + this.address);
       } catch (e) {
         console.log('request accounts error:', e);
       }
@@ -1302,8 +1468,10 @@ export default {
           this.address = this.$t('wrongNetwork');
         }else {
           const accounts = await ethereum.request({ method: 'eth_accounts' });
-          this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`;
+          // this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`;
+          this.address = `${accounts[0]}`;
         }
+        console.log('address' + this.address);
       } catch (e) {
         console.log('request accounts error:', e);
       }
