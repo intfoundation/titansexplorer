@@ -535,7 +535,7 @@
                             <div v-for="(item,index) in read.inputs" :key='index'>
                               <div class="all-flex">
                                 <label>{{item.name}}</label>
-                                <input  type="text" v-model="item.value" :placeholder="item.name" class="from-control" id="input" >
+                                <input autocomplete="off" type="text" v-model="item.value" :placeholder="item.name" class="from-control" id="input">
                               </div>
                             </div>
                             <button class="all-btn" @click="spanshow(r)">Query</button>
@@ -563,7 +563,7 @@
                           <div v-for="(items,index) in write.inputs" :key="index">
                             <div class="all-flex">
                               <label>{{items.name}}</label>
-                              <input type="text" v-model="items.value" :placeholder="items.name" class="from-control">
+                              <input autocomplete="off" v-model="items.value" :placeholder="items.name" class="from-control">
                             </div>
                           </div>
                           <button class="all-btn" @click="writeSub(n)">Write</button>
@@ -1084,7 +1084,7 @@ export default {
 
     // read
     async spanshow(r){
-      // console.log(this.reads[r]);
+      console.log(this.reads[r],r);
       // console.log(r);
       if (this.reads[r].inputs && this.reads[r].inputs.length > 0) { //有值
         this.reads[r].spanInfo = false;
@@ -1113,19 +1113,19 @@ export default {
             this.reads[r].value = result;
           }
           //调用接口
-          // const data ={
-          //   contractAbi: contractAbi,
-          //   contractAddr: this.addrInfo.address,
-          //   params: params
-          // }
-          // this.$axios.post('http://192.168.0.99:6660/api/account/readContract',data).then((res)=>{
-          //   console.log(res);
-          //   if(res.data.data){
-          //     this.reads[r].value = res.data.data;
-          //   }
-          // }).catch((err)=>{
-          //   console.log(err);
-          // })
+          const data ={
+            contractAbi: contractAbi,
+            contractAddr: this.addrInfo.address,
+            params: params
+          }
+          this.$axios.post('http://192.168.0.99:6660/api/account/readContract',data).then((res)=>{
+            console.log(res);
+            if(res.data.data){
+              this.reads[r].value = res.data.data;
+            }
+          }).catch((err)=>{
+            console.log(err);
+          })
         }
         //判断该按钮对应的input是否有值
       } else { //空值
@@ -1134,7 +1134,7 @@ export default {
     },
 
     readReset(){
-      // console.log(111);
+
     },
 
     writeSub(n){
@@ -1143,37 +1143,42 @@ export default {
         this.writes[n].spanInfo = false;
         for(let inputBox of this.writes[n].inputs){
           //1. 判断类型 address/uint256/uint8/string/bool
-          const flag = true;
+          let flag = false;
           switch(inputBox.type) {
             case 'address':
               flag = int4.utils.isAddress(inputBox.value);
-              this.message = "Invalid address";
+              this.message = "Error:Invalid address";
               break;
             case 'string':
               flag = _.isString(inputBox.value);
-              this.message = "Invalid string";
+              this.message = "Error:Invalid string";
               break;
             case 'bool':
               flag = _.isBool(inputBox.value);
-              this.message = "Invalid bool";
+              this.message = "Error:Invalid bool";
               break;
             case 'uint256':
             case 'uint8':
-              flag = _.isNumber(inputBox.value);
-              this.message = "Invalid number";
-              console.log(flag,"flag");
-              console.log(inputBox.value,"flag");
-              console.log(_.isNumber,"flag");
+              // flag = _.isNumber(inputBox.value);
+              flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
+              this.message = "Error:Invalid number";
+              // console.log(flag,"flag");
+              // console.log(inputBox.value,"flag");
+              // console.log(_.isNumber,"flag");
               break;
             default:
               this.flag = false;
-              this.message = "No match type";
+              this.message = "Error:No match type";
           }
 
           if(!flag) {
             this.writes[n].spanInfo = true;
             return;
           }
+        }
+
+        if(this.writes[n].spanInfo === false){
+          console.log("调用接口");
         }
       }
 
