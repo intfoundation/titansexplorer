@@ -370,8 +370,7 @@
                     </el-row>
                   </el-header>
                   <el-main class="c-main">
-                  <textarea name="text" rows="10" cols="141" class="wordwrap">1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa1111111111111111aaaaaaaaaaaaaaaaaaaaaaa
-                  </textarea>
+                  <textarea name="text" rows="10" cols="141" class="wordwrap"></textarea>
                   </el-main>
                 </el-container>
               </div>
@@ -567,9 +566,9 @@
                               <input type="text" v-model="items.value" :placeholder="items.name" class="from-control">
                             </div>
                           </div>
-                          <button class="all-btn">Write</button>
+                          <button class="all-btn" @click="wirteSub(n)">Write</button>
                           <div class="warning-info">
-                            <span v-if="write.spanInfo">Error: invalid address</span>
+                            <span v-if="write.spanInfo" style="color: #ed303b;">{{message}}</span>
                           </div>
                         </el-collapse-item>
                       </el-collapse>
@@ -590,6 +589,9 @@
 <script>
 import BigNumber from 'bignumber.js'
 import Clipboard from 'clipboard'
+// const int4 = require('int4')
+import int4 from "int4.js"
+import _ from 'underscore'
 export default {
   name: "StatsDetail",
   data() {
@@ -684,7 +686,8 @@ export default {
       testChainId: '0x800',
       reads:[],
       inputs:[],
-      invalidAddr:false
+      invalidAddr:false,
+      message:''
     }
   },
   created() {
@@ -1091,7 +1094,7 @@ export default {
             this.reads[r].value = "";
             break;
           }else {
-            if(num=/^(?![0-9]+$)(?![a-zA-Z]+$)[a-zA-Z0-9]{42}$/.test(num)){
+            if(num=/^(0x|0X)?[0-9a-f]{40}$/.test(num) || /^(0x|0X)?[0-9A-F]{40}$/.test(num)){
               this.invalidAddr = false;
             }else{
               this.invalidAddr = true;
@@ -1127,7 +1130,47 @@ export default {
       // console.log(111);
     },
 
+    wirteSub(n){
+      // console.log(this.writes[n].inputs);
+      if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
+        this.writes[n].spanInfo = false;
+        for(let inputBox of this.writes[n].inputs){
+          //1. 判断类型 address/uint256/uint8/string/bool
+          const flag = true;
+          switch(inputBox.type) {
+            case 'address':
+              flag = int4.utils.isAddress(inputBox.value);
+              this.message = "Invalid address";
+              break;
+            case 'string':
+              flag = _.isString(inputBox.value);
+              this.message = "Invalid string";
+              break;
+            case 'bool':
+              flag = _.isBool(inputBox.value);
+              this.message = "Invalid bool";
+              break;
+            case 'uint256':
+            case 'uint8':
+              flag = _.isNumber(inputBox.value);
+              this.message = "Invalid number";
+              console.log(flag,"flag");
+              console.log(inputBox.value,"flag");
+              console.log(_.isNumber,"flag");
+              break;
+            default:
+              this.flag = false;
+              message = "No match type";
+          }
 
+          if(!flag) {
+            this.writes[n].spanInfo = true;
+            return;  
+          }
+        }
+      }
+ 
+    },
 
 
 
