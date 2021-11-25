@@ -566,7 +566,7 @@
                               <input type="text" v-model="items.value" :placeholder="items.name" class="from-control">
                             </div>
                           </div>
-                          <button class="all-btn" @click="wirteSub(n)">Write</button>
+                          <button class="all-btn" @click="writeSub(n)">Write</button>
                           <div class="warning-info">
                             <span v-if="write.spanInfo" style="color: #ed303b;">{{message}}</span>
                           </div>
@@ -1130,7 +1130,7 @@ export default {
       // console.log(111);
     },
 
-    wirteSub(n){
+    writeSub(n){
       // console.log(this.writes[n].inputs);
       if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
         this.writes[n].spanInfo = false;
