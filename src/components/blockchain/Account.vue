@@ -557,7 +557,7 @@
                           <i v-if="greenIcon" class="fa fa-circle mr-1 text-success"></i>
                           <i v-if="redIcon" class="fa fa-circle text-danger mr-1"></i>
                           <button class="sub-btn" id="connectButton" @click=requestAccount>Connect to Web3 </button>
-                          <span v-if="addrShow">{{this.address}}</span> 
+                          <span v-if="addrShow">{{this.address}}</span>
                         </p>
                         <a style="color: #3498db" @click="resetWrite">[Reset]</a>
                       </div>
@@ -1173,10 +1173,12 @@ export default {
                 this.message = "Error:Invalid bool";
                 break;
               case 'uint256':
-              case 'uint8':
-                flag = _.isNumber(inputBox.value);
                 flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
-                // this.message = "Error:Invalid number";
+                this.message = "Error:Invalid number";
+              case 'uint8':
+                // flag = _.isNumber(inputBox.value);
+                flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
+                this.message = "Error:Invalid number";
                 break;
               default:
                 flag = false;
@@ -1216,7 +1218,7 @@ export default {
             input.value = '';
           }
         }
-      }     
+      }
     },
 
     //无参数的read contract获取
@@ -1479,7 +1481,7 @@ export default {
           }else{
             this.addrShow = true;
             this.redIcon = false;
-            this.greenIcon = true;     
+            this.greenIcon = true;
           }
       } catch (e) {
         console.log('request accounts error:', e);
