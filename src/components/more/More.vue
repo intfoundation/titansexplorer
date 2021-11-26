@@ -30,8 +30,7 @@
           <div class="mx-md">
             <el-form>
               <el-form-item
-                label="Please enter the Contract Address you would like to
-                verify"
+                label="Please enter the Contract Address you would like to verify"
               >
                 <el-input  v-model="address" type="search"  class="md-input"/>
               </el-form-item>
