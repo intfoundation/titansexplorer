@@ -117,12 +117,10 @@ export default {
   name: "More",
   data() {
     return {
-      picUrl: pic,
-      
+      picUrl: pic,     
       compiler: [],
       license: [],
       address: this.$route.params.address,
-
       compilerType: "",
       compilerVersion: "",
       licenseType: "",
@@ -150,19 +148,23 @@ export default {
 
     changeCompilerType(type) {
       console.log("[Please Select]", type);
-      if (type === "1") {
-        console.log("[Please Select]", type);
-        this.showCompileVersion = false;
-        return;
-      }
       this.showCompileVersion = true;
       this.compilerType = type;
     },
 
     verifyContract() {
+      if(!this.address){
+        console.log(this.address,'address');
+          this.$message({
+          message: 'Please enter the address',
+          type: 'warning'
+        });
+        return;
+      }
+
       if (this.compilerType === "") {
         this.$message({
-          message: 'This field required',
+          message: 'Please select Compiler Type',
           type: 'warning'
         });
         return;
@@ -170,7 +172,7 @@ export default {
 
       if (this.compilerVersion === "") {
         this.$message({
-          message: 'Required',
+          message: 'Please select Compiler Version',
           type: 'warning'
         });
         return;
@@ -178,7 +180,7 @@ export default {
 
       if (this.licenseType === "") {
         this.$message({
-          message: 'Required',
+          message: 'Please select Open Source License Type',
           type: 'warning'
         });
         return;
@@ -189,6 +191,7 @@ export default {
     },
 
     resetForm() {
+      this.address="";
       this.compilerType = "";
       this.compilerVersion = "";
       this.licenseType = "";

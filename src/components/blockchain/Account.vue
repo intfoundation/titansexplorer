@@ -556,7 +556,8 @@
 
                           <i v-if="greenIcon" class="fa fa-circle mr-1 text-success"></i>
                           <i v-if="redIcon" class="fa fa-circle text-danger mr-1"></i>
-                          <button class="sub-btn" id="connectButton" @click=requestAccount>Connect to Web3 <span v-if="addrShow">{{this.address}}</span> </button>
+                          <button class="sub-btn" id="connectButton" @click=requestAccount>Connect to Web3 </button>
+                          <span v-if="addrShow">{{this.address}}</span> 
                         </p>
                         <a style="color: #3498db" @click="resetWrite">[Reset]</a>
                       </div>
