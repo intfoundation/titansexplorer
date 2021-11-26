@@ -1434,22 +1434,6 @@ export default {
         )
     },
 
-    async getContractDecimals(contractAddress) {
-      let functionSig = int4.abi.methodID("decimals", []).substr(2, 8);
-      let tx = {
-        to: contractAddress,
-        data: "0x" + functionSig
-      }
-      let body = `{"jsonrpc":"2.0","method":"int_call","params":[` + JSON.stringify(tx) + `,"latest"],"id":1}`
-
-      try{
-        return await this.run(body)
-      }catch (e) {
-        console.log("getContractDecimals error", e);
-        return 0;
-      }
-    },
-
     async run(body, url = 'http://101.32.74.50:8555'){
       url = `http://${cfg.configs.rpcHost}:${cfg.configs.rpcPort}`;
       let options = {
