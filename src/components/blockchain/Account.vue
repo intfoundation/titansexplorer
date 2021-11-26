@@ -553,10 +553,12 @@
                     <div class="write-contract" v-show=" cur == 2">
                       <div class="write-flex">
                         <p>
-                          <i class="fa fa-circle text-danger mr-1"></i>
-                          <button class="sub-btn" id="connectButton" @click=requestAccount>Connect to Web3 <span>{{this.addrInfo.address}}</span> </button>
+
+                          <i v-if="greenIcon" class="fa fa-circle mr-1 text-success"></i>
+                          <i v-if="redIcon" class="fa fa-circle text-danger mr-1"></i>
+                          <button class="sub-btn" id="connectButton" @click=requestAccount>Connect to Web3 <span v-if="addrShow">{{this.address}}</span> </button>
                         </p>
-                        <a href="/" style="color: #3498db">[Reset]</a>
+                        <a style="color: #3498db" @click="resetWrite">[Reset]</a>
                       </div>
                       <el-collapse v-model="activeNames" @change="handleChange" v-for="(write,n) in writes" :key="n">
                         <el-collapse-item :title="write.full_name">
@@ -689,6 +691,9 @@ export default {
       invalidAddr:false,
       message: '',
       address: '', //小狐狸地址
+      addrShow:false,
+      greenIcon:false,
+      redIcon:true,
     }
   },
   created() {
@@ -1111,84 +1116,106 @@ export default {
           let contractAbi = this.reads[r].abi;
           let result = await this.withParamReadContract(contractAbi, this.addrInfo.address, params);
           if (result.data) {
-            this.reads[r].value = result;
+            this.reads[r].value = result.data;
+          } else {
+            this.message = result.message;
           }
-          //调用接口
-          const data ={
-            contractAbi: contractAbi,
-            contractAddr: this.addrInfo.address,
-            params: params
-          }
-          this.$axios.post('http://192.168.0.99:6660/api/account/readContract',data).then((res)=>{
-            console.log(res);
-            if(res.data.data){
-              this.reads[r].value = res.data.data;
-            }
-          }).catch((err)=>{
-            console.log(err);
-          })
         }
         //判断该按钮对应的input是否有值
       } else { //空值
-        this.spanInfo = true; //显示提示
+      //显示提示
+        this.reads[r].spanInfo = true;
       }
     },
 
     readReset(){
-
-    },
-
-    async writeSub(n){
-      // console.log(this.writes[n].inputs);
-      if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
-        this.writes[n].spanInfo = false;
-        let params = [];
-        for(let inputBox of this.writes[n].inputs){
-          //1. 判断类型 address/uint256/uint8/string/bool
-          let flag = false;
-          switch(inputBox.type) {
-            case 'address':
-              flag = int4.utils.isAddress(inputBox.value);
-              this.message = "Error:Invalid address";
-              break;
-            case 'string':
-              flag = _.isString(inputBox.value);
-              this.message = "Error:Invalid string";
-              break;
-            case 'bool':
-              flag = _.isBool(inputBox.value);
-              this.message = "Error:Invalid bool";
-              break;
-            case 'uint256':
-            case 'uint8':
-              // flag = _.isNumber(inputBox.value);
-              flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
-              this.message = "Error:Invalid number";
-              // console.log(flag,"flag");
-              // console.log(inputBox.value,"flag");
-              // console.log(_.isNumber,"flag");
-              break;
-            default:
-              this.flag = false;
-              this.message = "Error:No match type";
+      for(let values of this.reads){
+        //  console.log(values.value,'value');
+        if (values.inputs && values.inputs.length > 0) {
+           console.log(values.value,'value');
+          values.value = '';
+          for (let input of values.inputs) {
+            input.value = '';
           }
-          if(!flag) {
-            this.writes[n].spanInfo = true;
-            return;
-          }
-          params.push(inputBox.value);
-        }
-        let contractAbi = this.writes[n].abi;
-        let result = await this.WriteContract(contractAbi, this.addrInfo.address, params, '0x85ce6cc31ab08feb27bb1e4054f07e80a66f07d590b9ac1bc4d0aeb7d6bccd4e');
-        if (result) {
-          this.writes[n].value = result;
-        }
-
-        if(this.writes[n].spanInfo === false){
-          console.log("调用接口");
         }
       }
+    },
 
+    // write
+    async writeSub(n){
+      //最外层循环 隐藏所有提示信息
+      if(this.writes && this.writes.length > 0){
+        for(let write of this.writes){
+          write.spanInfo = false;
+        }
+      }
+      // 先判断地址是否连接 连接成功后判断是否有值
+      if(this.address){
+        // 数据中有inputs且值不空
+        if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
+          let params = [];
+          // 拿到input的值 判断数据类型
+          for(let inputBox of this.writes[n].inputs){
+            //1. 判断类型 address/uint256/uint8/string/bool
+            let flag = false;
+            switch(inputBox.type) {
+              case 'address':
+                flag = int4.utils.isAddress(inputBox.value);
+                this.message = "Error:Invalid address";
+                break;
+              case 'string':
+                flag = _.isString(inputBox.value);
+                this.message = "Error:Invalid string";
+                break;
+              case 'bool':
+                flag = _.isBool(inputBox.value);
+                this.message = "Error:Invalid bool";
+                break;
+              case 'uint256':
+              case 'uint8':
+                flag = _.isNumber(inputBox.value);
+                flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
+                // this.message = "Error:Invalid number";
+                break;
+              default:
+                flag = false;
+                this.message = "Error:No match type";
+            }
+            if(!flag) {
+              this.writes[n].spanInfo = true;
+              return;
+            }
+            params.push(inputBox.value);
+          }
+          // 如果错误提示不显示(inputs有值) 且 地址数据渲染到页面 调用接口
+          if(this.writes[n].spanInfo === false && this.addrShow === true){
+            console.log(this.addrShow,'show');
+            console.log("调用接口");
+            let contractAbi = this.writes[n].abi;
+            let result = await this.WriteContract(contractAbi, this.addrInfo.address, params);
+            if (result) {
+              this.message = result.message;
+              this.writes[n].spanInfo = true;
+            }
+          }
+        }
+      }else{
+        this.message = 'Please connect to your Web3 provider!';
+        this.writes[n].spanInfo = true;
+      }
+    },
+
+    resetWrite(){
+      for(let values of this.writes){
+        //  console.log(values);
+        console.log(values.inputs);
+        // this.message=''
+        if (values.inputs && values.inputs.length > 0) {
+          for (let input of values.inputs) {
+            input.value = '';
+          }
+        }
+      }     
     },
 
     //无参数的read contract获取
@@ -1356,7 +1383,7 @@ export default {
       if (gas) {
         tx.gas = gas;
       }
-      await ethereum.request({
+      return await ethereum.request({
           method: 'eth_sendTransaction',
           params: [tx],
         }).then((result) => {
@@ -1457,10 +1484,23 @@ export default {
           this.address = `${accounts[0]}`;
         }
         console.log('address' + this.address);
+          // 隐藏地址
+          if(this.address === ''){
+            this.redIcon = true;
+            this.greenIcon = false;
+
+            this.addrShow = false;
+            console.log(this.addrShow);
+          }else{
+            this.addrShow = true;
+            this.redIcon = false;
+            this.greenIcon = true;     
+          }
       } catch (e) {
         console.log('request accounts error:', e);
       }
     },
+
     async connectAccount () {
       // console.log("navbar connect account", this.currentChainId)
       try {
