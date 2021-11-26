@@ -542,8 +542,9 @@
                             <div class="warning-info">
                               <span  style="margin-right:5px" v-if='read.value ? true : false '>{{read.value}}</span>
                               <i>uint256</i>
-                              <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">Error: Invalid number of parameters for "{{read.name}}".expected {{read.inputs.length}}!</span>
-                              <span v-if="invalidAddr" style="color: #ed303b; margin-left:5px"> Error: invalid address</span>
+                              <!-- <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">Error: Invalid number of parameters for "{{read.name}}".expected {{read.inputs.length}}!</span>
+                              <span v-if="invalidAddr" style="color: #ed303b; margin-left:5px"> Error: invalid address</span> -->
+                              <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">{{msg}}</span>
                             </div>
                           </div>
                         </el-collapse-item>
@@ -561,7 +562,7 @@
                         </p>
                         <a style="color: #3498db" @click="resetWrite">[Reset]</a>
                       </div>
-                      <el-collapse v-model="activeNames" @change="handleChange" v-for="(write,n) in writes" :key="n">
+                      <el-collapse  v-model="activeNames" @change="handleChange" v-for="(write,n) in writes" :key="n">
                         <el-collapse-item :title="write.full_name">
                           <div v-for="(items,index) in write.inputs" :key="index">
                             <div class="all-flex">
@@ -689,12 +690,13 @@ export default {
       testChainId: '0x800',
       reads:[],
       inputs:[],
-      invalidAddr:false,
+      // invalidAddr:false,
       message: '',
       address: '', //小狐狸地址
       addrShow:false,
       greenIcon:false,
       redIcon:true,
+      msg:''
     }
   },
   created() {
@@ -1091,29 +1093,35 @@ export default {
 
     // read
     async spanshow(r){
-      console.log(this.reads[r],r);
-      // console.log(r);
+      if(this.reads && this.reads.length > 0){
+        for(let read of this.reads){
+          read.spanInfo = false;
+        }
+      }
       if (this.reads[r].inputs && this.reads[r].inputs.length > 0) { //有值
         this.reads[r].spanInfo = false;
         let params = [];
         for (let input of this.reads[r].inputs) {
           params.push(input.value);
-          let num = input.value
+          let num = input.value;
+          console.log(num);
           if (!num) {
+            this.msg = 'Error: Invalid number of parameters for "' + this.reads[r].name + '". expected ' + this.reads[r].inputs.length + '!'
             this.reads[r].spanInfo = true; //显示提示
             this.reads[r].value = "";
             break;
           }else {
             if(num=/^(0x|0X)?[0-9a-f]{40}$/.test(num) || /^(0x|0X)?[0-9A-F]{40}$/.test(num)){
-              this.invalidAddr = false;
+               this.reads[r].spanInfo = false
             }else{
-              this.invalidAddr = true;
+              this.msg = 'Error: invalid address'
+              this.reads[r].spanInfo = true
               break;
             }
           }
         }
         //如果循环完this.spanInfo还是false说明input都有值
-        if (this.reads[r].spanInfo === false && this.invalidAddr === false) {
+        if (this.reads[r].spanInfo === false) {
           let contractAbi = this.reads[r].abi;
           let result = await this.withParamReadContract(contractAbi, this.addrInfo.address, params);
           if (result.data) {
@@ -1123,9 +1131,6 @@ export default {
           }
         }
         //判断该按钮对应的input是否有值
-      } else { //空值
-      //显示提示
-        this.reads[r].spanInfo = true;
       }
     },
 
@@ -1152,7 +1157,7 @@ export default {
       }
       // 先判断地址是否连接 连接成功后判断是否有值
       if(this.address){
-        // 数据中有inputs且值不空
+        // 判断是否有输入框
         if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
           let params = [];
           // 拿到input的值 判断数据类型
