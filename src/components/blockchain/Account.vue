@@ -413,50 +413,53 @@
                       </template>
 
                       <template>
-                        <div class="csc-s">
-                          <p><i class="far fa-file-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Source Code</strong><span style="color: #77838f ; margin-left: 4px">(Solidity)</span></p>
-                          <!-- 隐藏 -->
-                          <div style="display:none; margin-top: 10px">
-                            <el-dropdown class="csc-i">
-                              <el-button type="primary" style="background-color: #77838f">
-                                Outline<i class="el-icon-arrow-down el-icon--right"></i>
-                              </el-button>
-                              <el-dropdown-menu slot="dropdown" class="csc-m">
-                                <el-dropdown-item>a</el-dropdown-item>
-                                <el-dropdown-item>b</el-dropdown-item>
-                                <el-dropdown-item>c</el-dropdown-item>
-                              </el-dropdown-menu>
-                            </el-dropdown>
-                            <el-dropdown class="csc-i" style="margin-left: 5px">
-                              <el-button type="primary" style="background-color: #77838f">
-                                More Options<i class="el-icon-arrow-down el-icon--right"></i>
-                              </el-button>
-                              <el-dropdown-menu slot="dropdown" class="csc-m">
-                                <el-dropdown-item>a</el-dropdown-item>
-                                <el-dropdown-item>b</el-dropdown-item>
-                                <el-dropdown-item>c</el-dropdown-item>
-                              </el-dropdown-menu>
-                            </el-dropdown>
+                        <p style="margin: 40px 0 -25px 0"><i class="far fa-file-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Source Code</strong><span style="color: #77838f ; margin-left: 4px"><strong>(Solidity)</strong></span></p>
+                        <div v-for="(item, index) in contractCodeList">
+                          <div class="csc-s">
+                            <p><span style="color: #77838f"><strong>File {{index + 1}} of {{contractCodeList.length}} : {{item.name}}</strong></span></p>
+                            <!-- 隐藏 -->
+                            <div style="display:none; margin-top: 10px">
+                              <el-dropdown class="csc-i">
+                                <el-button type="primary" style="background-color: #77838f">
+                                  Outline<i class="el-icon-arrow-down el-icon--right"></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown" class="csc-m">
+                                  <el-dropdown-item>a</el-dropdown-item>
+                                  <el-dropdown-item>b</el-dropdown-item>
+                                  <el-dropdown-item>c</el-dropdown-item>
+                                </el-dropdown-menu>
+                              </el-dropdown>
+                              <el-dropdown class="csc-i" style="margin-left: 5px">
+                                <el-button type="primary" style="background-color: #77838f">
+                                  More Options<i class="el-icon-arrow-down el-icon--right"></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown" class="csc-m">
+                                  <el-dropdown-item>a</el-dropdown-item>
+                                  <el-dropdown-item>b</el-dropdown-item>
+                                  <el-dropdown-item>c</el-dropdown-item>
+                                </el-dropdown-menu>
+                              </el-dropdown>
+                            </div>
+                            <!-- 如果让隐藏部分显示出来 删除这些代码 放开下面注释部分 -->
+                            <div class="c-icon">
+                              <!-- 复制textarea内容 -->
+                              <el-tooltip content="Copy source code to clipboaed" placement="top">
+                                <a class="rep-text" @click="replicate(index)" :data-clipboard-text="item.text"><i class="el-icon-copy-document"></i></a>
+                              </el-tooltip>
+                              <!-- 复制地址栏链接 -->
+                              <el-tooltip content="Generate Permalink" placement="top">
+                                <a class="copy-url" @click="copyUrl" :data-clipboard-text="url"><i class="el-icon-link"></i></a>
+                              </el-tooltip>
+                              <!-- 切换文本域大小 -->
+                              <el-tooltip  content="Toggle Fullscrent" placement="top">
+                                <a @click="changeIts(index)" :style="{display:iconsDisplay}"><i class="el-icon-full-screen" ></i></a>
+                              </el-tooltip>
+                              <a @click="changeIts(index)" :style="{display:activesDisplay}"><i class="fa fa-compress" ></i></a>
+                            </div>
                           </div>
-                          <!-- 如果让隐藏部分显示出来 删除这些代码 放开下面注释部分 -->
-                          <div class="c-icon">
-                            <!-- 复制textarea内容 -->
-                            <el-tooltip content="Copy source code to clipboaed" placement="top">
-                              <a class="rep-text" @click="replicate" data-clipboard-target="#loo"><i class="el-icon-copy-document"></i></a>
-                            </el-tooltip>
-                            <!-- 复制地址栏链接 -->
-                            <el-tooltip content="Generate Permalink" placement="top">
-                              <a class="copy-url" @click="copyUrl" :data-clipboard-text="url"><i class="el-icon-link"></i></a>
-                            </el-tooltip>
-                            <!-- 切换文本域大小 -->
-                            <el-tooltip  content="Toggle Fullscrent" placement="top">
-                              <a @click="changeIts" :style="{display:iconsDisplay}"><i class="el-icon-full-screen" ></i></a>
-                            </el-tooltip>
-                            <a @click="changeIts" :style="{display:activesDisplay}"><i class="fa fa-compress" ></i></a>
-                          </div>
+                          <!-- <div class="c-icon"></div> -->
+                          <textarea v-model="item.text" :class="[item.isActives? 'active':'actives']">{{item.text}}</textarea>
                         </div>
-                        <!-- <div class="c-icon"></div> -->
-                        <textarea id="loo" v-model="addrInfo.contract_code" :class="[isActives? 'active':'actives']">{{addrInfo.contract_code}}</textarea>
                       </template>
 
                       <!-- Export ABI -->
@@ -696,7 +699,8 @@ export default {
       addrShow:false,
       greenIcon:false,
       redIcon:true,
-      msg:''
+      msg:'',
+      contractCodeList: [],
     }
   },
   created() {
@@ -770,7 +774,8 @@ export default {
             this.addrInfo.compiler_name = this.addrInfo.contract.compiler ? this.addrInfo.contract.compiler.name : '';
             this.addrInfo.contract.optimization = this.addrInfo.contract.optimization === 0? 'no' : 'yes' ;
             this.addrInfo.contract.abi = this.addrInfo.contract.abi ? this.addrInfo.contract.abi : '';
-            this.addrInfo.contract_code = this.addrInfo.contract.contract_code ? this.addrInfo.contract.contract_code : '';
+            // this.addrInfo.contract_code = this.addrInfo.contract.contract_code ? this.addrInfo.contract.contract_code : '';
+            this.contractCodeList = this.addrInfo.contract.contract_code ? this.addrInfo.contract.contract_code : [];
             this.addrInfo.byte_code = this.addrInfo.contract.code ? this.addrInfo.contract.code.byte_code : '';
             this.addrInfo.source_map = this.addrInfo.contract.code ? this.addrInfo.contract.code.source_map : '';
             this.reads = this.addrInfo.contract.read_contract ? this.addrInfo.contract.read_contract : '';
@@ -1041,7 +1046,7 @@ export default {
       }
     },
 
-    replicate(){
+    replicate(index){
       let _this = this;
       var clipboard = new Clipboard('.rep-text')
       clipboard.on('success', function(e) {
@@ -1075,15 +1080,15 @@ export default {
       });
     },
 
-    changeIts: function() {
-      this.isActives = !this.isActives;
-      if (this.isActives == true) {
-        this.activesDisplay = 'none';
-        this.iconsDisplay = 'block'
+    changeIts: function(index) {
+      this.contractCodeList[index].isActives = !this.contractCodeList[index].isActives;
+      if (this.contractCodeList[index].isActives == true) {
+        this.contractCodeList[index].activesDisplay = 'none';
+        this.contractCodeList[index].iconsDisplay = 'block'
 
       } else {
-        this.activesDisplay = 'block';
-        this.iconsDisplay = 'none'
+        this.contractCodeList[index].activesDisplay = 'block';
+        this.contractCodeList[index].iconsDisplay = 'none'
       }
     },
 
@@ -1843,7 +1848,7 @@ textarea{
 }
 
 .active{
-  height: 400px;
+  height: 200px;
   background-color: #F9F9F9;
   color: #080808;
   margin-top: 5px;
