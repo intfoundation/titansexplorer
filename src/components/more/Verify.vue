@@ -94,8 +94,8 @@
                 <b>Please select the Solidity (*.sol) files for upload</b>
                 <span class="text-danger">*</span>
               </label>
-              <div class="upload">Step 1: <input type="file" accept=".sol" @change="onFileSelected" value="请选择文件夹"></div>
-              <div class="upload">Step 2: <input type="submit" @click="submitInfo" value="Click to Upload selected files"></div>       
+              <div class="upload">Step 1: <input type="file" multiple="multiple" accept=".sol" @change="onFileSelected" value="请选择文件夹"></div>
+              <div class="upload">Step 2: <input type="submit" @click="submitInfo" value="Click to Upload selected files"></div>
             </div>
 
             <div id="basicsAccordion">
@@ -226,7 +226,7 @@
                             style="color: #3498db"
                           ></i>
                         </div>
-                        <el-select 
+                        <el-select
                           v-model="licenseTypeItem"
                           placeholder="[Please Select]"
                         >
@@ -270,9 +270,9 @@ export default {
       licenseType: this.$route.params.licenseType,
       value:" ",
       activeNames: ["1"],
-      // 
+      //
       input: "",
-      // 
+      //
       optimizationType:[
         {
           id: 0,
@@ -293,7 +293,7 @@ export default {
       optimizer: "200",
       evmVersion:"",
       nododata:"",
-      solFile:""
+      solFile: []
     };
   },
 
@@ -309,21 +309,26 @@ export default {
     // 提交文件
       onFileSelected(event) {
         let that = this;
-        var file = event.target.files[0];
+        that.solFile = []; //先清空文件
+        let files = event.target.files;
+        // console.log(event.target.files);
         // console.log('file',file)
-        var reader = new FileReader();
-        reader.onload = function(event) {
-          // 文件里的文本会在这里被打印出来
-          console.log(event.target.result)
-          that.solFile = event.target.result;
-          // console.log(that.solFile)
-        };
-        reader.readAsText(file);
+        for (let file of files) {
+          let reader = new FileReader();
+          reader.onload = function (event) {
+            // 文件里的文本会在这里被打印出来
+            // console.log(event.target.result)
+            // 将文件加入数组
+            that.solFile.push(event.target.result);
+            // console.log(that.solFile)
+          };
+          reader.readAsText(file);
+        }
       },
 
       submitInfo(){
         // console.log(this.solFile,22222)
-        if(this.solFile === ""){
+        if(this.solFile === []){
           this.$message({
             message:'please select folder',
             type:"warning"
@@ -350,7 +355,7 @@ export default {
             type:"warning"
           })
         }
-        if(this.solFile===""){
+        if(this.solFile===[]){
           this.$message({
             message:"Please select file",
             type:"warning"
@@ -405,7 +410,7 @@ export default {
         });
       },
       resetInfo(){
-        this.solFile = "",
+        this.solFile = [],
         this.nododata =""
       }
     }
