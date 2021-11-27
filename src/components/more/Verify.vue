@@ -106,7 +106,7 @@
                   v-model="activeNames"
                   @change="handleChange"
                 >
-                  <el-collapse-item>
+                  <el-collapse-item style="magrin-top: 15px ">
                     <template slot="title">
                       Constructor Arguments<a>ABI-encoded</a>
                       <span style="color: #77838f"
@@ -551,7 +551,7 @@ h1 {
 }
 
 .ms-list{
-  padding: 0 18px;
+  padding-right:18px;
 }
 
 .message{
@@ -586,7 +586,7 @@ h1 {
 
 
 .card-info{
-  width: 1164px;
+  width: 1130px;
   height: 84px;
   margin: 0 12px 8px;
 }
