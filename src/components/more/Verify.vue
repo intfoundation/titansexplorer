@@ -302,7 +302,7 @@
             <div class="error-put">
               <p><b>Compiler debug log:</b> </p>
               <p style="color:#de4437">
-                <i class="fa fa-ban"></i>Error! Unable to generate Contract ByteCode and ABI 
+                <i class="fa fa-ban"></i> Error! Unable to generate Contract ByteCode and ABI 
               </p>
               <p>
                 <i class="fa fa-angle-double-right"></i>
@@ -835,7 +835,7 @@ h1 {
 .nowrap{
   white-space: nowrap;
   overflow: scroll;
-  border: 1px solid #aaacb3;
+  border: 1px solid #e7eaf3;
   margin: 0 0 8px;
   padding: 12px;
   border-radius: 5px;
