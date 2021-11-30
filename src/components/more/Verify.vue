@@ -226,7 +226,6 @@
                   Step 1:
                   <input
                     type="file"
-                    multiple="multiple"
                     accept=".json"
                     @change="onFileJson"
                     value="请选择文件夹"
