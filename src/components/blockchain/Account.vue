@@ -710,7 +710,7 @@ export default {
     this.getIIP20TokenTx();
     this.getIIP721TokenTx();
     this.getTokens(this.addr);
-    this.url = window.location.href
+    this.url = window.location.href;
   },
   mounted() {
 
@@ -789,6 +789,16 @@ export default {
             }else{
               // this.showVerify = true
               this.showContent = true;
+            }
+
+            //获取上一页面路径
+            if (document.referrer) {
+              let arrurl = document.referrer.split('/');
+              console.log(arrurl[3]);
+              //如果是从验证合约页面过来的选项卡需要直接定位到contract
+              if (arrurl[3] === 'verifyContractSolc') {
+                this.activeName = 3;
+              }
             }
           }else {
             this.tabList = ['Assets','Delegations','UnDelegations','Delegate Rewards'];

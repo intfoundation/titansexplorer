@@ -48,7 +48,7 @@
            <div class="tab-content" v-if="status === '1' ">
 <!--            <div class="tab-err-content">-->
             <p><i class="fa fa-angle-right"></i>  The Contract Source code for <strong>{{address}}</strong> has already been verified.</p>
-            <p><i class="fa fa-angle-right"></i> Click here to view the <a href="/">Verified Contract Source Code</a> </p>
+            <p><i class="fa fa-angle-right"></i> Click here to view the <a :href="verified_url">Verified Contract Source Code</a> </p>
           </div>
 
           <!-- 合约未认证 -->
@@ -574,6 +574,7 @@ export default {
       MulFiles: [],
       tab: 0,
       fileMsg: "",
+      verified_url: "/address/" + this.$route.params.address,
     };
   },
 
