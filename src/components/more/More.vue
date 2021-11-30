@@ -186,8 +186,27 @@ export default {
         return;
       }
 
-      const url = `/verifyContractSolc/${this.address}/${this.compilerType}/${this.compilerVersion}/${this.licenseType}`;
-      this.$router.push(url);
+      const data ={
+        contract_address:this.address
+      }
+      this.$axios.post('http://192.168.0.99:6660/api/contract/verifyStatus',data).then((res)=>{
+        console.log(res.data);
+        if( res.data.status===0 ){
+          const url = `/verifyContractSolc/${this.address}/${this.compilerType}/${this.compilerVersion}/${this.licenseType}/${res.data.data}`;
+          this.$router.push(url);
+        } else {
+          this.$message({
+            message: res.data.message,
+            type: 'warning'
+          });
+          return;
+        }
+      }).catch((err)=>{
+        console.log(err);
+      })
+
+
+
     },
 
     resetForm() {

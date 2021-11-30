@@ -112,8 +112,6 @@ export default new Router({
           name: 'BridgeList',
           component: BridgeList
         },
-
-
         {
           path: '/staking/validators',
           name: 'Validators',
@@ -129,8 +127,6 @@ export default new Router({
           name: 'Epochs',
           component: Epochs
         },
-
-
         {
           path: '/tokens/list/:page',
           name: 'Tokens',
@@ -157,7 +153,6 @@ export default new Router({
         //   component: TransferDetail
         // },
 
-
         {
           path: '/result/:result',
           name: 'Result',
@@ -175,7 +170,7 @@ export default new Router({
           component: More,
         },
         {
-          path: '/verifyContractSolc/:address/:compileType/:compileVersion/:licenseType',
+          path: '/verifyContractSolc/:address/:compilerType/:compileVersion/:licenseType/:verifyStatus',
           name: 'Verify',
           component: Verify
         },

@@ -171,6 +171,11 @@ export default {
     border-top: 1px solid rgba(0,0,0,.125);
     padding: 15px 0 0 15px;
   }
+
+ .json .compiler-input .el-input--suffix .el-input__inner{
+    width: 600px;
+  }
+  
   .el-collapse-item__header{
     border-bottom: none;
   }

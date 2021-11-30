@@ -27,7 +27,15 @@
           </ul>
         </div>
         <div class="card-body" v-show="tab == 0">
-          <div class="tab-content">
+          <!--  合约已经认证 -->
+          <!-- <div class="tab-content" v-if="status === 1 "> -->
+            <div class="tab-err-content">
+            <p><i class="fa fa-angle-right"></i>  The Contract Source code for <strong>{{address}}</strong> has already been verified.</p>
+            <p><i class="fa fa-angle-right"></i> Click here to view the <a href="/">Verified Contract Source Code</a> </p>
+          </div>
+
+          <!-- 合约未认证 -->
+          <div class="tab-content" v-if="status !== 1 ">
             <div class="alert">
               <button type="button" class="close">
                 <span>x</span>
@@ -45,67 +53,118 @@
                 </li>
                 <li>
                   3. For programatic contract verification, check out the
-                  <a href="/">Contract API Endpoint</a>
+                  <a>Contract API Endpoint</a>
                 </li>
               </ul>
             </div>
-            <div class="row">
-              <div class="js-from" style="width: 470px">
-                <label for="txtContractAddress">Contract Address </label>
-                <el-input class="ad-input" v-model="address" placeholder="请输入内容"></el-input>
-              </div>
-              <div class="js-from" style="width: 470px">
-                <label for="txtContractAddress">Compiler </label>
-                <!-- <el-input style="width: 470px ;" v-model="licenseType" disabled>
-                </el-input> -->
-                <el-select class="compiler-input"
-                  v-model="compilerItem"
-                  disabled
-                  placeholder="[Please Select]"
-                >
-                  <el-option
-                    v-for="item in compiler"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="col-md">
-                <div style="margin: 6px 0">
-                  <i class="far fa-question-circle text-muted"></i>
-                  <label for="txtContractAddress">Optimization </label>
+            <div class="row" v-if="compilerTyper==='0' || compilerTyper==='1' ">
+                <div class="js-from" style="width: 460px">
+                  <label for="txtContractAddress">Contract Address </label>
+                  <el-input class="ad-input" v-model="address" placeholder="请输入内容"></el-input>
                 </div>
-                <el-select
-                  style="width: 223px"  class="op-selest" v-model="optimization"  placeholder="no">
-                  <el-option
-                    v-for="item in optimizationType"
-                    :key="item.id"
-                    :label="item.type"
-                    :value="item.id"
+                <div class="js-from" style="width: 470px">
+                  <label for="txtContractAddress">Compiler </label>
+                  <!-- <el-input style="width: 470px ;" v-model="licenseType" disabled>
+                  </el-input> -->
+                  <el-select class="compiler-input"
+                    v-model="compilerItem"
+                    disabled
+                    placeholder="[Please Select]"
                   >
-                  </el-option>
-
-                </el-select>
-              </div>
-            </div>
-            <div class="message">
-              <label for="txtSourceCode" class="d-block">
-                <b>Please select the Solidity (*.sol) files for upload</b>
-                <span class="text-danger">*</span>
-              </label>
-              <div class="upload">Step 1: <input type="file" multiple="multiple" accept=".sol" @change="onFileSelected" value="请选择文件夹"></div>
-              <div class="upload">Step 2: <input type="submit" @click="submitInfo" value="Click to Upload selected files"></div>
-              <div v-if='fileInfo' class="m-files">
-                <div v-for="(item,index) in MulFiles" :key="index">
-                  <span>{{item.name}}</span>
-                  <span>{{item.size}} byte</span>
+                    <el-option
+                      v-for="item in compiler"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="col-md" style="margin-right: 2px">
+                  <div style="margin: 6px 0">
+                    <i class="far fa-question-circle text-muted"></i>
+                    <label for="txtContractAddress">Optimization </label>
+                  </div>
+                  <el-select
+                    style="width: 224px"  class="op-selest" v-model="optimization"  placeholder="no">
+                    <el-option
+                      v-for="item in optimizationType"
+                      :key="item.id"
+                      :label="item.type"
+                      :value="item.id"
+                    >
+                    </el-option>
+                  </el-select>
                 </div>
               </div>
+            <!-- 单个合约 -->
+            <!-- <div class="single-contract" @change="singContract" v-if='singMsg'> -->
+            <div v-if="compilerTyper==='0'">
+              <div class="single-contract" >
+                <label for="txtSourceCode" class="d-block"  style="display: block">
+                  <b>Enter the Solidity Contract Code below </b>
+                  <span class="text-danger">*</span>
+                </label>
+                <textarea v-model="fileMsg"></textarea>
+              </div>
             </div>
+            
 
-            <div id="basicsAccordion">
+            <!-- 多个合约  Please select the Solidity (*.sol) files for upload -->
+            <div v-if="compilerTyper==='1'">
+              <div class="message">
+                <label for="txtSourceCode" class="d-block">
+                  <b>Please select the Solidity (*.sol) files for upload</b>
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="upload">Step 1: <input type="file" multiple="multiple" accept=".sol" @change="onFileSelected" value="请选择文件夹"></div>
+                <div class="upload">Step 2: <input type="submit" @click="submitInfo" value="Click to Upload selected files"></div>
+                <div v-if='fileInfo' class="m-files">
+                  <div v-for="(item,index) in MulFiles" :key="index">
+                    <span>{{item.name}}</span>
+                    <span>{{item.size}} byte</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+
+            <div  v-if="compilerTyper==='2'">
+              <div class="row">
+                <div class="js-from" style="width: 600px">
+                  <label for="txtContractAddress">Contract Address </label>
+                  <el-input class="ad-input" v-model="address" placeholder="请输入内容"></el-input>
+                </div>
+                <div class="js-from json" style="width: 600px">
+                  <label for="txtContractAddress">Compiler </label>
+                  <el-select class="compiler-input"
+                    v-model="compilerItem"
+                    disabled
+                    placeholder="[Please Select]"
+                  >
+                    <el-option
+                      v-for="item in compiler"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="message" v-if="compilerTyper==='2'">
+                <label for="txtSourceCode" class="d-block">
+                  <b>Please select the Standard-Input-Json (*.json) file to upload</b>
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="upload">Step 1: <input type="file" multiple="multiple" accept=".json" @change="onFileJson" value="请选择文件夹"></div>
+                <div class="upload">Step 2: <input type="submit" @click="submitJson" value="Click to Upload selected files"></div>
+              </div>
+            </div>
+            
+
+            <div id="basicsAccordion" >
               <!-- ABI-encoded -->
               <div class="card-m">
                 <el-collapse
@@ -115,7 +174,7 @@
                 >
                   <el-collapse-item style="magrin-top: 15px ">
                     <template slot="title">
-                      Constructor Arguments<a>ABI-encoded</a>
+                      Constructor Arguments<a href="https://docs.soliditylang.org/en/develop/abi-spec.html">ABI-encoded</a>
                       <span style="color: #77838f"
                         >(for contracts that were created with constructor
                         parameters)</span
@@ -177,7 +236,7 @@
               </div>
               <!-- Misc Settings -->
               <div class="card-m">
-                <el-collapse
+                <el-collapse 
                   class="card-item"
                   v-model="activeNames"
                   @change="handleChange"
@@ -190,7 +249,7 @@
                       >
                     </template>
                     <div class="ms-list" >
-                      <div class="ms-col-md" >
+                      <div class="ms-col-md"  v-if="compilerTyper==='0' || compilerTyper==='1' ">
                         <div style="margin: 6px 0">
                           <i class="far fa-question-circle text-muted"></i>
                           <label for="txtContractAddress"
@@ -204,7 +263,7 @@
                         ></el-input>
                       </div>
 
-                      <div class="ms-col-md">
+                      <div class="ms-col-md"  v-if="compilerTyper==='0' || compilerTyper==='1' ">
                         <div style="margin: 6px 0">
                           <i class="far fa-question-circle text-muted"></i>
                           <label for="txtContractAddress"
@@ -257,13 +316,13 @@
               <router-link to>
                 <input type="submit" @click="$router.back(-1)" value="Return to Main" />
               </router-link>
-
             </div>
           </div>
         </div>
 
+
         <div class="card-body" v-show="tab == 1">
-          <!-- <div class="tab-content c-all">
+          <div class="tab-content c-all">
             <div class="c-put">
               <p><b>Compiler debug log:</b> </p>
               <p>
@@ -273,19 +332,19 @@
               <p>
                 <i class="fa fa-thumbs-up mr-1"></i>
                 <span style="color: #00c9a7">Successfully generated ByteCode and ABI for Contract Address </span>
-                <span> <a>[0x2ff8bc8af37d7596dc6dda01d01f4d66ca20a398]</a> </span>    
+                <span> <a>[{{address}}]</a> </span>    
               </p>
             </div>
 
             <div class="tab-more">
               <ul>
-                <li><strong>Compiler Version:</strong> v0.7.6+commit.7338295f</li>
+                <li><strong>Compiler Version:</strong>{{compilerName}}</li>
                 <li><strong>Optimization Enabled:</strong> False</li>
-                <li><strong>Runs:</strong> 200</li>
+                <li><strong>Runs:</strong>{{optimizer}}</li>
               </ul>
 
               <strong>Constructor Arguments Used (ABI-encoded):</strong>
-              <pre class="wordwrap">Constructor Arguments Used (ABI-encoded):1111111111jnkawlnvw dajvpoqv q'vnev vkdaiof mqc;kpwjvnqwfConstructor Arguments Used (ABI-encoded):1111111111jnkawlnvw dajvpoqv q'vnev vkdaiof mqc;kpwjvnqwfConstructor Arguments Used (ABI-encoded):1111111111jnkawlnvw dajvpoqv q'vnev vkdaiof mqc;kpwjvnqwfConstructor Arguments Used (ABI-encoded):1111111111jnkawlnvw dajvpoqv q'vnev vkdaiof mqc;kpwjvnqwf</pre>
+              <pre class="wordwrap">{{nododata}}</pre>
 
               <strong>ContractName:</strong>
               <pre class="wordwrap">ContractName:11111</pre>
@@ -295,10 +354,13 @@
 
               <strong>Constructor Arguments Used (ABI-encoded):</strong>
               <pre class="wordwrap">Constructor Arguments Used (ABI-encoded):11111</pre>
-            </div>
-          </div> -->
 
-           <div class="tab-content c-all">
+              <strong>Compiler Warning(s):</strong>
+              <pre class="wordwrap">Compiler Warning(s):11111</pre>
+            </div>
+          </div>
+
+           <!-- <div class="tab-content c-all">
             <div class="error-put">
               <p><b>Compiler debug log:</b> </p>
               <p style="color:#de4437">
@@ -358,7 +420,7 @@
                 <br>
                 60806040523480156200001157600080fd5b506040516200165238038062001652833981810160405260608110156200003757600080fd5b81019080805160405193929190846401fffffff16815260200190815260200160002081905550610e3c816000808573ffffffffffffffffffffffffffffffffffffffff1673fffffffffffffffff</pre>
             </div>
-          </div>
+          </div> -->
 
 
         </div>
@@ -375,8 +437,10 @@ export default {
   data() {
     return {
       address: this.$route.params.address,
+      compilerTyper:this.$route.params.compilerType,
       compileVersion: this.$route.params.compileVersion,
       licenseType: this.$route.params.licenseType,
+      status:this.$route.params.verifyStatus,
       value:" ",
       activeNames: ["1"],
       //
@@ -397,17 +461,21 @@ export default {
       license: [],
       evm:"",
       compilerItem: "",
+      compilerName: "",
       licenseTypeItem:"",
       optimization: 0,
       optimizer: "200",
       evmVersion:"",
       nododata:"",
       solFile: [],
+      jsonFile:[],
       name:"",
       size:"",
       fileInfo:false,
       MulFiles:[],
-      tab:0
+      tab:0,
+      fileMsg:'',
+      
     };
   },
 
@@ -419,21 +487,15 @@ export default {
       handleChange(val) {
         console.log(val);
       },
-
-    // 提交文件
+      
+    //  选择sol文件夹
       onFileSelected(event) {
         let that = this;
         that.solFile = []; //先清空文件
         let files = event.target.files;
-        // let MulFiles =[]
+        // let MulFiles =[];
         for (let file of files) {
-          // 文件名
-          // var name = file.name;
-          // this.name = name;
-          // 文件大小
-          // var size = file.size;
-          // this.size = size;
-          this.MulFiles.push({
+          that.MulFiles.push({
             name : file.name,
             size : file.size
           })
@@ -448,12 +510,12 @@ export default {
           };
           reader.readAsText(file);
         }
-        console.log(MulFiles);
+        // console.log(MulFiles);
       },
 
+      // 提交sol文件夹
       submitInfo(){
-        // console.log(this.solFile,22222)
-        if(this.solFile === []){
+        if(this.solFile.length === 0){  
           this.fileInfo = false,
           this.$message({
             message:'please select folder',
@@ -475,29 +537,100 @@ export default {
         });
       },
 
-     // 底部提交按钮
+      //  选择json文件夹
+      onFileJson(event){
+        let that = this;
+        that.jsonFile = []; //先清空文件
+        let file = event.target.files[0];
+        let reader = new FileReader();
+        reader.onload = function(event) {
+         // 文件里的文本会在这里被打印出来
+        // console.log(event.target.result)
+          that.jsonFile.push(event.target.result);
+        };
+        reader.readAsText(file);
+      },
+
+      // 提交json文件夹
+      submitJson(){
+        console.log(this.jsonFile,'jsonFile');
+        if(this.jsonFile.length === 0){  
+          this.$message({
+            message:'please select folder',
+            type:"warning"
+          })
+        }
+        this.$axios
+          .post("http://192.168.0.99:6660/api/contract/uploadContract",{
+            contract_address: this.address,
+            file: this.jsonFile,
+          })
+          .then((res) => {
+              console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+        });
+      },
+
+     // 提交合约认证按钮
       postInfo() {
+        if(this.compilerTyper === '0'){
+          if(this.fileMsg===''){
+            this.$message({
+              message:"Please select file",
+              type:"warning"
+            })
+            return
+          }
+        }
+
+        if (this.compilerTyper === '1') {
+          console.log(this.fileMsg,'this.fileMsg');
+          if(this.solFile.length ===0){
+            this.$message({
+              message:"Please select files",
+              type:"warning"
+            })
+            return
+          }
+        }
+
+        if(this.compilerTyper === '2'){
+          if(this.jsonFile.length ===0){
+            this.$message({
+              message:"Please select file",
+              type:"warning"
+            })
+            return
+          }
+        }
+
         if(this.nododata ===""){
           this.$message({
             message:"Please enter the ABI code",
             type:"warning"
           })
+          return
         }
-        if(this.solFile===[]){
-          this.$message({
-            message:"Please select file",
-            type:"warning"
-          })
+        if(this.compilerTyper === '0' || this.compilerTyper === '1'){
+          if(this.evmVersion===""){
+            this.$message({
+              message:"Please select EVM Version",
+              type:"warning"
+            })
+            return
+          }
         }
-        if(this.evmVersion===""){
-          this.$message({
-            message:"Please select EVM Version",
-            type:"warning"
-          })
+      
+
+        if (this.compilerTyper === '0') {
+          console.log(this.fileMsg,'this.fileMsg');
         }
 
-        // 提交的数据
-        const data = {
+        if(this.compilerTyper === '0'){
+          // 提交给后台数据
+          const data = {
             contract_address: this.address,
             license_id: this.licenseTypeItem,
             compiler_id: this.compilerItem,
@@ -505,7 +638,46 @@ export default {
             // contract_code: this.solFile,
             abi: this.nododata,
             optimization:this.optimization,
-            optimizer: parseInt(this.optimizer)
+            optimizer: parseInt(this.optimizer),
+            contract_code:this.fileMsg
+          }
+          this.$axios
+            .post("http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler",data)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+          });
+        }
+
+        if(this.compilerTyper === '1'){
+          // 提交给后台数据
+          const data = {
+            contract_address: this.address,
+            license_id: this.licenseTypeItem,
+            compiler_id: this.compilerItem,
+            evm_id:this.evmVersion,
+            abi: this.nododata,
+            optimization:this.optimization,
+            optimizer: parseInt(this.optimizer),
+          }
+          this.$axios
+            .post("http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler",data)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+          });
+        }
+
+        if(this.compilerTyper === '2'){
+          const data = {
+            contract_address: this.address,
+            license_id: this.licenseTypeItem,
+            compiler_id: this.compilerItem,
+            abi: this.nododata,
         }
         this.$axios
           .post("http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler",data)
@@ -515,6 +687,9 @@ export default {
           .catch((err) => {
             console.log(err);
         });
+          
+        
+        }
       },
 
       // 获取后台数据
@@ -529,18 +704,24 @@ export default {
             // 设置compiler licenseType 的默认值
             let index = this.compiler.findIndex(item => item.id == this.$route.params.compileVersion);
             this.compilerItem = this.compiler[index].id;
+            this.compilerName = this.compiler[index].name;
 
             let e = this.license.findIndex(item => item.id == this.$route.params.licenseType);
-            this.licenseTypeItem = this.license[e].id
+            this.licenseTypeItem = this.license[e].id;
+            
           })
         .catch((err) => {
           console.log(err);
         });
       },
+
       resetInfo(){
         this.solFile = [],
-        this.nododata =""
-      }
+        this.jsonFile=[],
+        this.nododata ="",
+        this.fileMsg=''
+      },
+
     }
 };
 </script>
@@ -636,6 +817,11 @@ h1 {
   margin: 0 4px;
   padding: 4px 0;
 }
+.tab-err-content p{
+  margin: 5px 0;
+  font-size: 14px;
+  color: #6c757e;
+}
 
 .alert{
   background-color: #E9ECF1;
@@ -709,7 +895,7 @@ h1 {
 }
 
 .card-m:nth-child(1){
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .card-info{
@@ -791,15 +977,18 @@ h1 {
 .c-put, .error-put{
   color: #6c757e;
   line-height: 1;
+  margin-bottom: 30px;
   /* font-weight: bold; */
 }
 
 .c-put p span a{
   color:#3498db;
+  /* font-weight: bolder; */
 }
 
 .c-put p, .error-put p{
   margin: 8px;
+  font-weight: bold;
 }
 
 .tab-more{
@@ -825,6 +1014,13 @@ h1 {
   display: block;
   color: #12161c;
   background-color: #f8f9fa;
+}
+
+.single-contract textarea{
+  height: 200px;
+  width: 1188px;
+  padding: 12px;
+  margin-top: 16px;
 }
 
 /* error */
