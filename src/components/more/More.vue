@@ -53,10 +53,10 @@
                     label="Solidity (Standard-Json-Input)"
                     value="2"
                   ></el-option>
-                  <el-option
-                    label="Vyper (Experimental)"
-                    value="3"
-                  ></el-option>
+<!--                  <el-option-->
+<!--                    label="Vyper (Experimental)"-->
+<!--                    value="3"-->
+<!--                  ></el-option>-->
                 </el-select>
               </el-form-item>
 
@@ -117,7 +117,7 @@ export default {
   name: "More",
   data() {
     return {
-      picUrl: pic,     
+      picUrl: pic,
       compiler: [],
       license: [],
       address: this.$route.params.address,

@@ -22,7 +22,7 @@
             for verifying smart contracts that fit in a single file
           </p>
           <p style="color: #6c757e; font-size: 14px"  v-if="compilerTyper === '1'">
-            <span class="none">Info:</span>  This is an experimental source code verifier which supports verification of 
+            <span class="none">Info:</span>  This is an experimental source code verifier which supports verification of
             multi-part solidity files  (imports).
           </p>
           <p style="color: #6c757e; font-size: 14px"  v-if="compilerTyper === '2'">
@@ -45,21 +45,14 @@
         </div>
         <div class="card-body" v-show="tab == 0">
           <!--  合约已经认证 -->
-          <!-- <div class="tab-content" v-if="status === '1' "> -->
-          <div class="tab-err-content">
-            <p>
-              <i class="fa fa-angle-right"></i> The Contract Source code for
-              <a> <strong>{{ address }}</strong> </a> has already been verified.
-            </p>
-            <p>
-              <i class="fa fa-angle-right"></i> Click here to view the
-              <a href="/">Verified Contract Source Code</a>
-            </p>
+           <div class="tab-content" v-if="status === '1' ">
+<!--            <div class="tab-err-content">-->
+            <p><i class="fa fa-angle-right"></i>  The Contract Source code for <strong>{{address}}</strong> has already been verified.</p>
+            <p><i class="fa fa-angle-right"></i> Click here to view the <a href="/">Verified Contract Source Code</a> </p>
           </div>
 
           <!-- 合约未认证 -->
-          <!-- <div class="tab-content" v-if="status !== '1'"> -->
-          <div class="tab-content">
+          <div class="tab-content" v-if="status !== '1' ">
             <div class="alert">
               <button type="button" class="close">
                 <span>x</span>
@@ -474,21 +467,21 @@
             <div class="error-put">
               <p><b>Compiler debug log:</b> </p>
               <p style="color:#de4437">
-                <i class="fa fa-ban"></i> Error! Unable to generate Contract ByteCode and ABI 
+                <i class="fa fa-ban"></i> Error! Unable to generate Contract ByteCode and ABI
               </p>
               <p>
                 <i class="fa fa-angle-double-right"></i>
-                <span> Found the following ContractName(s) in source code: Context.sol: <b>Context</b>, IERC20.sol: <b>IERC20</b>, SafeMath.sol: <b>SafeMath</b>, erc20.sol: <b>ERC20</b> </span>   
+                <span> Found the following ContractName(s) in source code: Context.sol: <b>Context</b>, IERC20.sol: <b>IERC20</b>, SafeMath.sol: <b>SafeMath</b>, erc20.sol: <b>ERC20</b> </span>
               </p>
                <p>
                 <i class="fa fa-angle-double-right"></i>
-                <span>But we were unable to locate a matching bytecode (err_code_2)</span>   
+                <span>But we were unable to locate a matching bytecode (err_code_2)</span>
               </p>
               <p>
                 <i class="fa fa-info-circle text-secondary"></i>
                 <span> For troubleshooting, you can try compiling your source code with the
                   <span> <a style="color: 3498db">Remix - Solidity IDE</a> </span>and check for exceptions
-                </span>   
+                </span>
               </p>
               <p style="margin:30px 0px 20px">
                 <strong>Compiler Warning(s):</strong>
@@ -622,7 +615,7 @@ export default {
     // 提交sol文件夹
     submitInfo() {
       if (this.solFile.length === 0) {
-        (this.fileInfo = false),
+          this.fileInfo = false,
           this.$message({
             message: "please select folder",
             type: "warning",
@@ -659,7 +652,6 @@ export default {
 
     // 提交json文件夹
     submitJson() {
-      console.log(this.jsonFile, "jsonFile");
       if (this.jsonFile.length === 0) {
         this.$message({
           message: "please select folder",
@@ -681,127 +673,97 @@ export default {
 
     // 提交合约认证按钮
     postInfo() {
-      if (this.compilerTyper === "0") {
-        if (this.fileMsg === "") {
+      //先验证数据为空
+      if (this.compilerTyper === '0') {
+        if (this.fileMsg === '') {
           this.$message({
-            message: "Please select file",
-            type: "warning",
-          });
-          return;
+            message: "Please enter the Solidity Contract Code",
+            type: "warning"
+          })
+          return
         }
       }
 
-      if (this.compilerTyper === "1") {
-        console.log(this.fileMsg, "this.fileMsg");
+      if (this.compilerTyper === '1') {
         if (this.solFile.length === 0) {
           this.$message({
             message: "Please select files",
-            type: "warning",
-          });
-          return;
+            type: "warning"
+          })
+          return
         }
       }
 
-      if (this.compilerTyper === "2") {
+      if (this.compilerTyper === '2') {
         if (this.jsonFile.length === 0) {
           this.$message({
             message: "Please select file",
-            type: "warning",
-          });
-          return;
+            type: "warning"
+          })
+          return
         }
       }
 
       if (this.nododata === "") {
         this.$message({
           message: "Please enter the ABI code",
-          type: "warning",
-        });
-        return;
+          type: "warning"
+        })
+        return
       }
-      if (this.compilerTyper === "0" || this.compilerTyper === "1") {
+      if (this.compilerTyper === '0' || this.compilerTyper === '1') {
+        if (this.optimizer === "") {
+          this.$message({
+            message: "Please enter Runs (Optimizer)",
+            type: "warning"
+          })
+          return
+        }
         if (this.evmVersion === "") {
           this.$message({
             message: "Please select EVM Version",
-            type: "warning",
-          });
-          return;
+            type: "warning"
+          })
+          return
         }
       }
 
-      if (this.compilerTyper === "0") {
-        console.log(this.fileMsg, "this.fileMsg");
+
+      if (this.compilerTyper === '0') {
+        console.log(this.fileMsg, 'this.fileMsg');
       }
 
-      if (this.compilerTyper === "0") {
-        // 提交给后台数据
-        const data = {
-          contract_address: this.address,
-          license_id: this.licenseTypeItem,
-          compiler_id: this.compilerItem,
-          evm_id: this.evmVersion,
-          // contract_code: this.solFile,
-          abi: this.nododata,
-          optimization: this.optimization,
-          optimizer: parseInt(this.optimizer),
-          contract_code: this.fileMsg,
-        };
-        this.$axios
-          .post(
-            "http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler",
-            data
-          )
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+      // 提交给后台数据，每种方式都需要以下参数
+      const data = {
+        contract_address: this.address,
+        license_id: this.licenseTypeItem,
+        compiler_id: this.compilerItem,
+        abi: this.nododata,
       }
-
-      if (this.compilerTyper === "1") {
-        // 提交给后台数据
-        const data = {
-          contract_address: this.address,
-          license_id: this.licenseTypeItem,
-          compiler_id: this.compilerItem,
-          evm_id: this.evmVersion,
-          abi: this.nododata,
-          optimization: this.optimization,
-          optimizer: parseInt(this.optimizer),
-        };
-        this.$axios
-          .post(
-            "http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler",
-            data
-          )
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+      //单文件(.sol)和多文件(.sol)需要加上以下额外参数
+      if (this.compilerTyper === '0' || this.compilerTyper === '1') {
+        data.evm_id = this.evmVersion;
+        data.optimization = this.optimization;
+        data.optimizer = parseInt(this.optimizer);
       }
-
-      if (this.compilerTyper === "2") {
-        const data = {
-          contract_address: this.address,
-          license_id: this.licenseTypeItem,
-          compiler_id: this.compilerItem,
-          abi: this.nododata,
-        };
-        this.$axios
-          .post(
-            "http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler",
-            data
-          )
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+      //只有单文件(.sol)才需要在验证时上传
+      if (this.compilerTyper === '0') {
+        data.contract_code = this.fileMsg;
       }
+      this.$axios.post("http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler", data).then((res) => {
+        console.log(res);
+        if (res.data.status === 0) {
+          //成功
+        } else {
+          this.$message({
+            message: res.data.message,
+            type: 'warning'
+          });
+          return;
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     },
 
     // 获取后台数据
@@ -814,15 +776,11 @@ export default {
           this.evm = res.data.evm;
 
           // 设置compiler licenseType 的默认值
-          let index = this.compiler.findIndex(
-            (item) => item.id == this.$route.params.compileVersion
-          );
+          let index = this.compiler.findIndex(item => item.id == this.$route.params.compileVersion);
           this.compilerItem = this.compiler[index].id;
           this.compilerName = this.compiler[index].name;
 
-          let e = this.license.findIndex(
-            (item) => item.id == this.$route.params.licenseType
-          );
+          let e = this.license.findIndex(item => item.id == this.$route.params.licenseType);
           this.licenseTypeItem = this.license[e].id;
         })
         .catch((err) => {
@@ -831,12 +789,12 @@ export default {
     },
 
     resetInfo() {
-      (this.solFile = []),
-        (this.jsonFile = []),
-        (this.nododata = ""),
-        (this.fileMsg = "");
+      this.solFile = [],
+      this.jsonFile = [],
+      this.nododata = "",
+      this.fileMsg = ""
     },
-  },
+  }
 };
 </script>
 
