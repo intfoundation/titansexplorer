@@ -7,7 +7,7 @@
           <span class="badge" v-if="compilerTyper === '0'"
             >Compiler Type: SINGLE FILE / CONCATENANTED METHOD</span
           >
-          <span class="badge" v-if="compilerTyper === '1'"
+          <span class="solbadge" v-if="compilerTyper === '1'"
             >Compiler Type: SOLIDITY MULTI-PART VERIFIER (IMPORTS)</span
           >
           <span class="jsonbadge" v-if="compilerTyper === '2'"
@@ -45,14 +45,14 @@
         </div>
         <div class="card-body" v-show="tab == 0">
           <!--  合约已经认证 -->
-           <div class="tab-content" v-if="status === '1' ">
-<!--            <div class="tab-err-content">-->
-            <p><i class="fa fa-angle-right"></i>  The Contract Source code for <strong>{{address}}</strong> has already been verified.</p>
-            <p><i class="fa fa-angle-right"></i> Click here to view the <a :href="verified_url">Verified Contract Source Code</a> </p>
+          <div class="tab-content tab-err-content" v-if="status === '1' ">
+            <p><i class="fa fa-angle-right"></i>  The Contract Source code for <a style="color: #ed303b">{{address}}</a>  has already been verified.</p>
+            <p><i class="fa fa-angle-right"></i> Click here to view the <a style="color: #ed303b"  :href="verified_url">Verified Contract Source Code</a> </p>
           </div>
 
           <!-- 合约未认证 -->
           <div class="tab-content" v-if="status !== '1' ">
+          <!-- <div class="tab-content"> -->
             <div class="alert">
               <button type="button" class="close">
                 <span>x</span>
@@ -88,7 +88,7 @@
               v-if="compilerTyper === '0' || compilerTyper === '1'"
             >
               <div class="js-from" style="width: 460px">
-                <label for="txtContractAddress">Contract Address </label>
+                <label>Contract Address </label>
                 <el-input
                   class="ad-input"
                   v-model="address"
@@ -96,7 +96,7 @@
                 ></el-input>
               </div>
               <div class="js-from" style="width: 470px">
-                <label for="txtContractAddress">Compiler </label>
+                <label >Compiler </label>
                 <!-- <el-input style="width: 470px ;" v-model="licenseType" disabled>
                   </el-input> -->
                 <el-select
@@ -117,7 +117,7 @@
               <div class="col-md" style="margin-right: 2px">
                 <div style="margin: 6px 0">
                   <i class="far fa-question-circle text-muted"></i>
-                  <label for="txtContractAddress">Optimization </label>
+                  <label>Optimization </label>
                 </div>
                 <el-select
                   style="width: 224px"
@@ -188,7 +188,7 @@
             <div v-if="compilerTyper === '2'">
               <div class="row">
                 <div class="js-from" style="width: 600px">
-                  <label for="txtContractAddress">Contract Address </label>
+                  <label>Contract Address </label>
                   <el-input
                     class="ad-input"
                     v-model="address"
@@ -196,7 +196,7 @@
                   ></el-input>
                 </div>
                 <div class="js-from json" style="width: 600px">
-                  <label for="txtContractAddress">Compiler </label>
+                  <label>Compiler </label>
                   <el-select
                     class="compiler-input"
                     v-model="compilerItem"
@@ -301,9 +301,7 @@
                         </div>
                         <div class="form-inline">
                           <span>
-                            <i
-                              class="fa fa-long-arrow-alt-right btn-icon__inner"
-                            ></i>
+                            <i class="fa fa-long-arrow-alt-right btn-icon__inner"></i>
                           </span>
                         </div>
                         <div class="form-inline">
@@ -330,15 +328,10 @@
                       >
                     </template>
                     <div class="ms-list">
-                      <div
-                        class="ms-col-md"
-                        v-if="compilerTyper === '0' || compilerTyper === '1'"
-                      >
+                      <div class="ms-col-md" v-if="compilerTyper === '0' || compilerTyper === '1'">
                         <div style="margin: 6px 0">
                           <i class="far fa-question-circle text-muted"></i>
-                          <label for="txtContractAddress"
-                            >Runs (Optimizer)</label
-                          >
+                          <label>Runs (Optimizer)</label>
                         </div>
                         <el-input
                           v-model="optimizer"
@@ -347,15 +340,10 @@
                         ></el-input>
                       </div>
 
-                      <div
-                        class="ms-col-md"
-                        v-if="compilerTyper === '0' || compilerTyper === '1'"
-                      >
+                      <div class="ms-col-md" v-if="compilerTyper === '0' || compilerTyper === '1'">
                         <div style="margin: 6px 0">
                           <i class="far fa-question-circle text-muted"></i>
-                          <label for="txtContractAddress"
-                            >EVM Version to target</label
-                          >
+                          <label>EVM Version to target</label>
                         </div>
                         <el-select
                           v-model="evmVersion"
@@ -373,11 +361,8 @@
 
                       <div class="ms-col-md">
                         <div style="margin: 6px 0">
-                          <label for="txtContractAddress">LicenseType</label>
-                          <i
-                            class="far fa-info-circle"
-                            style="color: #3498db"
-                          ></i>
+                          <label>LicenseType</label>
+                          <i class="far fa-info-circle" style="color: #3498db"></i>
                         </div>
                         <el-select
                           v-model="licenseTypeItem"
@@ -423,15 +408,15 @@
                 <i class="fa fa-check-circle"></i> Note: Contract was created
                 during TxHash#
                 <span>
-                  <a>0xa9356ee19415235849d9a817866bc5617439414793964dbb78ce05fa3975e557</a>
+                  <a>{{hash}}</a>
                 </span>
               </p>
               <p>
                 <i class="fa fa-thumbs-up mr-1"></i>
-                <span style="color: #00c9a7">Successfully generated ByteCode and ABI for Contract Address
+                <span style="color: #67c23a">Successfully generated ByteCode and ABI for Contract Address
                 </span>
                 <span>
-                  <a>[{{ address }}]</a>
+                  <a :href="verified_url">[{{ address }}]</a>
                 </span>
               </p>
             </div>
@@ -574,6 +559,7 @@ export default {
       MulFiles: [],
       tab: 0,
       fileMsg: "",
+      hash:"0xa9356ee19415235849d9a817866bc5617439414793964dbb78ce05fa3975e557",
       verified_url: "/address/" + this.$route.params.address,
     };
   },
@@ -805,7 +791,7 @@ export default {
   height: 100%;
 }
 a {
-  color: #3498db !important;
+  color: #3498db;
   margin: 0 4px;
 }
 
@@ -836,6 +822,15 @@ h1 {
   padding: 6px 15px;
   border-radius: 22px;
 }
+.solbadge{
+  color: #fff;
+  background-color: #3498db;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 15px;
+  border-radius: 22px;
+}
+
 .jsonbadge{
   color: #fff;
   background-color: #77838f;
@@ -1066,14 +1061,12 @@ h1 {
 }
 
 .c-put p span a {
-  color: #3498db;
-  /* font-weight: bolder; */
+  color: #ed303b;
 }
 
 .c-put p,
 .error-put p {
   margin: 8px;
-  font-weight: bold;
 }
 
 .tab-more {
