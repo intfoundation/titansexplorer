@@ -416,7 +416,7 @@
                         <p style="margin: 40px 0 -25px 0"><i class="far fa-file-code text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract Source Code</strong><span style="color: #77838f ; margin-left: 4px"><strong>(Solidity)</strong></span></p>
                         <div v-for="(item, index) in contractCodeList">
                           <div class="csc-s">
-                            <p><span style="color: #77838f"><strong>File {{index + 1}} of {{contractCodeList.length}} : {{item.name}}</strong></span></p>
+                            <p><span style="color: #77838f"><strong v-if="contractCodeList.length > 1">File {{index + 1}} of {{contractCodeList.length}} : {{item.name}}</strong></span></p>
                             <!-- 隐藏 -->
                             <div style="display:none; margin-top: 10px">
                               <el-dropdown class="csc-i">
