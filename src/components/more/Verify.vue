@@ -51,8 +51,8 @@
           </div>
 
           <!-- 合约未认证 -->
-          <!-- <div class="tab-content" v-if="status !== '1' "> -->
-          <div class="tab-content" >
+          <div class="tab-content" v-if="status !== '1' ">
+          <!-- <div class="tab-content" > -->
             <div class="alert" v-show="showBox">
               <button type="button" class="close">
                 <span @click="closeBox">×</span>
