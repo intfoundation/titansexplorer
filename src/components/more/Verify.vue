@@ -37,7 +37,7 @@
               <a @click="tab = 0" :class="{ isTab: tab == 0 }"
                 >Contract Source Code</a
               >
-              <a @click="tab = 1" :class="{ isTab: tab == 1 }"
+              <a v-show="tabShow" @click="tab = 1" :class="{ isTab: tab == 1 }"
                 >Compiler Output</a
               >
             </li>
@@ -51,11 +51,11 @@
           </div>
 
           <!-- 合约未认证 -->
-          <div class="tab-content" v-if="status !== '1' ">
-          <!-- <div class="tab-content"> -->
-            <div class="alert">
+          <!-- <div class="tab-content" v-if="status !== '1' "> -->
+          <div class="tab-content" >
+            <div class="alert" v-show="showBox">
               <button type="button" class="close">
-                <span>x</span>
+                <span @click="closeBox">×</span>
               </button>
               <ul v-if="compilerTyper === '0' || compilerTyper === '1'">
                 <li>
@@ -383,18 +383,10 @@
               </div>
             </div>
             <div class="text-f">
-              <input
-                type="submit"
-                @click="postInfo"
-                value="Verify and Publish"
-              />
+              <input class="submit" type="submit" @click="postInfo" value="Verify and Publish" />
               <input type="submit" @click="resetInfo" value="Reset" />
               <router-link to>
-                <input
-                  type="submit"
-                  @click="$router.back(-1)"
-                  value="Return to Main"
-                />
+                <input type="submit" @click="$router.back(-1)" value="Return to Main" />
               </router-link>
             </div>
           </div>
@@ -559,8 +551,10 @@ export default {
       MulFiles: [],
       tab: 0,
       fileMsg: "",
-      hash:"0xa9356ee19415235849d9a817866bc5617439414793964dbb78ce05fa3975e557",
+      hash:"0xc6844c595254242eb870997a4b99fa90b2069f6253f115f03df528e9e725b860",
       verified_url: "/address/" + this.$route.params.address,
+      showBox:true,
+      tabShow:false
     };
   },
 
@@ -571,6 +565,10 @@ export default {
   methods: {
     handleChange(val) {
       console.log(val);
+    },
+
+    closeBox(){
+      this.showBox= false
     },
 
     //  选择sol文件夹
@@ -726,13 +724,13 @@ export default {
         compiler_id: this.compilerItem,
         abi: this.nododata,
       }
-      //单文件(.sol)和多文件(.sol)需要加上以下额外参数
+      // 单文件(.sol)和多文件(.sol)需要加上以下额外参数
       if (this.compilerTyper === '0' || this.compilerTyper === '1') {
         data.evm_id = this.evmVersion;
         data.optimization = this.optimization;
         data.optimizer = parseInt(this.optimizer);
       }
-      //只有单文件(.sol)才需要在验证时上传
+      // 只有单文件(.sol)才需要在验证时上传
       if (this.compilerTyper === '0') {
         data.contract_code = this.fileMsg;
       }
@@ -750,6 +748,8 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+      this.tabShow = true;
+      this.tab = 1;
     },
 
     // 获取后台数据
@@ -1031,11 +1031,13 @@ h1 {
   font-size: 14px;
 }
 
-.text-f input:nth-child(1) {
+.text-f .submit {
   color: #fff;
   background-color: #3498db;
   border-color: #3498db;
 }
+
+
 .m-files {
   background-color: #f5f7fa;
   padding: 10px 15px;

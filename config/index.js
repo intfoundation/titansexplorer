@@ -25,9 +25,9 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/api': {
-                // target: 'http://titansexplorer.intchain.io/',
+                target: 'http://titansexplorer.intchain.io/',
                 // target: 'http://localhost:6660',
-                target: 'http://192.168.0.99:6660/',
+                // target: 'http://192.168.0.99:6660/',
                 changeOrigin: true
             }
         },

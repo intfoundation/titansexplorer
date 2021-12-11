@@ -96,9 +96,12 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-
-              <el-form-item label="I agree to the terms of service">
-                <el-button type="primary" @click="verifyContract()"
+             
+              <el-form-item>
+                <div style="margin-left: -26px;">
+                  <input type="checkbox" @click="checkbox()"> I agree to the terms of service
+                </div>  
+                <el-button type="primary" :disabled = "!dis" @click="verifyContract()"
                   >Continue</el-button
                 >
                 <el-button @click="resetForm()">Reset</el-button>
@@ -125,6 +128,7 @@ export default {
       compilerVersion: "",
       licenseType: "",
       showCompileVersion: false,
+      dis:false
     };
   },
 
@@ -151,11 +155,18 @@ export default {
       this.showCompileVersion = true;
       this.compilerType = type;
     },
+    
+    // 选中为true,未选中为false
+    checkbox(){
+        this.dis = event.target.checked
+        // console.log(event.target.checked)
+    },
+
 
     verifyContract() {
       if(!this.address){
         console.log(this.address,'address');
-          this.$message({
+        this.$message({
           message: 'Please enter the address',
           type: 'warning'
         });
@@ -191,7 +202,7 @@ export default {
       }
       this.$axios.post('http://192.168.0.99:6660/api/contract/verifyStatus',data).then((res)=>{
         console.log(res.data);
-        if( res.data.status===0 ){
+        if( res.data.status === 0 ){
           const url = `/verifyContractSolc/${this.address}/${this.compilerType}/${this.compilerVersion}/${this.licenseType}/${res.data.data}`;
           this.$router.push(url);
         } else {
@@ -204,9 +215,6 @@ export default {
       }).catch((err)=>{
         console.log(err);
       })
-
-
-
     },
 
     resetForm() {
