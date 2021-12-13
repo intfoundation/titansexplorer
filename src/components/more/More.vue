@@ -16,7 +16,7 @@
           <div class="row">
             <img :src="picUrl" alt="" style="width: 115px; height: 96px" />
             <p>
-              Source code verification provides <b>transparency</b> for users
+              Source code verification provides transparency for users
               interacting with smart contracts. By uploading the source code,
               Bscscan will match the compiled code with that on the
               blockchain. Just like contracts, a "smart contract" should
@@ -100,11 +100,10 @@
               <el-form-item>
                 <div style="margin-left: -26px;">
                   <input type="checkbox" @click="checkbox()"> I agree to the terms of service
-                </div>  
-                <el-button type="primary" :disabled = "!dis" @click="verifyContract()"
-                  >Continue</el-button
-                >
-                <el-button @click="resetForm()">Reset</el-button>
+                </div>               
+                <el-button class="sub" type="primary" :disabled = "!dis" @click="verifyContract()"
+                  >Continue</el-button>
+                <el-button class="reset" @click="resetForm()">Reset</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -139,7 +138,7 @@ export default {
   methods: {
     getDate() {
       this.$axios
-        .get("http://192.168.0.99:6660/api/contract/getContractInfo")
+        .get("https://titansexplorer.intchain.io/api/contract/getContractInfo")
         .then((res) => {
           this.compiler = res.data.compiler,
           this.license = res.data.license,
@@ -200,7 +199,7 @@ export default {
       const data ={
         contract_address:this.address
       }
-      this.$axios.post('http://192.168.0.99:6660/api/contract/verifyStatus',data).then((res)=>{
+      this.$axios.post('https://titansexplorer.intchain.io/api/contract/verifyStatus',data).then((res)=>{
         console.log(res.data);
         if( res.data.status === 0 ){
           const url = `/verifyContractSolc/${this.address}/${this.compilerType}/${this.compilerVersion}/${this.licenseType}/${res.data.data}`;
@@ -275,5 +274,32 @@ h1 {
   margin: auto;
   margin-top: 20px;
 }
+
+.sub{
+  background-color: #409eff;
+}
+.sub:hover{
+  background-color: #409eff !important;
+  color: #fff !important;
+}
+.sub:focus{
+  background-color: #409eff !important;
+  opacity: 0.8;
+  color: #fff !important;
+}
+
+/* .sub{
+  background-color: #ed303b;
+}
+.sub:hover{
+  background-color: #ed303b !important;
+  opacity: 0.8;
+  color: #fff !important;
+}
+.sub:focus{
+  background-color: #ed303b !important;
+  opacity: 0.8;
+  color: #fff !important;
+} */
 
 </style>

@@ -389,10 +389,15 @@
                 <input type="submit" @click="$router.back(-1)" value="Return to Main" />
               </router-link>
             </div>
+
+          <div>
+            <button @click="onSub">获取数据{{smart_contract.name}}</button>
+          </div>
           </div>
         </div>
 
         <div class="card-body" v-show="tab == 1">
+          <!-- 合约生成成功 -->
           <div class="tab-content c-all">
             <div class="c-put">
               <p><b>Compiler debug log:</b></p>
@@ -439,6 +444,7 @@
             </div>
           </div>
 
+          <!-- 合约生成错误 -->
           <!-- <div class="tab-content c-all">
             <div class="error-put">
               <p><b>Compiler debug log:</b> </p>
@@ -499,11 +505,19 @@
                 <br>
                 60806040523480156200001157600080fd5b506040516200165238038062001652833981810160405260608110156200003757600080fd5b81019080805160405193929190846401fffffff16815260200190815260200160002081905550610e3c816000808573ffffffffffffffffffffffffffffffffffffffff1673fffffffffffffffff</pre>
             </div>
+
+            <div>
+              <button class="statr-over" @click="startOver">Start Over</button>
+            </div>
           </div> -->
+          <!-- ceshi  -->
         </div>
       </div>
     </div>
   </div>
+
+
+  
 </template>
 
 
@@ -554,7 +568,15 @@ export default {
       hash:"0xc6844c595254242eb870997a4b99fa90b2069f6253f115f03df528e9e725b860",
       verified_url: "/address/" + this.$route.params.address,
       showBox:true,
-      tabShow:false
+      tabShow:false,
+      smart_contract:{
+        address_hash:0xaAf244486784aBbb646b4C9505FA46C0a6Bbc265,
+        name: 'INTBoxNFT',
+        nightly_builds: "v0.8.0+commit.c7dfd78e",
+        evm_version:"default",
+        optimization: 200,
+        contract_source_code: "// Sources flattened with hardhat v2.2.1 https://hardhat.org"
+      }
     };
   },
 
@@ -608,7 +630,7 @@ export default {
         this.fileInfo = true;
       }
       this.$axios
-        .post("http://192.168.0.99:6660/api/contract/uploadContract", {
+        .post("https://titansexplorer.intchain.io/api/contract/uploadContract", {
           contract_address: this.address,
           file: this.solFile,
         })
@@ -643,7 +665,7 @@ export default {
         });
       }
       this.$axios
-        .post("http://192.168.0.99:6660/api/contract/uploadContract", {
+        .post("https://titansexplorer.intchain.io/api/contract/uploadContract", {
           contract_address: this.address,
           file: this.jsonFile,
         })
@@ -712,7 +734,6 @@ export default {
         }
       }
 
-
       if (this.compilerTyper === '0') {
         console.log(this.fileMsg, 'this.fileMsg');
       }
@@ -734,7 +755,7 @@ export default {
       if (this.compilerTyper === '0') {
         data.contract_code = this.fileMsg;
       }
-      this.$axios.post("http://192.168.0.99:6660/api/contract/saveLicenseAndCompiler", data).then((res) => {
+      this.$axios.post("https://titansexplorer.intchain.io/api/contract/saveLicenseAndCompiler", data).then((res) => {
         console.log(res);
         if (res.data.status === 0) {
           //成功
@@ -755,7 +776,7 @@ export default {
     // 获取后台数据
     getDate() {
       this.$axios
-        .get("http://192.168.0.99:6660/api/contract/getContractInfo")
+        .get("https://titansexplorer.intchain.io/api/contract/getContractInfo")
         .then((res) => {
           this.compiler = res.data.compiler;
           this.license = res.data.license;
@@ -774,12 +795,40 @@ export default {
         });
     },
 
+    // 生成合约错误 　/start over 按钮/
+    startOver(){
+      this.tabShow = false;
+      this.tab = 0;
+    },
+
     resetInfo() {
       this.solFile = [],
       this.jsonFile = [],
       this.nododata = "",
       this.fileMsg = ""
     },
+
+    //  nightly_builds: "v0.8.0+commit.c7dfd78e",
+        // evm_version:"default",
+        // optimization: 200,
+        // contract_source_code: "// Sources flattened with hardhat v2.2.1 https://hardhat.org"
+
+    onSub(){
+      const datas = {
+        address_hash: this.smart_contract.address_hash,
+        name:this.smart_contract.name,
+        evm_version:this.smart_contract.evm_version,
+        optimization:this.smart_contract.optimization,
+        contract_source_code:this.smart_contract.contract_source_code
+      }
+      //  console.log(datas,"datas");
+      this.$axios.post("https://blockscout.explorer.intchain.io/verify_smart_contract/contract_verifications",datas).then((res)=>{
+        console.log(datas,"datas");
+        console.log(res);
+      }).catch((err)=>{
+        console.log(err);
+      })
+    }
   }
 };
 </script>
@@ -1019,7 +1068,7 @@ h1 {
   margin: 40px 0;
 }
 
-.text-f input {
+.text-f input,.statr-over{
   border: 0;
   color: #77838f;
   background: rgba(119, 131, 143, 0.1);
@@ -1029,12 +1078,17 @@ h1 {
   padding: 12px 16px;
   margin-right: 8px;
   font-size: 14px;
+  cursor:pointer;
 }
 
-.text-f .submit {
+.text-f .submit, .statr-over {
   color: #fff;
   background-color: #3498db;
   border-color: #3498db;
+}
+.statr-over{
+  height: 40px;
+  margin-top: 30px;
 }
 
 
