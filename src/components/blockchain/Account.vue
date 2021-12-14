@@ -781,7 +781,7 @@ export default {
             this.reads = this.addrInfo.contract.read_contract ? this.addrInfo.contract.read_contract : '';
             this.writes = this.addrInfo.contract.write_contract ? this.addrInfo.contract.write_contract : '';
 
-            this.noParamReadContract(); //无参数的read contract获取
+            // this.noParamReadContract(); //无参数的read contract获取
 
             if(res.data.contract.verify === 1){
               // this.showContent = true;
@@ -1298,21 +1298,54 @@ export default {
         to: contractAddr,
         data: "0x" + functionSig + data.substring(2)
       }
-      let body = `{"jsonrpc":"2.0","method":"int_call","params":[` + JSON.stringify(tx) + `,"latest"],"id":1}`
+      //调用RPC做法
+      // let body = `{"jsonrpc":"2.0","method":"int_call","params":[` + JSON.stringify(tx) + `,"latest"],"id":1}`
+      // try {
+      //   let result = await this.run(body);
+      //   let r = int4.abi.decodeParams(outputObj.names, outputObj.types, result);
+      //   if (outputObj.types && outputObj.types.length > 0) {
+      //     for (let i = 0; i < outputObj.types.length; i++) {
+      //       if (outputObj.types[i] === 'uint256' || outputObj.types[i] === 'uint8') {
+      //         r[i] = r[i].toString();
+      //       }
+      //     }
+      //   }
+      //   return {
+      //     data: r[0],
+      //     message: 'Success'
+      //   };
+      // } catch (e) {
+      //   console.log("调用合约失败， error:" + e);
+      //   return {
+      //     message: 'Fail',
+      //   }
+      // }
+
+      //调用小狐狸做法
       try {
-        let result = await this.run(body);
-        let r = int4.abi.decodeParams(outputObj.names, outputObj.types, result);
-        if (outputObj.types && outputObj.types.length > 0) {
-          for (let i = 0; i < outputObj.types.length; i++) {
-            if (outputObj.types[i] === 'uint256' || outputObj.types[i] === 'uint8') {
-              r[i] = r[i].toString();
+        return await ethereum.request({
+          method: 'eth_call',
+          params: [tx],
+        }).then((result) => {
+          console.log('hash', result);
+          let r = int4.abi.decodeParams(outputObj.names, outputObj.types, result);
+          if (outputObj.types && outputObj.types.length > 0) {
+            for (let i = 0; i < outputObj.types.length; i++) {
+              if (outputObj.types[i] === 'uint256' || outputObj.types[i] === 'uint8') {
+                r[i] = r[i].toString();
+              }
             }
           }
-        }
-        return {
-          data: r[0],
-          message: 'Success'
-        };
+          return {
+            data: r[0],
+            message: 'Success',
+          }
+        }).catch((error) => {
+          console.log('tx error', error);
+          return {
+            message: 'Fail',
+          }
+        });
       } catch (e) {
         console.log("调用合约失败， error:" + e);
         return {
@@ -1457,8 +1490,8 @@ export default {
         )
     },
 
-    async run(body, url = 'http://101.32.74.50:8555'){
-      url = `http://${cfg.configs.rpcHost}:${cfg.configs.rpcPort}`;
+    async run(body){
+      let url = `http://${cfg.configs.rpcHost}:${cfg.configs.rpcPort}`;
       let options = {
         url: url,
         method: 'POST',
