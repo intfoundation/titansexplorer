@@ -18,7 +18,7 @@ export default {
     methods:{
         getDate(){
             this.$axios
-                .get("https://titansexplorer.intchain.io/api/contract/exportAbi",{params:{contract_address:this.$route.params.address, format: this.format}})
+                .get("/api/contract/exportAbi",{params:{contract_address:this.$route.params.address, format: this.format}})
                 .then((res) => {
                     this.result = res.data
                     console.log(res);

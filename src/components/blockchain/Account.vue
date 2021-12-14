@@ -739,7 +739,7 @@ export default {
   methods: {
     getAddrDetail() {
       this.isInfoLoading = true;
-      this.$axios.get('https://titansexplorer.intchain.io/api/account/detail',{params:{address:this.addr}}).then(res => {
+      this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
         // console.log('api account detail', res.data);
 
         this.addrInfo = res.data;

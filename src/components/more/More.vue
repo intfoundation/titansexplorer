@@ -83,7 +83,7 @@ export default {
         };
         this.$axios
           .post(
-            "https://titansexplorer.intchain.io/api/contract/verifyStatus",
+            "/api/contract/verifyStatus",
             data
           )
           .then((res) => {

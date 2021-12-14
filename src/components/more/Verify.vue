@@ -443,10 +443,6 @@
                 <input type="submit" @click="$router.back(-1)" value="Return to Main" />
               </router-link>
             </div>
-
-          <div>
-            <button @click="onSub">获取数据{{smart_contract.name}}</button>
-          </div>
           </div>
         </div>
 
@@ -623,16 +619,6 @@ export default {
       verified_url: "/address/" + this.$route.params.address,
       showBox:true,
       tabShow:false,
-
-      
-      smart_contract:{
-        address_hash:0xaAf244486784aBbb646b4C9505FA46C0a6Bbc265,
-        name: 'INTBoxNFT',
-        nightly_builds: "v0.8.0+commit.c7dfd78e",
-        evm_version:"default",
-        optimization: 200,
-        contract_source_code: "// Sources flattened with hardhat v2.2.1 https://hardhat.org"
-      }
     };
   },
 
@@ -686,7 +672,7 @@ export default {
         this.fileInfo = true;
       }
       this.$axios
-        .post("https://titansexplorer.intchain.io/api/contract/uploadContract", {
+        .post("/api/contract/uploadContract", {
           contract_address: this.address,
           file: this.solFile,
         })
@@ -721,7 +707,7 @@ export default {
         });
       }
       this.$axios
-        .post("https://titansexplorer.intchain.io/api/contract/uploadContract", {
+        .post("/api/contract/uploadContract", {
           contract_address: this.address,
           file: this.jsonFile,
         })
@@ -811,7 +797,7 @@ export default {
       if (this.compilerTyper === '0') {
         data.contract_code = this.fileMsg;
       }
-      this.$axios.post("https://titansexplorer.intchain.io/api/contract/saveLicenseAndCompiler", data).then((res) => {
+      this.$axios.post("/api/contract/saveLicenseAndCompiler", data).then((res) => {
         console.log(res);
         if (res.data.status === 0) {
           //成功
@@ -832,7 +818,7 @@ export default {
     // 获取后台数据
     getDate() {
       this.$axios
-        .get("https://titansexplorer.intchain.io/api/contract/getContractInfo")
+        .get("/api/contract/getContractInfo")
         .then((res) => {
           this.compiler = res.data.compiler;
           this.license = res.data.license;
@@ -863,28 +849,6 @@ export default {
       this.nododata = "",
       this.fileMsg = ""
     },
-
-    //  nightly_builds: "v0.8.0+commit.c7dfd78e",
-        // evm_version:"default",
-        // optimization: 200,
-        // contract_source_code: "// Sources flattened with hardhat v2.2.1 https://hardhat.org"
-
-    onSub(){
-      const datas = {
-        address_hash: this.smart_contract.address_hash,
-        name:this.smart_contract.name,
-        evm_version:this.smart_contract.evm_version,
-        optimization:this.smart_contract.optimization,
-        contract_source_code:this.smart_contract.contract_source_code
-      }
-      //  console.log(datas,"datas");
-      this.$axios.post("https://blockscout.explorer.intchain.io/verify_smart_contract/contract_verifications",datas).then((res)=>{
-        console.log(datas,"datas");
-        console.log(res);
-      }).catch((err)=>{
-        console.log(err);
-      })
-    }
   }
 };
 </script>

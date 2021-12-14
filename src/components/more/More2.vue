@@ -138,7 +138,7 @@ export default {
   methods: {
     getDate() {
       this.$axios
-        .get("https://titansexplorer.intchain.io/api/contract/getContractInfo")
+        .get("/api/contract/getContractInfo")
         .then((res) => {
           this.compiler = res.data.compiler,
           this.license = res.data.license,
@@ -199,7 +199,7 @@ export default {
       const data ={
         contract_address:this.address
       }
-      this.$axios.post('https://titansexplorer.intchain.io/api/contract/verifyStatus',data).then((res)=>{
+      this.$axios.post('/api/contract/verifyStatus',data).then((res)=>{
         console.log(res.data);
         if( res.data.status === 0 ){
           const url = `/verifyContractSolc/${this.address}/${this.compilerType}/${this.compilerVersion}/${this.licenseType}/${res.data.data}`;
