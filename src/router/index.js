@@ -23,8 +23,8 @@ import Tokens from '@/components/tokens/Tokens'
 import NFT from '@/components/tokens/NFT'
 import Token from '@/components/tokens/Token'
 import More from '@/components/more/More'
-import Verify from '@/components/more/Verify'
-import Format from '@/components/more/Format'
+// import Verify from '@/components/more/Verify'
+// import Format from '@/components/more/Format'
 // import RawFormat from '@/components/more/RawFormat'
 
 Vue.use(Router);
@@ -169,16 +169,16 @@ export default new Router({
           name: 'More',
           component: More,
         },
-        {
-          path: '/verifyContractSolc/:address/:compilerType/:compileVersion/:licenseType/:verifyStatus',
-          name: 'Verify',
-          component: Verify
-        },
-        {
-          path:'exportAbi/:address/:format',
-          name: 'format',
-          component: Format
-        }
+        // {
+        //   path: '/verifyContractSolc/:address/:compilerType/:compileVersion/:licenseType/:verifyStatus',
+        //   name: 'Verify',
+        //   component: Verify
+        // },
+        // {
+        //   path:'exportAbi/:address/:format',
+        //   name: 'format',
+        //   component: Format
+        // }
       ]
     }
   ]

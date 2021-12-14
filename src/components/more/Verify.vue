@@ -22,11 +22,11 @@
             for verifying smart contracts that fit in a single file
           </p>
           <p style="color: #6c757e; font-size: 14px"  v-if="compilerTyper === '1'">
-            <span class="none">Info:</span>  This is an experimental source code verifier which supports verification of
-            multi-part solidity files  (imports).
+            <span class="none">Info:</span>  This is an <b>experimental</b> source code verifier which supports verification of
+            <b>multi-part solidity files</b>  (imports).
           </p>
           <p style="color: #6c757e; font-size: 14px"  v-if="compilerTyper === '2'">
-            <span class="none">Info:</span> Standard Json-Input is the recommended way to interface with the Solidity compiler especially for more complex and automated setups.
+            <span class="none">Info:</span> <b>Standard Json-Input</b> is the recommended way to interface with the Solidity compiler especially for more complex and automated setups.
           </p>
         </div>
       </div>
@@ -57,20 +57,30 @@
               <button type="button" class="close">
                 <span @click="closeBox">×</span>
               </button>
-              <ul v-if="compilerTyper === '0' || compilerTyper === '1'">
+              <ul v-if="compilerTyper === '0'">
                 <li>
-                  1. If the contract compiles correctly at
-                  nofollow noopener, it should also compile correctly here.
+                  1. If the contract compiles correctly at REMIX, it should also compile correctly here.
                 </li>
                 <li>
-                  2. We have limited support for verifying contracts created by
-                  another contract and there is a timeout of up to 45 seconds
+                  2. We have limited support for verifying contracts created by another contract and there is a timeout of up to 45 seconds
                   for each contract compiled.
                 </li>
                 <li>
                   3. For programatic contract verification, check out theContract API Endpoint
                 </li>
               </ul>
+              <ul v-if="compilerTyper === '1'">
+                <li>
+                  1. If it compiles correctly at REMIX , it should also compile correctly here.
+                </li>
+                <li>
+                  2. As this is an beta release module, there is limited support for external libraries
+                </li>
+                <li>
+                  3. There is a timeout of up to 45 seconds for each contract compiled, if you need longer compilation times (up to 3 mins) check out this API endpoint
+                </li>
+              </ul>
+
               <ul v-if="compilerTyper === '2'">
                 <li>
                   1. Contract sources in the json file must be formatted as Literal contents  and NOT as urls
@@ -171,6 +181,7 @@
                 <div class="upload">
                   Step 2:
                   <input
+                    class="up-input"
                     type="submit"
                     @click="submitInfo"
                     value="Click to Upload selected files"
@@ -234,6 +245,7 @@
                 <div class="upload">
                   Step 2:
                   <input
+                    class="up-input"
                     type="submit"
                     @click="submitJson"
                     value="Click to Upload selected files"
@@ -266,9 +278,9 @@
                       v-model="nododata"
                       class="card-info"
                     ></textarea>
-                    <p style="margin: 0 0 0 14px">
+                    <!-- <p style="margin: 0 0 0 14px">
                       For additional information on Constructor Arguments
-                    </p>
+                    </p> -->
                   </el-collapse-item>
                 </el-collapse>
               </div>
@@ -314,7 +326,7 @@
                 </el-collapse>
               </div>
               <!-- Misc Settings -->
-              <div class="card-m">
+              <div class="card-m" v-if="compilerTyper === '0' || compilerTyper === '1'">
                 <el-collapse
                   class="card-item"
                   v-model="activeNames"
@@ -328,24 +340,25 @@
                       >
                     </template>
                     <div class="ms-list">
-                      <div class="ms-col-md" v-if="compilerTyper === '0' || compilerTyper === '1'">
+                      <div class="ms-col-md">
                         <div style="margin: 6px 0">
                           <i class="far fa-question-circle text-muted"></i>
                           <label>Runs (Optimizer)</label>
                         </div>
                         <el-input
+                          style="width:320px"
                           v-model="optimizer"
                           clearable
                           placeholder="200"
                         ></el-input>
                       </div>
-
-                      <div class="ms-col-md" v-if="compilerTyper === '0' || compilerTyper === '1'">
+                      <div class="ms-col-md">
                         <div style="margin: 6px 0">
                           <i class="far fa-question-circle text-muted"></i>
                           <label>EVM Version to target</label>
                         </div>
                         <el-select
+                          style="width:390px"
                           v-model="evmVersion"
                           placeholder="default (compiler defaults)"
                         >
@@ -358,13 +371,14 @@
                           </el-option>
                         </el-select>
                       </div>
-
                       <div class="ms-col-md">
                         <div style="margin: 6px 0">
                           <label>LicenseType</label>
-                          <i class="far fa-info-circle" style="color: #3498db"></i>
+                          <i class="el-icon-info" style="color:#3498db"></i>
                         </div>
                         <el-select
+                        class="s-input"
+                          style="width:398px"
                           v-model="licenseTypeItem"
                           placeholder="[Please Select]"
                         >
@@ -381,6 +395,46 @@
                   </el-collapse-item>
                 </el-collapse>
               </div>
+
+              <div class="card-m" v-if="compilerTyper === '2'">
+                <el-collapse
+                  class="card-item"
+                  v-model="activeNames"
+                  @change="handleChange"
+                >
+                  <el-collapse-item>
+                    <template slot="title">
+                      Misc Settings
+                      <span style="color: #77838f"
+                        >(License Type settings)</span
+                      >
+                    </template>
+                    <div class="ms-list">
+                      <div class="ms-col-md">
+                        <div style="margin: 6px 0">
+                          <label>LicenseType</label>
+                          <i class="el-icon-info" style="color:#3498db"></i>
+                        </div>
+                        <el-select
+                          style="width:398px"
+                          v-model="licenseTypeItem"
+                          placeholder="[Please Select]"
+                        >
+                          <el-option
+                            v-for="item in license"
+                            :key="item.id"
+                            :label="item.type"
+                            :value="item.id"
+                          >
+                          </el-option>
+                        </el-select>
+                      </div>
+                    </div>
+                  </el-collapse-item>
+                </el-collapse>
+              </div>
+
+
             </div>
             <div class="text-f">
               <input class="submit" type="submit" @click="postInfo" value="Verify and Publish" />
@@ -569,6 +623,8 @@ export default {
       verified_url: "/address/" + this.$route.params.address,
       showBox:true,
       tabShow:false,
+
+      
       smart_contract:{
         address_hash:0xaAf244486784aBbb646b4C9505FA46C0a6Bbc265,
         name: 'INTBoxNFT',
@@ -1011,6 +1067,14 @@ h1 {
 
 .upload {
   margin: 20px 0;
+}
+
+.up-input{
+    background-color: #77838f;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    padding: 6px;
 }
 
 .card-m {

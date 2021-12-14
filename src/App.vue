@@ -180,4 +180,12 @@ export default {
     border-bottom: none;
   }
 
+  .el-select-dropdown__item{
+    font-size: 13px;
+  }
+
+  .s-input .el-input .el-input__inner{
+    font-size: 13px;
+  }
+
 </style>
