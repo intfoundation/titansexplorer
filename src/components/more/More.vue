@@ -174,6 +174,7 @@ h1 {
 .sub i {
   font-size: 26px;
   color: #fff;
+  display: block;
   margin-left: -8px;
   margin-top: -6px;
 }
