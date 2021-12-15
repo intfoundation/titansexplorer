@@ -390,7 +390,7 @@
                     <div class="blocks blocks1" v-show=" cur == 0">
                       <template>
                         <div class="csc-v">
-                          <p><i class="el-icon-success" style="font-size: 14px ; color: #00c9a7 ; margin-right: 4px"></i><strong>Contract Source Code Verified</strong><span style="color: #77838f ; margin-left: 4px">(Exact Match)</span></p>
+                          <p><i class="el-icon-success" style="font-size: 14px ; color: #00c9a7 ; margin-right: 4px"></i><strong>Contract Source Code Verified<span style="color: #77838f ; margin-left: 4px">(Exact Match)</span></strong></p>
                           <i class="el-icon-warning" style="font-size: 22px ; color: #db9a04"></i>
                         </div>
 
@@ -407,7 +407,7 @@
                             <span><strong style="margin-right: 4px">{{addrInfo.contract.optimization}}</strong>with<strong style="margin:0 4px">{{addrInfo.contract.optimizer}}</strong>runs</span>
                             <el-divider></el-divider>
                             <span style="margin-right: 86px">Compiler Version</span>
-                            <span><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong><a style="color: #3498db">license</a></span>
+                            <span><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong>license</span>
                           </div>
                         </div>
                       </template>
@@ -547,6 +547,7 @@
                               <i>{{read.type}}</i>
                               <!-- <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">Error: Invalid number of parameters for "{{read.name}}".expected {{read.inputs.length}}!</span>
                               <span v-if="invalidAddr" style="color: #ed303b; margin-left:5px"> Error: invalid address</span> -->
+                              <!-- <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">{{msg}}</span> -->
                               <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">{{msg}}</span>
                             </div>
                           </div>
@@ -557,7 +558,6 @@
                     <div class="write-contract" v-show=" cur == 2">
                       <div class="write-flex">
                         <p>
-
                           <i v-if="greenIcon" class="fa fa-circle mr-1 text-success"></i>
                           <i v-if="redIcon" class="fa fa-circle text-danger mr-1"></i>
                           <button class="sub-btn" id="connectButton" @click=requestAccount>Connect to Web3 </button>
@@ -687,7 +687,7 @@ export default {
       jsonUrl:'',
       rawUrl:'',
       cur: 0,
-      activeNames: ['1'],
+      activeNames: ['0'],
       currentChainId: '',
       chainId: '0x7ff',
       testChainId: '0x800',
@@ -1114,26 +1114,60 @@ export default {
         }
       }
       if (this.reads[r].inputs && this.reads[r].inputs.length > 0) { //有值
-        this.reads[r].spanInfo = false;
+        // this.reads[r].spanInfo = false;
         let params = [];
         for (let input of this.reads[r].inputs) {
           params.push(input.value);
           let num = input.value;
-          console.log(num);
-          if (!num) {
-            this.msg = 'Error: Invalid number of parameters for "' + this.reads[r].name + '". expected ' + this.reads[r].inputs.length + '!'
-            this.reads[r].spanInfo = true; //显示提示
-            this.reads[r].value = "";
-            break;
-          }else {
-            if(num=/^(0x|0X)?[0-9a-f]{40}$/.test(num) || /^(0x|0X)?[0-9A-F]{40}$/.test(num)){
-               this.reads[r].spanInfo = false
-            }else{
-              this.msg = 'Error: invalid address'
-              this.reads[r].spanInfo = true
-              break;
+          console.log(input.value,'num');
+            let flag = false;
+            switch(input.type) {
+              case 'address':
+                flag = int4.utils.isAddress(num);
+                this.msg = "Error:Invalid address";
+                break;
+              case 'string':
+                flag = _.isString(num);
+                this.msg = "Error:Invalid string";
+                break;
+              case 'bool':
+                flag = _.isBool(num);
+                this.msg = "Error:Invalid bool";
+                break;
+              case 'uint256':
+                flag = /^[1-9]+[0-9*]*$/.test(num);
+                this.msg = "Error:Invalid number";
+              case 'uint8':
+                // flag = _.isNumber(inputBox.value);
+                flag = /^[1-9]+[0-9*]*$/.test(num);
+                this.msg = "Error:Invalid number";
+                break;
+              default:
+                flag = false;
+                this.msg = "Error:No match type";
             }
-          }
+            if(!flag) {
+              this.msg = 'Error: Invalid number of parameters for "' + this.reads[r].name + '". expected ' + this.reads[r].inputs.length + '!'
+              this.reads[r].spanInfo = true; //显示提示
+              this.reads[r].value = "";
+              return;
+            }
+
+          // if (!num) {
+          //   this.msg = 'Error: Invalid number of parameters for "' + this.reads[r].name + '". expected ' + this.reads[r].inputs.length + '!'
+          //   this.reads[r].spanInfo = true; //显示提示
+          //   this.reads[r].value = "";
+          //   break;
+          // }else {
+          //   if(num=/^(0x|0X)?[0-9a-f]{40}$/.test(num) || /^(0x|0X)?[0-9A-F]{40}$/.test(num)){
+          //      this.reads[r].spanInfo = false
+          //   }else{
+          //     this.msg = 'Error: invalid address'
+          //     this.reads[r].spanInfo = true
+          //     break;
+          //   }
+          // }
+
         }
         //如果循环完this.spanInfo还是false说明input都有值
         if (this.reads[r].spanInfo === false) {
@@ -1178,6 +1212,7 @@ export default {
           // 拿到input的值 判断数据类型
           for(let inputBox of this.writes[n].inputs){
             //1. 判断类型 address/uint256/uint8/string/bool
+            console.log(this.writes[n].inputs,'input');
             let flag = false;
             switch(inputBox.type) {
               case 'address':
