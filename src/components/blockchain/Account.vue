@@ -440,17 +440,17 @@
                                 </el-dropdown-menu>
                               </el-dropdown>
                             </div>
-                            <!-- 如果让隐藏部分显示出来 删除这些代码 放开下面注释部分 -->
+                            <!-- If the hidden part is displayed, delete these codes and let go of the comment part below -->
                             <div class="c-icon">
-                              <!-- 复制textarea内容 -->
+                              <!-- Copy textarea content -->
                               <el-tooltip content="Copy source code to clipboaed" placement="top">
                                 <a class="rep-text" @click="replicate(index)" :data-clipboard-text="item.text"><i class="el-icon-copy-document"></i></a>
                               </el-tooltip>
-                              <!-- 复制地址栏链接 -->
+                              <!-- Copy the link to the address bar -->
                               <el-tooltip content="Generate Permalink" placement="top">
                                 <a class="copy-url" @click="copyUrl" :data-clipboard-text="url"><i class="el-icon-link"></i></a>
                               </el-tooltip>
-                              <!-- 切换文本域大小 -->
+                              <!-- Switch text field size -->
                               <el-tooltip  content="Toggle Fullscrent" placement="top">
                                 <a @click="changeIts(index)" :style="{display:iconsDisplay}"><i class="el-icon-full-screen" ></i></a>
                               </el-tooltip>
@@ -481,11 +481,11 @@
                               </el-dropdown-menu>
                             </el-dropdown>
                             <div class="ca-icon">
-                              <!-- 复制文本内容 -->
+                              <!-- Copy text content -->
                               <el-tooltip content="Copy source code to clipboaed" placement="top">
                                 <a :plain="true" class="copy-text" @click="copy" data-clipboard-target="#foo"><i class="el-icon-copy-document"></i></a>
                               </el-tooltip>
-                              <!-- 切换文本域大小 -->
+                              <!-- Switch text field size -->
                               <el-tooltip content="Toggle Fullscrent" placement="top">
                                 <a @click="changeIt" :style="{display:iconDisplay}"><i class="el-icon-full-screen" ></i></a>
                               </el-tooltip>
@@ -695,7 +695,7 @@ export default {
       inputs:[],
       // invalidAddr:false,
       message: '',
-      address: '', //小狐狸地址
+      address: '', //Little Fox Address
       addrShow:false,
       greenIcon:false,
       redIcon:true,
@@ -791,11 +791,11 @@ export default {
               this.showContent = true;
             }
 
-            //获取上一页面路径
+            //Get the path of the previous page
             if (document.referrer) {
               let arrurl = document.referrer.split('/');
               console.log(arrurl[3]);
-              //如果是从验证合约页面过来的选项卡需要直接定位到contract
+              //If it is the tab coming from the verification contract page, you need to directly locate the contract
               if (arrurl[3] === 'verifyContractSolc') {
                 this.activeName = 3;
               }
@@ -1024,7 +1024,7 @@ export default {
       this.$router.push(`/token/${val}`);
     },
 
-    // 点击全选textarea内容
+    // Click to select all textarea content
     copy(){
       let _this = this;
       var clipboard = new Clipboard('.copy-text')
@@ -1035,7 +1035,7 @@ export default {
         e.clearSelection();
         clipboard.destroy();
       });
-      //失败回调
+      //Failure callback
       clipboard.on('error', function(e) {
         // console.error('Action:', e.action);
         // console.error('Trigger:', e.trigger);
@@ -1044,7 +1044,7 @@ export default {
       });
     },
 
-    // 放大缩小功能
+    // Zoom in and zoom out
     changeIt: function() {
       this.isActive = !this.isActive;
       if (this.isActive == true) {
@@ -1064,14 +1064,14 @@ export default {
         e.clearSelection();
         clipboard.destroy();
       });
-      //失败回调
+      //Failure callback
       clipboard.on('error', function(e) {
         _this.$message.error("This browser does not support automatic copy")
         clipboard.destroy();
       });
     },
 
-    // 复制浏览器地址
+    // Copy browser address
     copyUrl(){
       let _this = this;
       let clipboard = new Clipboard(".copy-url");
@@ -1079,13 +1079,13 @@ export default {
       clipboard.on("success", e => {
         // console.log('aaaaa',e.text)
         _this.$message.success("Copy link successfully")
-        // 释放内存
+        //Release memory
         clipboard.destroy();
       });
       clipboard.on("error", e => {
-        // 不支持复制，提示根据自己项目实际使用的UI来写
+        // Does not support copying, prompt to write according to the UI actually used by your project
         _this.$message.error("This browser does not support automatic copy")
-        // 释放内存
+        // Release memory
         clipboard.destroy();
       });
     },
@@ -1169,7 +1169,7 @@ export default {
           // }
 
         }
-        //如果循环完this.spanInfo还是false说明input都有值
+        //If this.spanInfo is still false after the loop, the input has a value
         if (this.reads[r].spanInfo === false) {
           let contractAbi = this.reads[r].abi;
           let result = await this.withParamReadContract(contractAbi, this.addrInfo.address, params);
@@ -1179,7 +1179,7 @@ export default {
             this.message = result.message;
           }
         }
-        //判断该按钮对应的input是否有值
+        //Determine whether the input corresponding to the button has a value
       }
     },
 
@@ -1198,21 +1198,22 @@ export default {
 
     // write
     async writeSub(n){
-      //最外层循环 隐藏所有提示信息
+      //The outermost loop hide all prompt information
       if(this.writes && this.writes.length > 0){
         for(let write of this.writes){
           write.spanInfo = false;
         }
       }
-      // 先判断地址是否连接 连接成功后判断是否有值
+      // First judge whether the address is connected and after the connection is successful, judge whether there is a value
       if(this.address){
-        // 判断是否有输入框
+        let params = [];
+        // Determine whether there is an input box
         if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
-          let params = [];
-          // 拿到input的值 判断数据类型
+          // Get the value of input, determine the data type
           for(let inputBox of this.writes[n].inputs){
-            //1. 判断类型 address/uint256/uint8/string/bool
+            //1. Judgment type: address/uint256/uint8/string/bool
             console.log(this.writes[n].inputs,'input');
+
             let flag = false;
             switch(inputBox.type) {
               case 'address':
@@ -1220,11 +1221,19 @@ export default {
                 this.message = "Error:Invalid address";
                 break;
               case 'string':
-                flag = _.isString(inputBox.value);
+                if (!inputBox.value) {
+                  flag = false;
+                } else {
+                  flag = _.isString(inputBox.value);
+                }
                 this.message = "Error:Invalid string";
                 break;
               case 'bool':
-                flag = _.isBool(inputBox.value);
+                if (inputBox.value === 'true' || inputBox.value === 'false') {
+                  // Convert to boolean
+                  inputBox.value = JSON.parse(inputBox.value);
+                }
+                flag = _.isBoolean(inputBox.value);
                 this.message = "Error:Invalid bool";
                 break;
               case 'uint256':
@@ -1245,15 +1254,15 @@ export default {
             }
             params.push(inputBox.value);
           }
-          // 如果错误提示不显示(inputs有值) 且 地址数据渲染到页面 调用接口
-          if(this.writes[n].spanInfo === false && this.addrShow === true){
-            console.log(this.addrShow,'show');
-            let contractAbi = this.writes[n].abi;
-            let result = await this.WriteContract(contractAbi, this.addrInfo.address, params);
-            if (result) {
-              this.message = result.message;
-              this.writes[n].spanInfo = true;
-            }
+        }
+        // If the error message is not displayed (inputs have values) and the address data is rendered to the page, call the interface
+        if(this.writes[n].spanInfo === false && this.addrShow === true){
+          console.log(this.addrShow,'show');
+          let contractAbi = this.writes[n].abi;
+          let result = await this.WriteContract(contractAbi, this.addrInfo.address, params);
+          if (result) {
+            this.message = result.message;
+            this.writes[n].spanInfo = true;
           }
         }
       }else{
@@ -1334,7 +1343,7 @@ export default {
         to: contractAddr,
         data: "0x" + functionSig + data.substring(2)
       }
-      //调用RPC做法
+      // Calling RPC practices
       // let body = `{"jsonrpc":"2.0","method":"int_call","params":[` + JSON.stringify(tx) + `,"latest"],"id":1}`
       // try {
       //   let result = await this.run(body);
@@ -1383,14 +1392,14 @@ export default {
           }
         });
       } catch (e) {
-        console.log("调用合约失败， error:" + e);
+        console.log("Failed to call contract， error:" + e);
         return {
           message: 'Fail',
         }
       }
     },
 
-    //write contract获取
+    //write contract
     async WriteContract(contractAbi, contractAddr, params) {
       let inputs = contractAbi.inputs;
       let outputs = contractAbi.outputs;
@@ -1410,7 +1419,7 @@ export default {
           outputObj.types.push(output.type);
         }
       }
-      //如果是转账，要判断余额是否充足
+      //If it is a transfer, it is necessary to judge whether the balance is sufficient
       if (contractAbi.name === 'transfer' || contractAbi.name === 'transferFrom') {
         let balance_abi = {
             "inputs": [
@@ -1433,10 +1442,10 @@ export default {
           };
         let param1 = '';
         if (contractAbi.name === 'transfer') {
-          //获取该合约地址余额
+          //Get the contract address balance
           param1 = this.address;
         } else if (contractAbi.name === 'transferFrom') {
-          //获取第一个参数的合约地址余额
+          //Get the contract address balance of the first parameter
           param1 = params[0];
         }
         let balanceOf = await this.withParamReadContract(balance_abi, this.addrInfo.address, [param1]);
@@ -1446,16 +1455,16 @@ export default {
         }
         console.log('balance ' + balance);
         console.log('amount: ' + params[params.length - 1]);
-        //用余额和转账金额比较，params数组的最后一个对象是转账金额
+        //Compare the balance with the transfer amount, the last object of the params array is the transfer amount
         if (parseInt(balance) < parseInt(params[params.length - 1])) {
-          console.log('余额不足');
+          console.log('Insufficient balance');
           return {
             message: 'Insufficient balance'
           }
         }
       }
       for (let input in inputTypes) {
-        if (inputTypes[input] === 'uint8' || inputTypes[input] === 'uint256') { //是金额，要进行转换
+        if (inputTypes[input] === 'uint8' || inputTypes[input] === 'uint256') { //Is the amount and needs to be converted
           params[input] = new BigNumber(params[input]);
         }
       }
@@ -1495,7 +1504,7 @@ export default {
         });
     },
 
-    //获取gasprice
+    //get gasprice
     async getGasPrice() {
       return await ethereum.request({
           method: 'eth_gasPrice',
@@ -1510,7 +1519,7 @@ export default {
         )
     },
 
-    //获取gas
+    //get gas
     async getGas(params) {
       console.log(params);
       return await ethereum.request({
@@ -1560,7 +1569,7 @@ export default {
           this.address = `${accounts[0]}`;
         }
         console.log('address' + this.address);
-          // 隐藏地址
+          // Hide address
           if(this.address === ''){
             this.redIcon = true;
             this.greenIcon = false;
