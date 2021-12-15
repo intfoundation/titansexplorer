@@ -1119,7 +1119,6 @@ export default {
         for (let input of this.reads[r].inputs) {
           params.push(input.value);
           let num = input.value;
-          console.log(input.value,'num');
             let flag = false;
             switch(input.type) {
               case 'address':
@@ -1130,7 +1129,6 @@ export default {
                 // flag = _.isString(num);
                 // this.msg = "Error:Invalid string";
                 // break;
-
                 if (!num) {
                   flag = false;
                 } else {
@@ -1150,16 +1148,50 @@ export default {
                 this.message = "Error:Invalid bool";
                 break;
               case 'uint256':
-                // flag = /^[1-9]+[0-9*]*$/.test(num);
-                flag = _.isNumber(num);
-                console.log(flag,'flag');
-                console.log(typeof(num),'type');
-                this.msg = "Error:Invalid number";
+                if (num && parseInt(num) > 0) {
+                  // Get the bignumber type of the maximum value of uint256
+                  let max = Math.pow(2, 256) - 1;
+                  // max = int4.utils.toBN(parseInt(max));
+                  max = new BigNumber(max);
+                  // console.log(max)
+                  // Convert the value of the input box to bignumber type
+                  // num = int4.utils.toBN(parseInt(num));
+                  num = new BigNumber(num);
+                  // console.log(num)
+                  // Satisfy if you don't exceed it
+                  if (num.lte(max)) {
+                    flag = true;
+                    console.log('zq')
+                  } else {
+                    flag = false;
+                    console.log('cw')
+                  }
+                }
+                this.msg = "Error:Invalid uint256";
                 break;
               case 'uint8':
-                // flag = _.isNumber(inputBox.value);
-                flag = /^[1-9]+[0-9*]*$/.test(num);
-                this.msg = "Error:Invalid number";
+                if (num && parseInt(num) > 0) {
+                  // flag = _.isNumber(inputBox.value);
+                  // flag = /^[1-9]+[0-9*]*$/.test(num);
+                  if (parseInt(num) <= 255) {
+                    flag = true;
+                  } else {
+                    flag = false;
+                  }
+                }
+                this.msg = "Error:Invalid uint8";
+                break;
+              case 'bytes4':
+                if (num.length == 10 && num.substring(0, 2) == '0x') {
+                  flag = int4.utils.isHex(num);
+                }
+                this.msg = "Error:Invalid bytes4";
+                break;
+              case 'bytes':
+                if (num.substring(0, 2) == '0x') {
+                  flag = int4.utils.isHex(num);
+                }
+                this.msg = "Error:Invalid bytes";
                 break;
               default:
                 flag = false;
@@ -1230,6 +1262,7 @@ export default {
         if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
           // Get the value of input, determine the data type
           for(let inputBox of this.writes[n].inputs){
+            params.push(inputBox.value);
             //1. Judgment type: address/uint256/uint8/string/bool
             console.log(this.writes[n].inputs,'input');
 
@@ -1256,12 +1289,44 @@ export default {
                 this.message = "Error:Invalid bool";
                 break;
               case 'uint256':
-                flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
-                this.message = "Error:Invalid number";
+                // Get the bignumber type of the maximum value of uint256
+                if (inputBox.value && parseInt(inputBox.value) > 0) {
+                  let max = Math.pow(2, 256) - 1;
+                  max = int4.utils.toBN(parseInt(max));
+                  // Convert the value of the input box to bignumber type
+                  inputBox.value = int4.utils.toBN(parseInt(inputBox.value));
+                  // Satisfy if you don't exceed it
+                  if (inputBox.value <= max) {
+                    flag = true;
+                  } else {
+                    flag = false;
+                  }
+                }
+                this.message = "Error:Invalid uint256";
                 break;
               case 'uint8':
-                flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
-                this.message = "Error:Invalid number";
+                if (inputBox.value && parseInt(inputBox.value) > 0) {
+                  // flag = _.isNumber(inputBox.value);
+                  // flag = /^[1-9]+[0-9*]*$/.test(num);
+                  if (parseInt(inputBox.value) <= 255) {
+                    flag = true;
+                  } else {
+                    flag = false;
+                  }
+                }
+                this.message = "Error:Invalid uint8";
+                break;
+              case 'bytes4':
+                if (inputBox.value.length == 10 && inputBox.value.substring(0, 2) == '0x') {
+                  flag = int4.utils.isHex(inputBox.value);
+                }
+                this.message = "Error:Invalid bytes4";
+                break;
+              case 'bytes':
+                if (inputBox.value.substring(0, 2) == '0x') {
+                  flag = int4.utils.isHex(inputBox.value);
+                }
+                this.message = "Error:Invalid bytes";
                 break;
               default:
                 flag = false;
@@ -1271,7 +1336,6 @@ export default {
               this.writes[n].spanInfo = true;
               return;
             }
-            params.push(inputBox.value);
           }
         }
         // If the error message is not displayed (inputs have values) and the address data is rendered to the page, call the interface
