@@ -543,8 +543,8 @@
                             </div>
                             <button class="all-btn" @click="spanshow(r)">Query</button>
                             <div class="warning-info">
-                              <span  style="margin-right:5px" v-if='read.value ? true : false '>{{read.value}}</span>
-                              <i>uint256</i>
+                              <span  style="margin-right:5px" v-if='read.value !== undefined ? true : false '>{{read.value}}</span>
+                              <i>{{read.type}}</i>
                               <!-- <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">Error: Invalid number of parameters for "{{read.name}}".expected {{read.inputs.length}}!</span>
                               <span v-if="invalidAddr" style="color: #ed303b; margin-left:5px"> Error: invalid address</span> -->
                               <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">{{msg}}</span>
@@ -1139,7 +1139,7 @@ export default {
         if (this.reads[r].spanInfo === false) {
           let contractAbi = this.reads[r].abi;
           let result = await this.withParamReadContract(contractAbi, this.addrInfo.address, params);
-          if (result.data) {
+          if (result.data !== undefined) {
             this.reads[r].value = result.data;
           } else {
             this.message = result.message;
@@ -1213,7 +1213,6 @@ export default {
           // 如果错误提示不显示(inputs有值) 且 地址数据渲染到页面 调用接口
           if(this.writes[n].spanInfo === false && this.addrShow === true){
             console.log(this.addrShow,'show');
-            console.log("调用接口");
             let contractAbi = this.writes[n].abi;
             let result = await this.WriteContract(contractAbi, this.addrInfo.address, params);
             if (result) {
@@ -1241,7 +1240,7 @@ export default {
       }
     },
 
-    //无参数的read contract获取
+    //Get the read contract without parameters
     async noParamReadContract() {
       if (this.reads && this.reads.length > 0) {
         for (let read of this.reads) {
@@ -1259,6 +1258,8 @@ export default {
                 let decodeData = int4.abi.decodeParams([""], [read.type], result);
                 if (read.type === 'uint256' || read.type === 'uint8' || read.type === 'string') {
                   read.value = decodeData['0'].toString();
+                } else if (read.type === 'bool' || read.type === 'address') {
+                  read.value = decodeData["0"];
                 } else {
                   read.value = result;
                 }
@@ -1271,7 +1272,7 @@ export default {
       }
     },
 
-    //带参数的read contract获取
+    //Get the read contract with parameters
     async withParamReadContract(contractAbi, contractAddr, params) {
       let inputs = contractAbi.inputs;
       let outputs = contractAbi.outputs;
@@ -1315,13 +1316,13 @@ export default {
       //     message: 'Success'
       //   };
       // } catch (e) {
-      //   console.log("调用合约失败， error:" + e);
+      //   console.log("Failed to call contract， error:" + e);
       //   return {
       //     message: 'Fail',
       //   }
       // }
 
-      //调用小狐狸做法
+      //Call the little fox
       try {
         return await ethereum.request({
           method: 'eth_call',
@@ -1331,7 +1332,7 @@ export default {
           let r = int4.abi.decodeParams(outputObj.names, outputObj.types, result);
           if (outputObj.types && outputObj.types.length > 0) {
             for (let i = 0; i < outputObj.types.length; i++) {
-              if (outputObj.types[i] === 'uint256' || outputObj.types[i] === 'uint8') {
+              if (outputObj.types[i] === 'uint256' || outputObj.types[i] === 'uint8' || outputObj.types[i] === 'string') {
                 r[i] = r[i].toString();
               }
             }
