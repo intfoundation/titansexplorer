@@ -1127,16 +1127,35 @@ export default {
                 this.msg = "Error:Invalid address";
                 break;
               case 'string':
-                flag = _.isString(num);
-                this.msg = "Error:Invalid string";
+                // flag = _.isString(num);
+                // this.msg = "Error:Invalid string";
+                // break;
+
+                if (!num) {
+                  flag = false;
+                } else {
+                  flag = _.isString(num);
+                }
+                this.message = "Error:Invalid string";
                 break;
               case 'bool':
-                flag = _.isBool(num);
-                this.msg = "Error:Invalid bool";
+                // flag = _.isBool(num);
+                // this.msg = "Error:Invalid bool";
+                // break;
+                if (num === 'true' || num === 'num') {
+                  // Convert to boolean
+                  inputBox.value = JSON.parse(num);
+                }
+                flag = _.isBoolean(num);
+                this.message = "Error:Invalid bool";
                 break;
               case 'uint256':
-                flag = /^[1-9]+[0-9*]*$/.test(num);
+                // flag = /^[1-9]+[0-9*]*$/.test(num);
+                flag = _.isNumber(num);
+                console.log(flag,'flag');
+                console.log(typeof(num),'type');
                 this.msg = "Error:Invalid number";
+                break;
               case 'uint8':
                 // flag = _.isNumber(inputBox.value);
                 flag = /^[1-9]+[0-9*]*$/.test(num);
@@ -1147,7 +1166,7 @@ export default {
                 this.msg = "Error:No match type";
             }
             if(!flag) {
-              this.msg = 'Error: Invalid number of parameters for "' + this.reads[r].name + '". expected ' + this.reads[r].inputs.length + '!'
+              this.msg = ''+this.msg+' of parameters for "' + this.reads[r].name + '". expected ' + this.reads[r].inputs.length + '!'
               this.reads[r].spanInfo = true; //显示提示
               this.reads[r].value = "";
               return;
@@ -1239,8 +1258,8 @@ export default {
               case 'uint256':
                 flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
                 this.message = "Error:Invalid number";
+                break;
               case 'uint8':
-                // flag = _.isNumber(inputBox.value);
                 flag = /^[1-9]+[0-9*]*$/.test(inputBox.value);
                 this.message = "Error:Invalid number";
                 break;
