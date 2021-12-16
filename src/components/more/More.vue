@@ -37,18 +37,17 @@
                 "
                 label="Please enter the Contract Address you would like to verify"
               >
-                <div style="display: flex">
+                <!-- <div style="display: flex"> -->
                   <el-input v-model="address" type="search" class="md-input" />
-                  <el-button
-                    style="width: 38px; height: 40px"
+                <!-- </div> -->
+              </el-form-item>
+                <el-button
                     class="sub"
                     type="primary"
                     @click="verifyContract()"
                   >
-                    <i class="el-icon-check"></i>
-                  </el-button>
-                </div>
-              </el-form-item>
+                  Continue
+                </el-button>
             </el-form>
           </div>
         </div>
@@ -165,7 +164,6 @@ h1 {
   border: none;
   border-radius: 4px;
   background-color: #ed303b;
-  margin-left: 10px;
   height: 40px;
 }
 

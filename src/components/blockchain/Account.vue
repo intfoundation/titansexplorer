@@ -534,7 +534,7 @@
                         <a @click="readReset" style="color: #3498db">[Reset]</a>
                       </div>
                       <el-collapse v-model="activeNames"  @change="handleChange" v-for="(read, r) in reads" :key="r">
-                        <el-collapse-item :title="read.full_name" name="1"  >
+                        <el-collapse-item :title="read.full_name" :name="r" >
                           <div v-if="read.inputs == '' ? true : false">{{read.value}}<i><span style="margin-left:5px;padding-top: 10px; ">{{read.type}}</span></i></div>
                           <div v-if="read.inputs == '' ? false : true" >
                             <div v-for="(item,index) in read.inputs" :key='index'>
@@ -547,9 +547,6 @@
                             <div class="warning-info">
                               <span  style="margin-right:5px" v-if='read.value !== undefined ? true : false '>{{read.value}}</span>
                               <i>{{read.type}}</i>
-                              <!-- <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">Error: Invalid number of parameters for "{{read.name}}".expected {{read.inputs.length}}!</span>
-                              <span v-if="invalidAddr" style="color: #ed303b; margin-left:5px"> Error: invalid address</span> -->
-                              <!-- <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">{{msg}}</span> -->
                               <span v-if="read.spanInfo" style="color: #ed303b; margin-left:5px">{{msg}}</span>
                             </div>
                           </div>
@@ -567,8 +564,8 @@
                         </p>
                         <a style="color: #3498db" @click="resetWrite">[Reset]</a>
                       </div>
-                      <el-collapse  v-model="activeNames" @change="handleChange" v-for="(write,n) in writes" :key="n">
-                        <el-collapse-item :title="write.full_name" name="1">
+                      <el-collapse  v-model="writeNames" @change="handleChange" v-for="(write,n) in writes" :key="n">
+                        <el-collapse-item :title="write.full_name" :name="n">
                           <div v-for="(items,index) in write.inputs" :key="index">
                             <div class="all-flex">
                               <label>{{items.name}}</label>
@@ -689,7 +686,8 @@ export default {
       jsonUrl:'',
       rawUrl:'',
       cur: 0,
-      activeNames: '1',
+      activeNames: [],
+      writeNames:[],
       currentChainId: '',
       chainId: '0x7ff',
       testChainId: '0x800',
@@ -782,7 +780,17 @@ export default {
             this.addrInfo.source_map = this.addrInfo.contract.code ? this.addrInfo.contract.code.source_map : '';
             this.reads = this.addrInfo.contract.read_contract ? this.addrInfo.contract.read_contract : '';
             this.writes = this.addrInfo.contract.write_contract ? this.addrInfo.contract.write_contract : '';
+            if (this.reads.length > 0) { 
+              for (let read_num = 0; read_num < this.reads.length; read_num ++) {
+                this.activeNames.push(read_num);
+              }
+            }
 
+            if (this.writes.length > 0) {  
+              for (let write_num = 0; write_num < this.writes.length; write_num ++) {
+                this.writeNames.push(write_num);
+              }
+            }
             // this.noParamReadContract(); //无参数的read contract获取
 
             if(res.data.contract.verify === 1){
@@ -935,7 +943,6 @@ export default {
         this.delPage.total = res.data.count;
         this.delPage.isPageShow = this.delPage.total > this.delPage.size;
         this.delList = res.data.list;
-        // console.log('delegations', res.data)
         this.delList.forEach((v, i) => {
           v.addUrl = `/address/${v.candidate}`;
           v.amount = v.active === 1 ? transAmount(v.proxied_balance) : transAmount(v.deposit_proxied_balance);
@@ -1023,7 +1030,6 @@ export default {
     },
 
     onTokenChange(val) {
-      // console.log('token change', val)
       this.$router.push(`/token/${val}`);
     },
 
@@ -1032,16 +1038,12 @@ export default {
       let _this = this;
       var clipboard = new Clipboard('.copy-text')
       clipboard.on('success', function(e) {
-        // console.log('Action:', e.action);
-        // console.log('Text:', e.text);
         _this.$message.success("Copy Contract ABI successfully")
         e.clearSelection();
         clipboard.destroy();
       });
       //Failure callback
       clipboard.on('error', function(e) {
-        // console.error('Action:', e.action);
-        // console.error('Trigger:', e.trigger);
         _this.$message.error("This browser does not support automatic copy")
         clipboard.destroy();
       });
@@ -1078,9 +1080,7 @@ export default {
     copyUrl(){
       let _this = this;
       let clipboard = new Clipboard(".copy-url");
-      // console.log(this.url,111);
       clipboard.on("success", e => {
-        // console.log('aaaaa',e.text)
         _this.$message.success("Copy link successfully")
         //Release memory
         clipboard.destroy();
@@ -1107,7 +1107,7 @@ export default {
 
 
     handleChange(val) {
-      // console.log(val);
+      console.log(val);
     },
 
     // read
@@ -1152,32 +1152,23 @@ export default {
                 this.message = "Error:Invalid bool";
                 break;
               case 'uint256':
-                // console.log(parseFloat(num).toString() == num);
                 if (num && parseFloat(num).toString() == num) {
                   // Get the bignumber type of the maximum value of uint256
                   let max = Math.pow(2, 256) - 1;
-                  // max = int4.utils.toBN(parseInt(max));
                   max = new BigNumber(max);
-                  // console.log(max)
                   // Convert the value of the input box to bignumber type
-                  // num = int4.utils.toBN(parseInt(num));
                   num = new BigNumber(num);
-                  // console.log(num)
                   // Satisfy if you don't exceed it
                   if (num.lte(max)) {
                     flag = true;
-                    // console.log('zq')
                   } else {
                     flag = false;
-                    // console.log('cw')
                   }
                 }
                 this.msg = "Error:Invalid uint256";
                 break;
               case 'uint8':
                 if (num && num < 255) {
-                  // flag = _.isNumber(inputBox.value);
-                  // flag = /^[1-9]+[0-9*]*$/.test(num);
                   flag = true;
                 }
                 this.msg = "Error:Invalid uint8";
@@ -1205,21 +1196,6 @@ export default {
               return;
             }
 
-          // if (!num) {
-          //   this.msg = 'Error: Invalid number of parameters for "' + this.reads[r].name + '". expected ' + this.reads[r].inputs.length + '!'
-          //   this.reads[r].spanInfo = true; //显示提示
-          //   this.reads[r].value = "";
-          //   break;
-          // }else {
-          //   if(num=/^(0x|0X)?[0-9a-f]{40}$/.test(num) || /^(0x|0X)?[0-9A-F]{40}$/.test(num)){
-          //      this.reads[r].spanInfo = false
-          //   }else{
-          //     this.msg = 'Error: invalid address'
-          //     this.reads[r].spanInfo = true
-          //     break;
-          //   }
-          // }
-
         }
         //If this.spanInfo is still false after the loop, the input has a value
         if (this.reads[r].spanInfo === false) {
@@ -1237,9 +1213,7 @@ export default {
 
     readReset(){
       for(let values of this.reads){
-        //  console.log(values.value,'value');
         if (values.inputs && values.inputs.length > 0) {
-           // console.log(values.value,'value');
           values.value = '';
           for (let input of values.inputs) {
             input.value = '';
@@ -1299,28 +1273,21 @@ export default {
                 if (inputBox.value && parseFloat(inputBox.value).toString() == inputBox.value) {
                   // Get the bignumber type of the maximum value of uint256
                   let max = Math.pow(2, 256) - 1;
-                  // max = int4.utils.toBN(parseInt(max));
                   max = new BigNumber(max);
-                  // console.log(max)
                   // Convert the value of the input box to bignumber type
-                  // num = int4.utils.toBN(parseInt(num));
                   inputBox.value = new BigNumber(inputBox.value);
                   // console.log(num)
                   // Satisfy if you don't exceed it
                   if (inputBox.value.lte(max)) {
                     flag = true;
-                    // console.log('zq')
                   } else {
                     flag = false;
-                    // console.log('cw')
                   }
                 }
                 this.message = "Error:Invalid uint256";
                 break;
               case 'uint8':
                 if (inputBox.value && inputBox.value < 255) {
-                  // flag = _.isNumber(inputBox.value);
-                  // flag = /^[1-9]+[0-9*]*$/.test(num);
                   flag = true;
                 }
                 this.message = "Error:Invalid uint8";
@@ -1356,7 +1323,6 @@ export default {
         }
         // If the error message is not displayed (inputs have values) and the address data is rendered to the page, call the interface
         if(this.writes[n].spanInfo === false && this.addrShow === true){
-          // console.log(this.addrShow,'show');
           let contractAbi = this.writes[n].abi;
           let result = await this.WriteContract(contractAbi, this.addrInfo.address, params, payable_value);
           if (result) {
@@ -1372,9 +1338,6 @@ export default {
 
     resetWrite(){
       for(let values of this.writes){
-        //  console.log(values);
-        // console.log(values.inputs);
-        // this.message=''
         if (values.inputs && values.inputs.length > 0) {
           for (let input of values.inputs) {
             input.value = '';
