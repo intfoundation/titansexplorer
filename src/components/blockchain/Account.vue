@@ -1291,15 +1291,22 @@ export default {
               case 'uint256':
                 // Get the bignumber type of the maximum value of uint256
                 if (inputBox.value && parseInt(inputBox.value) > 0) {
+                  // Get the bignumber type of the maximum value of uint256
                   let max = Math.pow(2, 256) - 1;
-                  max = int4.utils.toBN(parseInt(max));
+                  // max = int4.utils.toBN(parseInt(max));
+                  max = new BigNumber(max);
+                  // console.log(max)
                   // Convert the value of the input box to bignumber type
-                  inputBox.value = int4.utils.toBN(parseInt(inputBox.value));
+                  // num = int4.utils.toBN(parseInt(num));
+                  inputBox.value = new BigNumber(inputBox.value);
+                  // console.log(num)
                   // Satisfy if you don't exceed it
-                  if (inputBox.value <= max) {
+                  if (inputBox.value.lte(max)) {
                     flag = true;
+                    // console.log('zq')
                   } else {
                     flag = false;
+                    // console.log('cw')
                   }
                 }
                 this.message = "Error:Invalid uint256";
