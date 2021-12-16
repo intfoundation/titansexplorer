@@ -1148,7 +1148,8 @@ export default {
                 this.message = "Error:Invalid bool";
                 break;
               case 'uint256':
-                if (num && parseInt(num) > 0) {
+                // console.log(parseFloat(num).toString() == num);
+                if (num && parseFloat(num).toString() == num) {
                   // Get the bignumber type of the maximum value of uint256
                   let max = Math.pow(2, 256) - 1;
                   // max = int4.utils.toBN(parseInt(max));
@@ -1161,23 +1162,19 @@ export default {
                   // Satisfy if you don't exceed it
                   if (num.lte(max)) {
                     flag = true;
-                    // console.log('zq')
+                    console.log('zq')
                   } else {
                     flag = false;
-                    // console.log('cw')
+                    console.log('cw')
                   }
                 }
                 this.msg = "Error:Invalid uint256";
                 break;
               case 'uint8':
-                if (num && parseInt(num) > 0) {
+                if (num && num < 255) {
                   // flag = _.isNumber(inputBox.value);
                   // flag = /^[1-9]+[0-9*]*$/.test(num);
-                  if (parseInt(num) <= 255) {
-                    flag = true;
-                  } else {
-                    flag = false;
-                  }
+                  flag = true;
                 }
                 this.msg = "Error:Invalid uint8";
                 break;
@@ -1290,7 +1287,7 @@ export default {
                 break;
               case 'uint256':
                 // Get the bignumber type of the maximum value of uint256
-                if (inputBox.value && parseInt(inputBox.value) > 0) {
+                if (inputBox.value && parseFloat(inputBox.value).toString() == inputBox.value) {
                   // Get the bignumber type of the maximum value of uint256
                   let max = Math.pow(2, 256) - 1;
                   // max = int4.utils.toBN(parseInt(max));
@@ -1312,14 +1309,10 @@ export default {
                 this.message = "Error:Invalid uint256";
                 break;
               case 'uint8':
-                if (inputBox.value && parseInt(inputBox.value) > 0) {
+                if (inputBox.value && inputBox.value < 255) {
                   // flag = _.isNumber(inputBox.value);
                   // flag = /^[1-9]+[0-9*]*$/.test(num);
-                  if (parseInt(inputBox.value) <= 255) {
-                    flag = true;
-                  } else {
-                    flag = false;
-                  }
+                  flag = true;
                 }
                 this.message = "Error:Invalid uint8";
                 break;
