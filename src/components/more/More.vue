@@ -155,7 +155,7 @@ export default {
       this.compilerType = type;
     },
     
-    // 选中为true,未选中为false
+    // Checked is true, unchecked is false
     checkbox(){
         this.dis = event.target.checked
         // console.log(event.target.checked)

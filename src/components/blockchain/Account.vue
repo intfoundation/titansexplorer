@@ -1161,10 +1161,10 @@ export default {
                   // Satisfy if you don't exceed it
                   if (num.lte(max)) {
                     flag = true;
-                    console.log('zq')
+                    // console.log('zq')
                   } else {
                     flag = false;
-                    console.log('cw')
+                    // console.log('cw')
                   }
                 }
                 this.msg = "Error:Invalid uint256";

@@ -44,13 +44,13 @@
           </ul>
         </div>
         <div class="card-body" v-show="tab == 0">
-          <!--  合约已经认证 -->
+          <!--  The contract has been certified -->
           <div class="tab-content tab-err-content" v-if="status === '1' ">
             <p><i class="fa fa-angle-right"></i>  The Contract Source code for <a style="color: #ed303b">{{address}}</a>  has already been verified.</p>
             <p><i class="fa fa-angle-right"></i> Click here to view the <a style="color: #ed303b"  :href="verified_url">Verified Contract Source Code</a> </p>
           </div>
 
-          <!-- 合约未认证 -->
+          <!-- Contract is not certified -->
           <div class="tab-content" v-if="status !== '1' ">
           <!-- <div class="tab-content" > -->
             <div class="alert" v-show="showBox">
@@ -145,7 +145,7 @@
                 </el-select>
               </div>
             </div>
-            <!-- 单个合约 -->
+            <!-- Single contract -->
             <!-- <div class="single-contract" @change="singContract" v-if='singMsg'> -->
             <div v-if="compilerTyper === '0'">
               <div class="single-contract">
@@ -161,7 +161,7 @@
               </div>
             </div>
 
-            <!-- 多个合约  Please select the Solidity (*.sol) files for upload -->
+            <!-- Multiple contracts  Please select the Solidity (*.sol) files for upload -->
             <div v-if="compilerTyper === '1'">
               <div class="message">
                 <label for="txtSourceCode" class="d-block">
@@ -447,7 +447,7 @@
         </div>
 
         <div class="card-body" v-show="tab == 1">
-          <!-- 合约生成成功 -->
+          <!-- The contract is successfully generated -->
           <div class="tab-content c-all">
             <div class="c-put">
               <p><b>Compiler debug log:</b></p>
@@ -494,7 +494,7 @@
             </div>
           </div>
 
-          <!-- 合约生成错误 -->
+          <!-- Contract generation error-->
           <!-- <div class="tab-content c-all">
             <div class="error-put">
               <p><b>Compiler debug log:</b> </p>
@@ -635,10 +635,10 @@ export default {
       this.showBox= false
     },
 
-    //  选择sol文件夹
+    //  Select sol folder
     onFileSelected(event) {
       let that = this;
-      that.solFile = []; //先清空文件
+      that.solFile = []; //Clear the file first
       let files = event.target.files;
       // let MulFiles =[];
       for (let file of files) {
@@ -646,12 +646,12 @@ export default {
           name: file.name,
           size: file.size,
         });
-        // 读取文件内的数据
+        // Read the data in the file
         let reader = new FileReader();
         reader.onload = function (event) {
-          // 文件里的文本会在这里被打印出来
+          // The text in the file will be printed here
           // console.log(event.target.result)
-          // 将文件加入数组
+          // Add files to array
           that.solFile.push(event.target.result);
           // console.log(that.solFile)
         };
@@ -660,7 +660,7 @@ export default {
       // console.log(MulFiles);
     },
 
-    // 提交sol文件夹
+    // Submit the sol folder
     submitInfo() {
       if (this.solFile.length === 0) {
           this.fileInfo = false,
@@ -684,21 +684,19 @@ export default {
         });
     },
 
-    //  选择json文件夹
+    //  Select json folder
     onFileJson(event) {
       let that = this;
-      that.jsonFile = []; //先清空文件
+      that.jsonFile = [];
       let file = event.target.files[0];
       let reader = new FileReader();
       reader.onload = function (event) {
-        // 文件里的文本会在这里被打印出来
-        // console.log(event.target.result)
         that.jsonFile.push(event.target.result);
       };
       reader.readAsText(file);
     },
 
-    // 提交json文件夹
+    // Submit json folder
     submitJson() {
       if (this.jsonFile.length === 0) {
         this.$message({
@@ -719,9 +717,9 @@ export default {
         });
     },
 
-    // 提交合约认证按钮
+    // Submit contract authentication button
     postInfo() {
-      //先验证数据为空
+      //First verify that the data is empty
       if (this.compilerTyper === '0') {
         if (this.fileMsg === '') {
           this.$message({
@@ -780,27 +778,27 @@ export default {
         console.log(this.fileMsg, 'this.fileMsg');
       }
 
-      // 提交给后台数据，每种方式都需要以下参数
+      // Submitted to the background data, each method requires the following parameters
       const data = {
         contract_address: this.address,
         license_id: this.licenseTypeItem,
         compiler_id: this.compilerItem,
         abi: this.nododata,
       }
-      // 单文件(.sol)和多文件(.sol)需要加上以下额外参数
+      // Single file (.sol) and multiple files (.sol) need to add the following additional parameters
       if (this.compilerTyper === '0' || this.compilerTyper === '1') {
         data.evm_id = this.evmVersion;
         data.optimization = this.optimization;
         data.optimizer = parseInt(this.optimizer);
       }
-      // 只有单文件(.sol)才需要在验证时上传
+      // Only single files (.sol) need to be uploaded during verification
       if (this.compilerTyper === '0') {
         data.contract_code = this.fileMsg;
       }
       this.$axios.post("/api/contract/saveLicenseAndCompiler", data).then((res) => {
         console.log(res);
         if (res.data.status === 0) {
-          //成功
+          //success
         } else {
           this.$message({
             message: res.data.message,
@@ -815,7 +813,6 @@ export default {
       this.tab = 1;
     },
 
-    // 获取后台数据
     getDate() {
       this.$axios
         .get("/api/contract/getContractInfo")
@@ -824,7 +821,7 @@ export default {
           this.license = res.data.license;
           this.evm = res.data.evm;
 
-          // 设置compiler licenseType 的默认值
+          // Set the default value of compiler licenseType
           let index = this.compiler.findIndex(item => item.id == this.$route.params.compileVersion);
           this.compilerItem = this.compiler[index].id;
           this.compilerName = this.compiler[index].name;
@@ -837,7 +834,6 @@ export default {
         });
     },
 
-    // 生成合约错误 　/start over 按钮/
     startOver(){
       this.tabShow = false;
       this.tab = 0;
