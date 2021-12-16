@@ -716,7 +716,7 @@ export default {
     this.url = window.location.href;
   },
   mounted() {
-
+    this.initialize();
   },
   computed: {
 
@@ -744,7 +744,7 @@ export default {
       this.isInfoLoading = true;
       this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
         this.addrInfo = res.data;
-        console.log(res.data.byteCode);
+        // console.log(res.data.byteCode);
         let keys = Object.keys(res.data);
         if (keys.length === 0) {
           this.addrInfo.address = this.addr;
@@ -796,7 +796,7 @@ export default {
             //Get the path of the previous page
             if (document.referrer) {
               let arrurl = document.referrer.split('/');
-              console.log(arrurl[3]);
+              // console.log(arrurl[3]);
               //If it is the tab coming from the verification contract page, you need to directly locate the contract
               if (arrurl[3] === 'verifyContractSolc') {
                 this.activeName = 3;
@@ -810,7 +810,7 @@ export default {
             this.addrInfo.delegated = transAmount(this.addrInfo.delegate_balance) + ' INT';
             this.addrInfo.pendingRefund = transAmount(this.addrInfo.pending_refund_balance) + ' INT';
             this.addrInfo.reward = transAmount(this.addrInfo.reward_balance) + ' INT';
-            
+
             // this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           }
         }
@@ -1078,7 +1078,7 @@ export default {
     copyUrl(){
       let _this = this;
       let clipboard = new Clipboard(".copy-url");
-      console.log(this.url,111);
+      // console.log(this.url,111);
       clipboard.on("success", e => {
         // console.log('aaaaa',e.text)
         _this.$message.success("Copy link successfully")
@@ -1104,10 +1104,10 @@ export default {
         this.contractCodeList[index].iconsDisplay = 'none'
       }
     },
-    
+
 
     handleChange(val) {
-      console.log(val);
+      // console.log(val);
     },
 
     // read
@@ -1166,10 +1166,10 @@ export default {
                   // Satisfy if you don't exceed it
                   if (num.lte(max)) {
                     flag = true;
-                    console.log('zq')
+                    // console.log('zq')
                   } else {
                     flag = false;
-                    console.log('cw')
+                    // console.log('cw')
                   }
                 }
                 this.msg = "Error:Invalid uint256";
@@ -1239,7 +1239,7 @@ export default {
       for(let values of this.reads){
         //  console.log(values.value,'value');
         if (values.inputs && values.inputs.length > 0) {
-           console.log(values.value,'value');
+           // console.log(values.value,'value');
           values.value = '';
           for (let input of values.inputs) {
             input.value = '';
@@ -1270,7 +1270,7 @@ export default {
               params.push(inputBox.value);
             }
             //1. Judgment type: address/uint256/uint8/string/bool
-            console.log(this.writes[n].inputs,'input');
+            // console.log(this.writes[n].inputs,'input');
 
             let flag = false;
             switch(inputBox.type) {
@@ -1356,7 +1356,7 @@ export default {
         }
         // If the error message is not displayed (inputs have values) and the address data is rendered to the page, call the interface
         if(this.writes[n].spanInfo === false && this.addrShow === true){
-          console.log(this.addrShow,'show');
+          // console.log(this.addrShow,'show');
           let contractAbi = this.writes[n].abi;
           let result = await this.WriteContract(contractAbi, this.addrInfo.address, params, payable_value);
           if (result) {
@@ -1373,7 +1373,7 @@ export default {
     resetWrite(){
       for(let values of this.writes){
         //  console.log(values);
-        console.log(values.inputs);
+        // console.log(values.inputs);
         // this.message=''
         if (values.inputs && values.inputs.length > 0) {
           for (let input of values.inputs) {
@@ -1471,7 +1471,7 @@ export default {
           method: 'eth_call',
           params: [tx],
         }).then((result) => {
-          console.log('hash', result);
+          // console.log('hash', result);
           let r = int4.abi.decodeParams(outputObj.names, outputObj.types, result);
           if (outputObj.types && outputObj.types.length > 0) {
             for (let i = 0; i < outputObj.types.length; i++) {
@@ -1552,11 +1552,11 @@ export default {
         if (balanceOf.data) {
           balance = balanceOf.data;
         }
-        console.log('balance ' + balance);
-        console.log('amount: ' + params[params.length - 1]);
+        // console.log('balance ' + balance);
+        // console.log('amount: ' + params[params.length - 1]);
         //Compare the balance with the transfer amount, the last object of the params array is the transfer amount
         if (parseInt(balance) < parseInt(params[params.length - 1])) {
-          console.log('Insufficient balance');
+          // console.log('Insufficient balance');
           return {
             message: 'Insufficient balance'
           }
@@ -1567,7 +1567,6 @@ export default {
           params[input] = new BigNumber(params[input]);
         }
       }
-      console.log(inputTypes);
       let data = int4.abi.encodeParams(inputTypes, params);
       let functionSig = int4.abi.methodID(contractAbi.name, inputTypes);
       if (payable_value) {
@@ -1581,7 +1580,7 @@ export default {
         value: payable_value,
         data: functionSig + data.substring(2)
       }
-      console.log(tx);
+      // console.log(tx);
       let gasPrice = await this.getGasPrice();
       if (gasPrice) {
         tx.gasPrice = gasPrice;
@@ -1594,7 +1593,7 @@ export default {
           method: 'eth_sendTransaction',
           params: [tx],
         }).then((result) => {
-          console.log('hash', result);
+          // console.log('hash', result);
           return {
             message: 'Success',
           }
@@ -1616,7 +1615,7 @@ export default {
           method: 'eth_gasPrice',
           params: []
         }).then((result) => {
-          console.log('gasprice', result);
+          // console.log('gasprice', result);
           return result;
         }).catch((error) => {
             console.log('error', error)
@@ -1627,12 +1626,12 @@ export default {
 
     //get gas
     async getGas(params) {
-      console.log(params);
+      // console.log(params);
       return await ethereum.request({
           method: 'eth_estimateGas',
           params: [params],
         }).then((result) => {
-          console.log('gas', result);
+          // console.log('gas', result);
           return result;
         }).catch((error) => {
             console.log('error', error)
@@ -1662,6 +1661,17 @@ export default {
       })
     },
 
+    async initialize () {
+      this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
+
+      ethereum.on('chainChanged', (_chainId) => {
+        this.connectAccount(_chainId)
+      });
+
+      ethereum.on('accountsChanged', (_accounts) => {
+        this.requestAccount()
+      });
+    },
 
     async requestAccount () {
       this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
@@ -1673,15 +1683,16 @@ export default {
           const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
           // this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`;
           this.address = `${accounts[0]}`;
+          // console.log('连接1');
         }
-        console.log('address' + this.address);
+        // console.log('address' + this.address);
           // Hide address
           if(this.address === ''){
             this.redIcon = true;
             this.greenIcon = false;
 
             this.addrShow = false;
-            console.log(this.addrShow);
+            // console.log(this.addrShow);
           }else{
             this.addrShow = true;
             this.redIcon = false;
@@ -1701,8 +1712,9 @@ export default {
           const accounts = await ethereum.request({ method: 'eth_accounts' });
           // this.address = `${accounts[0].substr(0, 6)}...${accounts[0].slice(-4)}`;
           this.address = `${accounts[0]}`;
+          // console.log('连接2');
         }
-        console.log('address' + this.address);
+        // console.log('address' + this.address);
       } catch (e) {
         console.log('request accounts error:', e);
       }
