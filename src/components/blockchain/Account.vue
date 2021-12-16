@@ -1255,11 +1255,16 @@ export default {
       // First judge whether the address is connected and after the connection is successful, judge whether there is a value
       if(this.address){
         let params = [];
+        let payable_value;
         // Determine whether there is an input box
         if(this.writes[n].inputs && this.writes[n].inputs.length > 0){
           // Get the value of input, determine the data type
           for(let inputBox of this.writes[n].inputs){
-            params.push(inputBox.value);
+            if (inputBox.payable && inputBox.payable === true){
+              payable_value = inputBox.value;
+            } else {
+              params.push(inputBox.value);
+            }
             //1. Judgment type: address/uint256/uint8/string/bool
             console.log(this.writes[n].inputs,'input');
 
@@ -1328,6 +1333,13 @@ export default {
                 }
                 this.message = "Error:Invalid bytes";
                 break;
+              case 'number':
+                // Multiply 10 to the 18th power to determine whether it is a positive integer
+                if (inputBox.value > 0 && /^[+]{0,1}(\d+)$/.test(inputBox.value * Math.pow(10, 18))) {
+                  flag = true;
+                }
+                this.message = "Error:Invalid number";
+                break;
               default:
                 flag = false;
                 this.message = "Error:No match type";
@@ -1342,7 +1354,7 @@ export default {
         if(this.writes[n].spanInfo === false && this.addrShow === true){
           console.log(this.addrShow,'show');
           let contractAbi = this.writes[n].abi;
-          let result = await this.WriteContract(contractAbi, this.addrInfo.address, params);
+          let result = await this.WriteContract(contractAbi, this.addrInfo.address, params, payable_value);
           if (result) {
             this.message = result.message;
             this.writes[n].spanInfo = true;
@@ -1483,7 +1495,7 @@ export default {
     },
 
     //write contract
-    async WriteContract(contractAbi, contractAddr, params) {
+    async WriteContract(contractAbi, contractAddr, params, payable_value) {
       let inputs = contractAbi.inputs;
       let outputs = contractAbi.outputs;
       let inputTypes = [];
@@ -1551,14 +1563,21 @@ export default {
           params[input] = new BigNumber(params[input]);
         }
       }
+      console.log(inputTypes);
       let data = int4.abi.encodeParams(inputTypes, params);
       let functionSig = int4.abi.methodID(contractAbi.name, inputTypes);
+      if (payable_value) {
+        payable_value = '0x' + new BigNumber(payable_value * Math.pow(10, 18)).toString(16);
+      } else {
+        payable_value = '0x0';
+      }
       let tx = {
         from: this.address,
         to: contractAddr,
-        value: "0x0",
+        value: payable_value,
         data: functionSig + data.substring(2)
-      };
+      }
+      console.log(tx);
       let gasPrice = await this.getGasPrice();
       if (gasPrice) {
         tx.gasPrice = gasPrice;
