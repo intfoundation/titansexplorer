@@ -355,22 +355,24 @@
             <div class="stx-pane" v-if="activeName === 3">
               <div v-if="showContent">
                 <el-container class="el-contract">
-                  <el-header style="height:100px">
+                  <el-header style="height:50px">
                     <div>
                       <i class="el-icon-warning"></i>
                       <span> Are you the contract creator?
 
-                        <router-link style="color:#3498db ; font-weight: bolder" :to="verifyUrl">Verify and Publish</router-link>
-                        your contract source code today!</span>
+                      <!-- <router-link style="color:#3498db ; font-weight: bolder" :to="verifyUrl">Verify and Publish</router-link>
+                      your contract source code today!</span> -->
+                      <a :href="`https://blockscout.explorer.intchain.io/address/${addrInfo.address}/contract_verifications/new`" style="color:#3498db ; font-weight: bolder">Verify and Publish</a>
+                      your contract source code today!</span>
                     </div>
-                    <el-row class="c-row">
+                    <!-- <el-row class="c-row">
                       <el-button type="warning" class="c-button">Decompile ByteCode </el-button>
                       <el-button type="warning" class="c-button">Switch to Opcodes View</el-button>
                       <el-button type="info" class="c-button">Similar Contracts</el-button>
-                    </el-row>
+                    </el-row> -->
                   </el-header>
                   <el-main class="c-main">
-                  <textarea name="text" rows="10" cols="141" class="wordwrap"></textarea>
+                  <textarea name="text" rows="10" cols="141" class="wordwrap">{{byteCode}}</textarea>
                   </el-main>
                 </el-container>
               </div>
@@ -531,10 +533,10 @@
                         </p>
                         <a @click="readReset" style="color: #3498db">[Reset]</a>
                       </div>
-                      <el-collapse v-model="activeNames" @change="handleChange" v-for="(read, r) in reads" :key="r">
-                        <el-collapse-item :title="read.full_name" :name="read.id"  >
-                          <div v-if="read.inputs == '' ? true : false">{{read.value}}<i><span style="margin-left:5px">{{read.type}}</span></i></div>
-                          <div v-if="read.inputs == '' ? false : true">
+                      <el-collapse v-model="activeNames"  @change="handleChange" v-for="(read, r) in reads" :key="r">
+                        <el-collapse-item :title="read.full_name" name="1"  >
+                          <div v-if="read.inputs == '' ? true : false">{{read.value}}<i><span style="margin-left:5px;padding-top: 10px; ">{{read.type}}</span></i></div>
+                          <div v-if="read.inputs == '' ? false : true" >
                             <div v-for="(item,index) in read.inputs" :key='index'>
                               <div class="all-flex">
                                 <label>{{item.name}}</label>
@@ -566,7 +568,7 @@
                         <a style="color: #3498db" @click="resetWrite">[Reset]</a>
                       </div>
                       <el-collapse  v-model="activeNames" @change="handleChange" v-for="(write,n) in writes" :key="n">
-                        <el-collapse-item :title="write.full_name">
+                        <el-collapse-item :title="write.full_name" name="1">
                           <div v-for="(items,index) in write.inputs" :key="index">
                             <div class="all-flex">
                               <label>{{items.name}}</label>
@@ -673,7 +675,7 @@ export default {
         total: 0,
         isIIP721TxPageShow: false,
       },
-      verifyUrl: "",
+      // verifyUrl: "",
       showContent:false,
       showVerify:false,
       // isActive: true,
@@ -687,7 +689,7 @@ export default {
       jsonUrl:'',
       rawUrl:'',
       cur: 0,
-      activeNames: ['0'],
+      activeNames: '1',
       currentChainId: '',
       chainId: '0x7ff',
       testChainId: '0x800',
@@ -701,6 +703,7 @@ export default {
       redIcon:true,
       msg:'',
       contractCodeList: [],
+      byteCode:""
     }
   },
   created() {
@@ -740,10 +743,8 @@ export default {
     getAddrDetail() {
       this.isInfoLoading = true;
       this.$axios.get('/api/account/detail',{params:{address:this.addr}}).then(res => {
-        // console.log('api account detail', res.data);
-
         this.addrInfo = res.data;
-        console.log(res.data.contract);
+        console.log(res.data.byteCode);
         let keys = Object.keys(res.data);
         if (keys.length === 0) {
           this.addrInfo.address = this.addr;
@@ -754,6 +755,7 @@ export default {
           this.addrInfo.reward = 0 + ' INT';
           this.addrInfo.time = '/';
         } else {
+          this.byteCode = res.data.byteCode;
           if (res.data.isContract) {
             this.isContract = true;
             this.tabList = ['Overview'];
@@ -767,7 +769,7 @@ export default {
             this.addrInfo.tokenTracker = this.addrInfo.contract_type !== 0 ? `${this.addrInfo.name}(${this.addrInfo.symbol})` : "";
             this.addrInfo.tokenTrackerUrl = this.addrInfo.contract_type !== 0 ? `/token/${this.addrInfo.address}` : "";
             //
-            this.verifyUrl = `/verifyContract/${this.addrInfo.address}`;
+            // this.verifyUrl = `/verifyContract/${this.addrInfo.address}`;
             this.jsonUrl = `/exportAbi/${this.addrInfo.address}/json`;
             this.rawUrl = `/exportAbi/${this.addrInfo.address}/raw`;
             this.addrInfo.name = this.addrInfo.name ? this.addrInfo.name : '';
@@ -808,6 +810,7 @@ export default {
             this.addrInfo.delegated = transAmount(this.addrInfo.delegate_balance) + ' INT';
             this.addrInfo.pendingRefund = transAmount(this.addrInfo.pending_refund_balance) + ' INT';
             this.addrInfo.reward = transAmount(this.addrInfo.reward_balance) + ' INT';
+            
             // this.addrInfo.time = this.$moment(this.addrInfo.createtime).utc().format('YYYY/MM/DD HH:mm:ss') + '+UTC';
           }
         }
@@ -1101,6 +1104,7 @@ export default {
         this.contractCodeList[index].iconsDisplay = 'none'
       }
     },
+    
 
     handleChange(val) {
       console.log(val);
