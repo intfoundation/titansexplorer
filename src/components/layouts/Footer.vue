@@ -4,9 +4,9 @@
         <div class="foot-c">
           <div class="foot-icon">
             <img src="../../assets/blockscout_logo.png" alt="">
-            <p>Titans explorer is a Block Explorer and Analytics Platform for Int Chain</p>
+            <p>Titans explorer is a Block Explorer and Analytics Platform for INT Chain</p>
             <div>
-              <button @click=switchToEtheruemChain> <img src="../../assets/metamask.svg" alt=""> Add Int Chain</button>
+              <button @click=switchToEtheruemChain> <img src="../../assets/metamask.svg" alt=""> Add INT Chain Network</button>
             </div>
           </div>
           <div class="contact">
@@ -28,7 +28,7 @@
             <hr>
             <div class="f-f">
               <div class="f-line">
-                <div class="group"><a target="_blank" href="https://titansexplorer.intchain.io"><span>4.0 Blockscout Explorer</span></a></div>
+                <div class="group"><a target="_blank" href="https://blockscout.explorer.intchain.io"><span>Blockscout Explorer</span></a></div>
               </div> 
             </div>
           </div>
@@ -164,10 +164,12 @@
   }
 
   .foot-icon button:hover{
+    cursor: pointer;
     opacity: .6;
   }
 
   .foot-icon button:focus{
+    cursor: pointer;
     opacity: .6;
   }
 
@@ -183,7 +185,7 @@
   .foot-c .f-t {
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 16px;
+    /* margin-bottom: 16px; */
   }
 
   .foot-c .f-f .f-line {
@@ -268,7 +270,7 @@
   }
 
   .footer hr{
-    margin-bottom: 20px;
+    margin: 10px 0;
     opacity: .2;
   }
   .f-icon {
