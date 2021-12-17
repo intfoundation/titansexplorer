@@ -95,14 +95,12 @@
             chainName = 'INT Chain Mainnet';
           }
           try {
-            if (this.currentChainId !== this.chainId  && this.currentChainId !== this.testChainId) {
-              await ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: chainIds}]
-              })
+            await ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: chainIds}]
+            })
 
-              this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
-            }
+            this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
           } catch (e) {
             if (e.code === 4902) {
               try {
