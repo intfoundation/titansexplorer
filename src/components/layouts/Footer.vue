@@ -19,7 +19,7 @@
                 <div class="group"><a target="_blank" href=""><span>Brand Assets</span></a></div>
                 <div class="group"><a target="_blank" href=""><span>Careers</span></a></div>
                 <div class="group"><a target="_blank" href=""><span>Terms of Service</span></a></div> -->
-              </div> 
+              </div>
             </div>
           </div>
 
@@ -29,7 +29,7 @@
             <div class="f-f">
               <div class="f-line">
                 <div class="group"><a target="_blank" href="https://blockscout.explorer.intchain.io"><span>Blockscout Explorer</span></a></div>
-              </div> 
+              </div>
             </div>
           </div>
 
@@ -53,14 +53,14 @@
               <a target="_blank" href="https://twitter.com/intchain"><i class="f-icon fi-twi"></i></a>
               <a target="_blank" href="https://www.facebook.com/INTchainINT"><i class="f-icon fi-fb"></i></a>
               <a target="_blank" href="https://www.reddit.com/r/INT_Chain/"><i class="f-icon fi-red"></i></a>
-              <a target="_blank" href="mailto:intfoundation@intchain.io"><i class="f-icon fi-yx"></i></a>          
-            </div> 
+              <a target="_blank" href="mailto:intfoundation@intchain.io"><i class="f-icon fi-yx"></i></a>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    
+
 </template>
 
 <script>
@@ -82,20 +82,20 @@
         getLocaction() {
           this.isTestNetwork = window.location.hostname.substr(0, 4) === "test" || window.location.hostname.substr(0, 4) === "loca";
         },
-        
+
         async switchToEtheruemChain () {
-          let chainIds = '0x7ff';
+          let chainIds = '0x800';
           let rpc = 'https://testnet.titansrpc.intchain.io';
-          let browser = 'https://test.titansexplorer.intchain.io/'
+          let browser = 'https://test.titansexplorer.intchain.io/';
+          let chainName = 'INT Chain Testnet';
           if (!this.isTestNetwork) {
-          console.log(this.isTestNetwork);
-            chainIds = '0x800';
+            chainIds = '0x7ff';
             rpc = 'https://titansrpc.intchain.io';
-            browser = 'https://titansexplorer.intchain.io'
+            browser = 'https://titansexplorer.intchain.io';
+            chainName = 'INT Chain Mainnet';
           }
           try {
-            if (this.currentChainId !== this.chainId  && this.currentChainId !== this.testChainId && this.currentChainId !== "0x1" && this.currentChainId !== "0x38") {
-              console.log(22);
+            if (this.currentChainId !== this.chainId  && this.currentChainId !== this.testChainId) {
               await ethereum.request({
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: chainIds}]
@@ -110,7 +110,7 @@
                   method: 'wallet_addEthereumChain',
                   params: [{
                     chainId: chainIds,
-                    chainName: 'INT Chain',
+                    chainName: chainName,
                     nativeCurrency: {
                       name: "INT",
                       symbol: "INT",
