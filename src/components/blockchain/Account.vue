@@ -2077,13 +2077,35 @@ textarea{
 
 .all-btn{
   background-color: #f8f9fa;
+  /* opacity: .9; */
   border: 1px solid #ced4da;
   padding: 5px 10px;
   border-radius: 5px;
+  cursor:pointer;
 }
 
 .warning-info{
   margin-top: 10px;
+}
+
+.all-btn:hover{
+  background-color: #ced4da;
+  color: #fff;
+}
+
+.all-btn:focus{
+  background-color: #ced4da;
+  color: #fff;
+}
+
+.write-contract .all-btn:hover {
+  background-color: #ed303b !important;
+  color: #fff !important;
+}
+.write-contract .all-btn:focus {
+  background-color: #ed303b !important;
+  opacity: 0.7;
+  color: #fff !important;
 }
 
 .write-contract .all-btn{
