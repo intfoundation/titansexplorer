@@ -393,7 +393,7 @@
                       <template>
                         <div class="csc-v">
                           <p><i class="el-icon-success" style="font-size: 14px ; color: #00c9a7 ; margin-right: 4px"></i><strong>Contract Source Code Verified<span style="color: #77838f ; margin-left: 4px">(Exact Match)</span></strong></p>
-                          <i class="el-icon-warning" style="font-size: 22px ; color: #db9a04"></i>
+                          <!-- <i class="el-icon-warning" style="font-size: 22px ; color: #db9a04"></i> -->
                         </div>
 
                         <div class="exact">
@@ -470,7 +470,7 @@
                           <p><i class="fa fa-tasks text-secondary mr-1" style="margin-right: 4px"></i><strong>Contract ABI</strong></p>
                           <div  style="margin-top: 10px" class="cab-a">
                             <el-dropdown style="csc-i">
-                              <el-button  type="primary" style="background-color: #77838f">
+                              <el-button  class="export-b" type="primary" style="background-color: #77838f !important; colorl:#fff !important">
                                 Export ABI<i class="el-icon-arrow-down el-icon--right"></i>
                               </el-button>
                               <el-dropdown-menu slot="dropdown" class="csc-m-abi">
@@ -2127,6 +2127,19 @@ textarea{
 .sub-btn span{
   margin-left: 4px;
   color: #000;
+}
+
+a i:hover{
+  opacity: .5;
+  cursor:pointer
+}
+
+.export-b:hover{
+  color: #fff !important;
+}
+
+.export-b:focus{
+  color: #fff !important;
 }
 
 

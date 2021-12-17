@@ -2,89 +2,199 @@
     <div class="footer">
       <div id="box">
         <div class="foot-c">
-          <div class="contact">
-            <div class="f-t"><span>Contact Us</span></div>
-            <div class="f-f">
-              <div class="f-line">
-                <div class="group"><a target="_blank" href="https://t.me/INTChainOfficial"><i class="f-icon fi-tel"></i><span>Telegram</span></a></div>
-                <div class="group"><a target="_blank" href="https://twitter.com/intchain"><i class="f-icon fi-twi"></i><span>Twitter</span></a></div>
-                <div class="group"><a target="_blank" href="https://www.facebook.com/INTchainINT"><i class="f-icon fi-fb"></i><span>FaceBook</span></a></div>
-                <div class="group"><a target="_blank" href="https://www.reddit.com/r/INT_Chain/"><i class="f-icon fi-red"></i><span>Reddit</span></a></div>
-              </div>
-              <div class="f-line">
-                <div class="group"><a href="javascript:void(0)"><div class="fi-qr"><div class="qr-wc"></div></div><i class="f-icon fi-wc"></i><span>WeChat</span></a></div>
-                <div class="group"><a target="_blank" href="https://weibo.com/u/6358909246"><i class="f-icon fi-wb"></i><span>Weibo</span></a></div>
-                <div class="group"><a target="_blank" href="mailto:intfoundation@intchain.io"><i class="f-icon fi-yx"></i><span>Email</span></a></div>
-                <div class="group"><a href="javascript:void(0)"><div class="fi-qr"><div class="qr-sb"></div></div><i class="f-icon fi-sb"></i><span>Subscription</span></a></div>
-              </div>
+          <div class="foot-icon">
+            <img src="../../assets/blockscout_logo.png" alt="">
+            <p>Titans explorer is a Block Explorer and Analytics Platform for Int Chain</p>
+            <div>
+              <button @click=switchToEtheruemChain> <img src="../../assets/metamask.svg" alt=""> Add Int Chain</button>
             </div>
           </div>
-          <div class="link">
-            <div class="f-t"><span>Link</span></div>
+          <div class="contact">
+            <div class="f-t"><span>Company</span></div>
+            <hr>
             <div class="f-f">
               <div class="f-line">
-                <div class="group"><a target="_blank" href="http://tech.intchain.io/"><i class="f-icon fi-sq"></i><span>Community</span></a></div>
-                <div class="group"><a target="_blank" :href="`https://${isTestNetwork ? 'test.' : ''}titanswallet.intchain.io`"><i class="f-icon fi-qb"></i><span>Wallet</span></a></div>
+                <div class="group"><a target="_blank" href="https://intchain.io/#/"><span>About Us</span></a></div>
+                <!-- <div class="group"><a target="_blank" href=""><span>Contact Us</span></a></div>
+                <div class="group"><a target="_blank" href=""><span>Brand Assets</span></a></div>
+                <div class="group"><a target="_blank" href=""><span>Careers</span></a></div>
+                <div class="group"><a target="_blank" href=""><span>Terms of Service</span></a></div> -->
+              </div> 
+            </div>
+          </div>
+
+          <div class="contact">
+            <div class="f-t"><span>Resources</span></div>
+            <hr>
+            <div class="f-f">
+              <div class="f-line">
+                <div class="group"><a target="_blank" href="https://titansexplorer.intchain.io"><span>4.0 Blockscout Explorer</span></a></div>
+              </div> 
+            </div>
+          </div>
+
+          <div class="link">
+            <div class="f-t"><span>Link</span></div>
+            <hr>
+            <div class="f-f">
+              <div class="f-line">
+                <div class="group"><a target="_blank" href="http://tech.intchain.io/"><span>Community</span></a></div>
+                <div class="group"><a target="_blank" :href="`https://${isTestNetwork ? 'test.' : ''}titanswallet.intchain.io`"><span>Wallet</span></a></div>
               </div>
             </div>
           </div>
         </div>
         <div class="foot-right">
-          <span>Copyright © 2019-{{year}} INT.</span>
+          <hr>
+          <div class="foot-bottom">
+              <span>Copyright © 2019-{{year}} INT.</span>
+            <div>
+              <a target="_blank" href="https://t.me/INTChainOfficial"><i class="f-icon fi-tel"></i></a>
+              <a target="_blank" href="https://twitter.com/intchain"><i class="f-icon fi-twi"></i></a>
+              <a target="_blank" href="https://www.facebook.com/INTchainINT"><i class="f-icon fi-fb"></i></a>
+              <a target="_blank" href="https://www.reddit.com/r/INT_Chain/"><i class="f-icon fi-red"></i></a>
+              <a target="_blank" href="mailto:intfoundation@intchain.io"><i class="f-icon fi-yx"></i></a>          
+            </div> 
+          </div>
         </div>
       </div>
     </div>
+
+    
 </template>
 
 <script>
     export default {
-        name: "Footer",
-        data() {
-          return {
-            year: new Date().getFullYear(),
-            isTestNetwork: true
+      name: "Footer",
+      data() {
+        return {
+          year: new Date().getFullYear(),
+          isTestNetwork: true,
+          currentChainId: '',
+          chainId: '0x7ff',
+          testChainId: '0x800',
+        }
+      },
+      mounted() {
+        this.getLocaction();
+      },
+      methods: {
+        getLocaction() {
+          this.isTestNetwork = window.location.hostname.substr(0, 4) === "test" || window.location.hostname.substr(0, 4) === "loca";
+        },
+        
+        async switchToEtheruemChain () {
+          let chainIds = '0x7ff';
+          let rpc = 'https://testnet.titansrpc.intchain.io';
+          let browser = 'https://test.titansexplorer.intchain.io/'
+          if (!this.isTestNetwork) {
+          console.log(this.isTestNetwork);
+            chainIds = '0x800';
+            rpc = 'https://titansrpc.intchain.io';
+            browser = 'https://titansexplorer.intchain.io'
           }
-        },
-        mounted() {
-          this.getLocaction();
-        },
-        methods: {
-          getLocaction() {
-            this.isTestNetwork = window.location.hostname.substr(0, 4) === "test" || window.location.hostname.substr(0, 4) === "loca";
+          try {
+            if (this.currentChainId !== this.chainId  && this.currentChainId !== this.testChainId && this.currentChainId !== "0x1" && this.currentChainId !== "0x38") {
+              console.log(22);
+              await ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: chainIds}]
+              })
+
+              this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
+            }
+          } catch (e) {
+            if (e.code === 4902) {
+              try {
+                await ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [{
+                    chainId: chainIds,
+                    chainName: 'INT Chain',
+                    nativeCurrency: {
+                      name: "INT",
+                      symbol: "INT",
+                      decimals: 18
+                    },
+                    rpcUrls: [rpc],
+                    blockExplorerUrls: [browser]
+                  }]
+                })
+
+                this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
+              } catch (e) {
+                console.log('add network error', e)
+              }
+            }
           }
         }
+      }
     }
 </script>
 
 <style scoped>
   .footer {
     width: 100%;
-    padding: 80px 0 45px;
+    padding: 60px 0 30px;
     background-color: #4d4d4d;
     color: #ffffff;
   }
 
+  .foot-icon{
+    width: 400px;
+    margin-right: 20px;
+  }
   .footer .foot-c {
     display: flex;
+    justify-content: space-around;
+  }
+
+  .foot-icon img{
+    width: 60px;
+    vertical-align: middle;
+  }
+
+  .foot-icon button{
+    background-color: #ed303b;
+    opacity: .9;
+    border: none;
+    padding: 6px;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .foot-icon button:hover{
+    opacity: .6;
+  }
+
+  .foot-icon button:focus{
+    opacity: .6;
+  }
+
+  .foot-icon button img{
+    width: 15px;
+    height: 15px;
   }
 
   .foot-c .contact {
-    margin-right: 180px;
+    margin-right: 150px;
   }
 
   .foot-c .f-t {
-    font-size: 24px;
+    font-size: 14px;
     font-weight: bold;
-    margin-bottom: 45px;
+    margin-bottom: 16px;
   }
 
   .foot-c .f-f .f-line {
     display: flex;
-    margin-bottom: 30px;
+    flex-direction: column;
+    /* margin-bottom: 30px; */
   }
 
   .f-f .f-line .group {
-    width: 170px;
+    width: 150px;
+    margin: 6px 0;
   }
 
   .f-line .group .f-icon {
@@ -99,86 +209,6 @@
     background-size: contain;
   }
 
-  .f-line .group .fi-tel {
-    background-image: url("../../assets/telegram.png");
-  }
-
-  .f-line .group a:hover .fi-tel {
-    background-image: url("../../assets/telegram-xz.png");
-  }
-
-  .f-line .group .fi-twi {
-    background-image: url("../../assets/twitter.png");
-  }
-
-  .f-line .group a:hover .fi-twi {
-    background-image: url("../../assets/twitter.png");
-  }
-
-  .f-line .group .fi-fb {
-    background-image: url("../../assets/facebook.png");
-  }
-
-  .f-line .group a:hover .fi-fb {
-    background-image: url("../../assets/facebook-xz.png");
-  }
-
-  .f-line .group .fi-red {
-    background-image: url("../../assets/reddit.png");
-  }
-
-  .f-line .group a:hover .fi-red {
-    background-image: url("../../assets/reddit-xz.png");
-  }
-
-  .f-line .group .fi-wc {
-    background-image: url("../../assets/wechat.png");
-  }
-
-  .f-line .group a:hover .fi-wc {
-    background-image: url("../../assets/wechat-xz.png");
-  }
-
-  .f-line .group .fi-wb {
-    background-image: url("../../assets/weibo.png");
-
-  }
-
-  .f-line .group a:hover .fi-wb {
-    background-image: url("../../assets/weibo-xz.png");
-  }
-
-  .f-line .group .fi-yx {
-    background-image: url("../../assets/youxiang.png");
-  }
-
-  .f-line .group a:hover .fi-yx {
-    background-image: url("../../assets/youxiang-xz.png");
-  }
-
-  .f-line .group .fi-sb {
-    background-image: url("../../assets/subscription.png");
-  }
-
-  .f-line .group a:hover .fi-sb {
-    background-image: url("../../assets/subscription-xz.png");
-  }
-
-  .f-line .group .fi-sq {
-    background-image: url("../../assets/shequ.png");
-  }
-
-  .f-line .group a:hover .fi-sq {
-    background-image: url("../../assets/shequ-xz.png");
-  }
-
-  .f-line .group .fi-qb {
-    background-image: url("../../assets/qianbao.png");
-  }
-
-  .f-line .group a:hover .fi-qb {
-    background-image: url("../../assets/qianbao-xz.png");
-  }
 
   .f-line .group a {
     display: inline-block;
@@ -192,6 +222,7 @@
   .f-line .group span {
     display: inline-block;
     vertical-align: middle;
+    font-size: 13px;
   }
 
   .contact .f-line:last-of-type .group:first-of-type a,
@@ -227,8 +258,69 @@
   }
 
   .footer .foot-right {
-    margin-top: 100px;
+    margin-top: 32px;
     font-size: 12px;
-    text-align: center;
+  }
+
+  .foot-bottom{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .footer hr{
+    margin-bottom: 20px;
+    opacity: .2;
+  }
+  .f-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    /* margin-right: 5px; */
+    margin: 0 6px;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-background-size: contain;
+    background-size: contain;
+  }
+
+  .fi-tel {
+    background-image: url("../../assets/telegram.png");
+  }
+
+  .fi-tel:hover {
+    background-image: url("../../assets/telegram-xz.png");
+  }
+
+  .fi-twi {
+    background-image: url("../../assets/twitter.png");
+  }
+
+  .fi-twi:hover {
+    background-image: url("../../assets/twitter2.png");
+  }
+
+  .fi-fb {
+    background-image: url("../../assets/facebook.png");
+  }
+
+  .fi-fb:hover {
+    background-image: url("../../assets/facebook-xz.png");
+  }
+
+  .fi-red {
+    background-image: url("../../assets/reddit.png");
+  }
+
+  .fi-red:hover {
+    background-image: url("../../assets/reddit-xz.png");
+  }
+
+  .fi-yx {
+    background-image: url("../../assets/youxiang.png");
+  }
+
+  .fi-yx:hover {
+    background-image: url("../../assets/youxiang-xz.png");
   }
 </style>
