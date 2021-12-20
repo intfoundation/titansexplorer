@@ -95,12 +95,16 @@
             chainName = 'INT Chain Mainnet';
           }
           try {
+            this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
+            if (this.currentChainId === chainIds) {
+              window.alert("INT Chain Network has been added to Metamask.")
+            }
+
             await ethereum.request({
               method: 'wallet_switchEthereumChain',
               params: [{ chainId: chainIds}]
             })
 
-            this.currentChainId = await ethereum.request({ method: 'eth_chainId' });
           } catch (e) {
             if (e.code === 4902) {
               try {
