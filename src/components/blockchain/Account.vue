@@ -406,10 +406,10 @@
                           </div>
                           <div class="exact-r">
                             <span style="margin-right: 50px">Optimization Enabled:</span>
-                            <span><strong style="margin-right: 4px">{{addrInfo.contract.optimization}}</strong>with<strong style="margin:0 4px">{{addrInfo.contract.optimizer}}</strong>runs</span>
+                            <span class="exact-span"><strong style="margin-right: 4px">{{addrInfo.contract.optimization}}</strong>with<strong style="margin:0 4px">{{addrInfo.contract.optimizer}}</strong>runs</span>
                             <el-divider></el-divider>
                             <span style="margin-right: 86px">Compiler Version</span>
-                            <span><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong>license</span>
+                            <span class="exact-span"><strong>default </strong>evmVersion, <strong style="margin-right: 4px">None</strong>license</span>
                           </div>
                         </div>
                       </template>
@@ -511,7 +511,7 @@
                       </template>
 
                       <!-- Deployed ByteCode Sourcemap -->
-                      <template>
+                      <!-- <template>
                         <div class="csc-s">
                           <p><i class="far fa-map text-secondary mr-1" style="margin-right: 4px"></i><strong>Deployed ByteCode Sourcemap</strong></p>
                         </div>
@@ -522,7 +522,7 @@
                           <p><i class="fas fa-chess-board text-secondary mr-1" style="margin-right: 4px"></i><strong>Swarm Source</strong></p>
                         </div>
                         <pre  class="ace-dawn" style="margin-top: 5px; height:64px; display: none;"></pre>
-                      </template>
+                      </template> -->
                     </div>
                     <!-- Read Contract -->
                     <div class="read-contract" v-show=" cur == 1">
@@ -1883,7 +1883,7 @@ export default {
 
 .con-button{
   padding: 6px 12px !important;
-  border: 1px solid #d5dae2 !important;
+  border: 1px solid #d5dae2;
 }
 
 .el-main {
@@ -2098,7 +2098,7 @@ textarea{
   color: #fff;
 }
 
-.write-contract .all-btn:hover {
+/* .write-contract .all-btn:hover {
   background-color: #ed303b !important;
   color: #fff !important;
 }
@@ -2112,7 +2112,7 @@ textarea{
   background-color: #ed303b;
   color: #fff;
   opacity: .9;
-}
+} */
 
 .iscur{
   color: #ed303b !important;

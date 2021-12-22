@@ -225,7 +225,7 @@
   .navbar {
     width: 100%;
     height: 80px;
-    background-color: #fff;
+    /* background-color: #fff; */
     box-shadow:0 4px 8px 0 rgba(230,230,230,0.6);
   }
 

@@ -115,10 +115,11 @@ export default {
 }
 .more {
   height: 600px;
+  padding: 50px 90px;
 }
-.container {
+/* .container {
   margin: 50px 90px;
-}
+} */
 .text-center {
   text-align: center;
   margin-bottom: 12px;

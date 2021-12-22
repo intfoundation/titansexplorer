@@ -5,7 +5,7 @@
           <div class="hb-box hb-height">
             <div class="hb-t"><img src="../assets/Blockchain.png" class="hb-icon"/><span>Block Height</span></div>
             <router-link v-if="blockInfo.blockUrl" tag="div" :to="blockInfo.blockUrl" class="hb-num"><span>{{blockInfo.number}}</span></router-link>
-            <router-link v-if="blockInfo.addrUrl" tag="div" :to="blockInfo.addrUrl" class="hb-data"><span>{{blockInfo.name}}</span></router-link>
+            <router-link v-if="blockInfo.addrUrl" tag="div" :to="blockInfo.addrUrl" class="spans"><span>{{blockInfo.name}}</span></router-link>
           </div>
           <div class="hb-box">
             <div class="hb-t"><img src="../assets/Transactions.png" class="hb-icon"/><span>Transactions</span></div>
@@ -111,7 +111,8 @@
               <ul class="hl-ul">
                 <li class="hl-li" v-for="item in transList" :key="item.id">
                   <div class="hl-i">
-                    <router-link tag="div" :to="item.url" class="tl-tx"><span style="color: #333;">TX#</span>&nbsp;<span>{{item.transactionHash}}</span></router-link>
+                    <router-link tag="div" :to="item.url" class="tl-tx">
+                      <span class="tx">TX#</span>&nbsp;<span>{{item.transactionHash}}</span></router-link>
                     <div class="tl-time"><span>> {{item.passTime}}</span></div>
                   </div>
                   <div class="hl-ii">
@@ -540,9 +541,10 @@
     font-weight: 500;
   }
 
-  .h-block .hb-height .hb-data {
+  .h-block .hb-height .spans {
     color: #ed303b!important;
     cursor: pointer;
+    font-size: 12px;
   }
 
   .h-block .hb-data .hb-tps {
@@ -750,5 +752,9 @@
 
   .hl-li .hl-i .tl-tx:hover {
     text-decoration: underline;
+  }
+
+  .tx{
+    color: #333;
   }
 </style>

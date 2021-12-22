@@ -6,7 +6,13 @@
             <img src="../../assets/blockscout_logo.png" alt="">
             <p>Titans explorer is a Block Explorer and Analytics Platform for INT Chain</p>
             <div>
-              <button @click=switchToEtheruemChain> <img src="../../assets/metamask.svg" alt=""> Add INT Chain Network</button>
+              <button @click=switchToEtheruemChain><img src="../../assets/metamask.svg" alt=""> Add INT Chain Network
+              </button>
+              <button class="icon" @click="changeMode"> 
+                <i :style="{display:moon}" class="fa fa-moon"></i>
+                <i :style="{display:sun}" class="fa fa-sun"></i>
+              </button>
+
             </div>
           </div>
           <div class="contact">
@@ -15,10 +21,6 @@
             <div class="f-f">
               <div class="f-line">
                 <div class="group"><a target="_blank" href="https://intchain.io/#/"><span>About Us</span></a></div>
-                <!-- <div class="group"><a target="_blank" href=""><span>Contact Us</span></a></div>
-                <div class="group"><a target="_blank" href=""><span>Brand Assets</span></a></div>
-                <div class="group"><a target="_blank" href=""><span>Careers</span></a></div>
-                <div class="group"><a target="_blank" href=""><span>Terms of Service</span></a></div> -->
               </div>
             </div>
           </div>
@@ -73,9 +75,17 @@
           currentChainId: '',
           chainId: '0x7ff',
           testChainId: '0x800',
+          mode:false,
+          sun:'block',
+          moon:'none',
         }
       },
       mounted() {
+        console.log(sessionStorage.getItem("data-theme"));
+        if (!sessionStorage.getItem("data-theme")) {
+          sessionStorage.setItem("data-theme",'light'); 
+        }
+        window.document.documentElement.setAttribute('data-theme',sessionStorage.getItem("data-theme"));
         this.getLocaction();
       },
       methods: {
@@ -129,6 +139,20 @@
               }
             }
           }
+        },
+        changeMode(){
+          this.mode = !this.mode;
+          if(this.mode == true){
+            window.document.documentElement.setAttribute('data-theme','dark');
+            sessionStorage.setItem("data-theme", 'dark');
+            this.moon='block',
+            this.sun='none'
+          }else{
+            window.document.documentElement.setAttribute('data-theme','light');
+            sessionStorage.setItem("data-theme",'light'); 
+            this.moon='none',
+            this.sun='block'
+          }
         }
       }
     }
@@ -138,7 +162,7 @@
   .footer {
     width: 100%;
     padding: 60px 0 30px;
-    background-color: #4d4d4d;
+    background-color: #132a47;
     color: #ffffff;
   }
 
@@ -157,7 +181,10 @@
   }
 
   .foot-icon button{
-    background-color: #ed303b;
+    /* background-color: #ed303b; */
+    height: 26px;
+    background: rgba(248,249,250,.1);
+    border-color: transparent;
     opacity: .9;
     border: none;
     padding: 6px;
@@ -165,7 +192,7 @@
     color: #fff;
   }
 
-  .foot-icon button:hover{
+  .foot-icon button:hover, .fa-moon:hover{
     cursor: pointer;
     opacity: .6;
   }
@@ -326,5 +353,15 @@
 
   .fi-yx:hover {
     background-image: url("../../assets/youxiang-xz.png");
+  }
+
+  .icon{
+    width: 24px;
+    color: #f8f9fa;
+    background: rgba(248,249,250,.1);
+    border-color: transparent;
+    padding: 4px 0 0 6px;
+    border-radius: 4px;
+    cursor: pointer;
   }
 </style>
