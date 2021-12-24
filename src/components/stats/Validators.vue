@@ -4,10 +4,10 @@
       <div class="sd-t">Validators</div>
       <div class="sd-c">
         <div class="sc-asset">
-          <div class="sa-t">
+          <div class="sa-t v-bg">
             <div class="sa-tab" v-for="(item,index) in tabList" :class="{'sa-tab-choose': choose === index}" @click="choose = index"><span>{{item}}</span></div>
           </div>
-          <div class="sa-c">
+          <div class="sa-c v-c">
             <div class="sa-block" v-if="choose === 0">
               <el-table :data="actVdList" v-loading="isActLoading">
                 <el-table-column prop="i" label="Rank" :key="Math.random()" align="left" width="60"></el-table-column>

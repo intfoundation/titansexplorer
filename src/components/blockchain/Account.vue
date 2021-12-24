@@ -2,7 +2,7 @@
   <div class="sDetail">
     <div id="box">
       <div class="sd-t">{{isContract ? "Contract " + addr : "Address " + addr}}</div>
-      <div class="sd-c">
+      <div class="sd-bg">
         <div class="sc-asset">
           <div class="sa-t">
             <div class="sa-tab" v-for="(item,index) in tabList" :class="{'sa-tab-choose': choose === index}" @click="choose = index"><span>{{item}}</span></div>
@@ -569,7 +569,7 @@
                           <div v-for="(items,index) in write.inputs" :key="index">
                             <div class="all-flex">
                               <label>{{items.name}}</label>
-                              <input autocomplete="off" v-model="items.value" :placeholder="items.name" class="from-control">
+                              <input autocomplete="off" v-model="items.value" type="text" :placeholder="items.name" class="from-control">
                             </div>
                           </div>
                           <button class="all-btn" @click="writeSub(n)">Write</button>
@@ -2066,6 +2066,7 @@ textarea{
   flex-direction: column;
   padding-right: 15px;
 }
+
 
 .from-control{
   height: 20px;

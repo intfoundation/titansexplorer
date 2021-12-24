@@ -76,14 +76,22 @@
           chainId: '0x7ff',
           testChainId: '0x800',
           mode:false,
-          sun:'block',
-          moon:'none',
+          sun:'none',
+          moon:'block',
         }
       },
       mounted() {
         console.log(sessionStorage.getItem("data-theme"));
         if (!sessionStorage.getItem("data-theme")) {
           sessionStorage.setItem("data-theme",'light'); 
+        }
+        if (sessionStorage.getItem("data-theme") === 'dark') {
+          this.mode = true;
+          this.moon='none';
+          this.sun='block';
+        } else {
+          this.moon='block';
+          this.sun='none';
         }
         window.document.documentElement.setAttribute('data-theme',sessionStorage.getItem("data-theme"));
         this.getLocaction();
@@ -142,17 +150,16 @@
         },
         changeMode(){
           this.mode = !this.mode;
+          console.log(this.mode);
           if(this.mode == true){
-            window.document.documentElement.setAttribute('data-theme','dark');
+            // window.document.documentElement.setAttribute('data-theme','dark');
             sessionStorage.setItem("data-theme", 'dark');
-            this.moon='block',
-            this.sun='none'
           }else{
-            window.document.documentElement.setAttribute('data-theme','light');
+            // window.document.documentElement.setAttribute('data-theme','light');
             sessionStorage.setItem("data-theme",'light'); 
-            this.moon='none',
-            this.sun='block'
           }
+            location.reload(),
+            this.$router.go(0)
         }
       }
     }

@@ -172,7 +172,11 @@
             top: '5%',
             // bottom: 20,
             data: ['Transaction(Txs)','Price($)'],
-            z: 100
+            z: 100,
+            textStyle: {
+              // fontSize: 9, //横轴字体大小
+              color: '', //颜色
+            },
           },
           tooltip: {
             trigger: 'axis' // tooltip出现悬浮的解释框
@@ -184,7 +188,10 @@
             axisLabel: {
               rotate: 45, //倾斜度 -90 至 90 默认为0
               margin: 12, // 刻度标签与轴线的距离
-              fontWeight: 500
+              fontWeight: 500,
+              textStyle: {
+                color: '', //颜色
+              },
             },
             axisTick: {
               // alignWithLabel: true // 刻度和标签对齐
@@ -201,12 +208,16 @@
               // interval: 250000/5,
               axisLine: {
                 lineStyle: {
-                  color: '#333'
+                  // color: '#333'
+                  color:''
                 }
               },
               axisLabel: {
                 formatter: '{value} ',
-                margin: 5 // 刻度标签与轴线的距离
+                margin: 5 ,// 刻度标签与轴线的距离
+                textStyle: {
+                  color: '', //颜色
+                },
               },
               splitLine: {
                 show: false
@@ -221,7 +232,8 @@
               // interval: (0.025 - 0.018)/5,
               axisLine: {
                 lineStyle: {
-                  color: '#333'
+                  // color: '#333'
+                  color:''
                 }
               },
               axisLabel: {
@@ -273,6 +285,10 @@
           legend: {
             orient: 'vertical',
             left: 'left',
+            textStyle: {
+              // color: "#a8bcdb"
+              color: '',
+            },
             data: []
           },
           series : [
@@ -321,7 +337,7 @@
     },
     mounted() {
       this.getTxHistory();
-      this.echartPie();
+      this.echartPie();    
     },
     destroyed() {
       clearInterval(this.timer)
@@ -396,6 +412,17 @@
       },
       getTxHistory() { //获取近14天每天交易数量
         this.$axios.get('/api/tx/txsByDay').then(res => {
+          if(window.document.documentElement.getAttribute("data-theme") == 'light'){
+            this.option.legend.textStyle.color = '#333',
+            this.option.xAxis.axisLabel.textStyle.color ='#333',
+            this.option.yAxis[0].axisLine.lineStyle.color ='#333',
+            this.option.yAxis[1].axisLine.lineStyle.color ='#333'
+          }else{
+            this.option.legend.textStyle.color = '#a8bcdb',
+            this.option.xAxis.axisLabel.textStyle.color ='#a8bcdb',
+            this.option.yAxis[0].axisLine.lineStyle.color ='#a8bcdb',
+            this.option.yAxis[1].axisLine.lineStyle.color ='#a8bcdb'
+          }
           res.data.forEach(item => {
             this.option.xAxis.data.push(item.time);
             this.option.series[0].data.push(item.txCount);
@@ -430,7 +457,14 @@
         })
       },
       echartPie() {
+        // console.log(window.document.documentElement.getAttribute("data-theme"),'qqqqq');
         this.$axios.get('/api/node/list').then(res => {
+          // console.log(sessionStorage.getItem("data-theme"));
+          if(sessionStorage.getItem("data-theme") == 'light'){
+            this.optionPie.legend.textStyle.color = '#333333'
+          }else{
+            this.optionPie.legend.textStyle.color = '#a8bcdb'
+          }
           let top10Power = 0;
           for (let i in res.data) {
             res.data[i].addr = res.data[i].address.slice(0,6) + '...' + res.data[i].address.slice(-4);
@@ -455,10 +489,13 @@
             }
           }
           var PieChart = echarts.init(this.$refs.top10);// 减少dom的消耗
-          PieChart.setOption(this.optionPie)
+          PieChart.setOption(this.optionPie);
         }).catch(err => {
           console.log(err);
         });
+      },
+      changeModes() {
+        alert(111);
       },
       getBlockList() { //获取出块列表
         this.$axios.get('/api/block/list').then(res => {
@@ -673,7 +710,7 @@
   .home .h-up .h-view {
     padding: 0 8px;
     line-height: 28px;
-    background-color: #fdeaeb;
+    /* background-color: #fdeaeb; */
     border: 1px solid #ed303b;
     border-radius: 4px;
     color: #ed303b;

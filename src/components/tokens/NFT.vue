@@ -17,7 +17,7 @@
       <div class="sd-c">
         <div class="sc-asset">
           <div class="sa-c">
-            <div class="sa-t">
+            <div class="sa-t sa-t-bg">
               <span class="sa-tt">Non-Fungible Tokens (NFT)</span>
             </div>
             <div class="sa-block">

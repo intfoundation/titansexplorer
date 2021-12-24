@@ -7,7 +7,7 @@
       </div>
       <div class="sd-c">
         <div class="sc-token">
-          <div class="sc-asset">
+          <div class="sd-card">
             <div class="sa-c">
               <div class="sa-t">
                   <span class="sa-tt">Overview</span>
@@ -32,7 +32,7 @@
               </div>
             </div>
           </div>
-          <div class="sc-asset">
+          <div class="sd-card">
             <div class="sa-c">
               <div class="sa-t">
                 <span class="sa-tt">Summary</span>
@@ -439,7 +439,7 @@
     clear: both;
   }
 
-  .sDetail .sc-asset {
+  .sDetail .sd-card {
     float: left;
     width: 50%;
     margin-bottom: 30px;
@@ -447,28 +447,28 @@
     padding-right: 5px;
   }
 
-  .sDetail .sc-asset .sa-c {
+  .sDetail .sd-card .sa-c {
     box-shadow: 0 4px 8px 0 #e6e6e6;
     border-radius: 5px;
     border: 1px solid rgb(230,230,230);
     background-color: #fff;
   }
 
-  .sDetail .sc-asset .sa-t {
+  .sDetail .sd-card .sa-t {
     height: 52px;
     width: 100%;
     background-color: #fff;
     border-radius: 5px 5px 0 0;
     border-bottom: 1px solid rgb(230,230,230);
   }
-  .sDetail .sc-asset .sa-t .sa-tt {
+  .sDetail .sd-card .sa-t .sa-tt {
     display: block;
     padding: 15px;
     /*line-height: ;*/
     font-weight: bold;
   }
 
-  .sc-asset .sa-t .sa-tab {
+  .sd-card .sa-t .sa-tab {
     display: inline-block;
     padding: 0 30px;
     height: 60px;
@@ -479,41 +479,41 @@
     font-weight: 400;
   }
 
-  .sc-asset .sa-t .sa-tab:first-of-type {
+  .sd-card .sa-t .sa-tab:first-of-type {
     border-radius: 4px 0 0 0;
   }
 
-  .sc-asset .sa-t .sa-tab:hover {
+  .sd-card .sa-t .sa-tab:hover {
     color: #ed303b;
   }
 
-  .sc-asset .sa-t .sa-tab-choose {
+  .sd-card .sa-t .sa-tab-choose {
     color: #ed303b;
     border-top-color: #ed303b;
     background-color: #fff;
   }
 
-  .sDetail .sc-asset .sa-c {
+  .sDetail .sd-card .sa-c {
     width: 100%;
     /*background-color: #fff;*/
   }
 
-  .sc-asset .sa-c .sa-block {
+  .sd-card .sa-c .sa-block {
     padding: 20px 15px 40px;
     border-radius: 0 0 4px 4px;
   }
 
-  .sc-asset .sa-c .sa-block .sa-r {
+  .sd-card .sa-c .sa-block .sa-r {
     height: 45px;
     padding: 10px 0 10px;
     text-align: right;
   }
 
-  .sc-asset .sa-c .sa-asset {
+  .sd-card .sa-c .sa-asset {
     padding: 15px;
   }
 
-  .sc-asset .sa-c .sa-group {
+  .sd-card .sa-c .sa-group {
     display: flex;
     align-items: center;
     height: 45px;

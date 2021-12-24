@@ -509,6 +509,10 @@
     border-color: transparent;
   }
 
+  .td-c hr{
+    opacity: .5;
+  }
+
   .event-body .event-item:after {
     content: "";
     display: block;

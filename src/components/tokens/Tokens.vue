@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="sd-c">
-        <div class="sc-asset">
+        <div class="sc-border">
           <div class="sa-c">
             <div class="sa-t">
               <span class="sa-tt">IIP-20 Tokens</span>
@@ -131,7 +131,7 @@
     padding: 8px 0 10px;
     text-align: right;
   }
-  .sDetail .sc-asset {
+  .sDetail .sc-border {
     margin-bottom: 30px;
     background-color: #fff;
     box-shadow: 0 4px 8px 0 #e6e6e6;
@@ -139,7 +139,7 @@
     border:1px solid rgb(230,230,230);
   }
 
-  .sDetail .sc-asset .sa-t {
+  .sDetail .sc-border .sa-t {
     height: 52px;
     width: 100%;
     background-color: #fff;
@@ -147,19 +147,19 @@
     border-bottom: 1px solid rgb(230,230,230);
   }
 
-  .sDetail .sc-asset .sa-t .sa-tt {
+  .sDetail .sc-border .sa-t .sa-tt {
     display: block;
     padding: 15px;
     /*line-height: ;*/
     font-weight: bold;
   }
 
-  .sc-asset .sa-c .sa-block {
+  .sc-border .sa-c .sa-block {
     padding: 20px 15px 0;
     border-radius: 0 0 10px 10px;
   }
 
-  .sc-asset .sa-t .sa-tab {
+  .sc-border .sa-t .sa-tab {
     display: inline-block;
     padding: 0 30px;
     height: 60px;
@@ -170,26 +170,26 @@
     font-weight: 400;
   }
 
-  .sc-asset .sa-t .sa-tab:first-of-type {
+  .sc-border .sa-t .sa-tab:first-of-type {
     border-radius: 4px 0 0 0;
   }
 
-  .sc-asset .sa-t .sa-tab:hover {
+  .sc-border .sa-t .sa-tab:hover {
     color: #ed303b;
   }
 
-  .sc-asset .sa-t .sa-tab-choose {
+  .sc-border .sa-t .sa-tab-choose {
     color: #ed303b;
     border-top-color: #ed303b;
     background-color: #fff;
   }
 
-  .sc-asset .al-mo {
+  .sc-border .al-mo {
     color: #ed303b;
     cursor: pointer;
   }
 
-  .sc-asset .al-mo img {
+  .sc-border .al-mo img {
     display: inline-block;
     width: 30px;
     height: 30px;
@@ -197,21 +197,21 @@
     vertical-align: middle;
   }
 
-  .sc-asset .al-mo span {
+  .sc-border .al-mo span {
     display: inline-block;
     vertical-align: middle;
   }
 
-  .sc-asset .al-mo:hover span {
+  .sc-border .al-mo:hover span {
     text-decoration: underline;
   }
 
-  .sc-asset .al-url {
+  .sc-border .al-url {
     color: #ed303b;
     cursor: pointer;
   }
 
-  .sc-asset .al-url:hover {
+  .sc-border .al-url:hover {
     text-decoration: underline;
   }
 </style>

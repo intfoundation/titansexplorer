@@ -178,7 +178,7 @@ export default {
   }
   
   .el-collapse-item__header{
-    border-bottom: none;
+    border-bottom: none !important;
   }
 
   .el-select-dropdown__item{
@@ -188,6 +188,12 @@ export default {
   .s-input .el-input .el-input__inner{
     font-size: 13px;
   }
+/* 
+  .el-loading-spinner .path{
+    background-color:#132a47 !important;
+  } */
+
+
 
   :root[data-theme=dark]{
     --current-background-color:var(--dark-background-color);
@@ -225,6 +231,10 @@ export default {
     --current-top-color: var(--dark-top-color);
     --current-top-border:var(--dark-top-border);
     --current-write-color:var(--dark-write-color);
+    --current-loading:var(--dark-loading);
+    --currebt-asset-border:var(--dark-asset-border);
+    --current-card:var(--dark-card);
+    --current-border-hover:var(--dark-border-hover);
       
   
     --dark-background-color:#132a47;
@@ -262,7 +272,10 @@ export default {
     --dark-top-color: #c0d3df;
     --dark-top-border:  1px solid #18365b;
     --dark-write-color: #132a47;
-  
+    --dark-loading: #132a47;
+    --dark-asset-border: 1px solid #132a47;
+    --dark-card: #132a47;
+    --dark-border-hover: 0 0 8px 0 rgba(230,230,230,.5);
   }
 
   :root[data-theme=light]{
@@ -298,6 +311,10 @@ export default {
     --current-top-color: var(--light-top-color);
     --current-top-border:var(--light-top-border);
     --current-write-color:var(--light-write-color);
+    --current-loading:var(--light-loading);
+    --currebt-asset-border:var(--light-asset-border);
+    --current-card:var(--light-card);
+    --current-border-hover:var(--light-border-hover);
 
 
     --light-background-color:#fff;
@@ -332,6 +349,10 @@ export default {
     --light-top-color: #606266;
     --light-top-border: 1px solid #d5dae2;
     --light-write-color: #fff;
+    --light-loading: #fff;
+    --light-asset-border: 1px solid rgb(230,230,230);
+    --light-card: #fff;
+    --light-border-hover:  0 0 8px 0 rgba(230,230,230,1)
     
   }
 
@@ -400,18 +421,56 @@ export default {
     color: var(--current-title-color);
   }
 
-  /*  */
   .b-height span, .tlt-i span, .al-t span, .sd-t, .vd-t span, .vt-t span, .vp-t span{
     color: var(--current-title-color)
   }
 
-  .block  .b-list, .tl-c, .al-c,.bd-c, .vd-a, .vd-block, .stx-c, .td-c, .st-l, .sa-c, .sDetail .sd-c .sc-asset {
+  .block  .b-list,.al-c,.bd-c,  .stx-c, .td-c, .st-l, .sc-border,.sc-asset,.sd-card .sa-asset,.sd-card .sc{
     box-shadow: var(--current-box-shadow) !important;
     border: var(--current-border) !important;
     background-color: var(--current-item-background-color) !important;
   }
 
-  .sDetail  .sa-t{
+  .sa-c{
+    background-color: var(--current-item-background-color) !important;
+    box-shadow: var(--current-box-shadow) !important;
+
+  }
+
+  .sd-card .sa-c{
+    border: var(--current-border) !important;
+  }
+
+  /* .v-c{
+    border: none !important;
+  } */
+
+
+
+  .sd-bg .sc-asset .sa-c, .stx-c{
+    border-top: none !important;
+  }
+
+  .tl-c{
+    background-color: var(--current-item-background-color) !important;
+  }
+
+  .vd-a, .vd-block{
+    box-shadow: var(--current-box-shadow) !important;
+    background-color: var(--current-item-background-color) !important;
+  }
+
+  .sd-card .sa-asset{
+     background-color: var(--current-item-background-color) !important;
+     border: none !important;
+  }
+
+
+  .sDetail .sd-card .sa-t, .sc-border .sa-c .sa-t, .sa-t-bg{
+    background-color: var(--current-card) !important;
+  }
+
+  .sd-bg .sc-asset .sa-t,.v-bg{
     background-color: var(--current-table-background-color) !important;
   }
 
@@ -461,7 +520,7 @@ export default {
     color: var(--current-title-color);
   }
 
-  .sa-group, .tc-t,.tc-group, .bi-t, .bi-group{
+  .sa-group, .tc-t,.tc-group, .bi-t, .bi-group, .td-c .tc-c .tc-input{
     border-bottom: var(--current-group-border) !important;
   }
 
@@ -514,7 +573,7 @@ export default {
     border-bottom: var(--current-read-border) !important;
   }
 
-  .is-active, .el-collapse-item__content,.el-collapse-item__header{
+  .is-active, .el-collapse-item__content,.el-collapse-item__header,.all-flex input{
     color: var(--current-read-color) !important;
   }
 
@@ -557,6 +616,29 @@ export default {
   .sub-btn{
     background-color: var(--current-write-color) !important;
   }
+
+  .sDetail .sc-border .sa-t, .sDetail .sd-card .sa-t, .sa-t-bg{
+    border-bottom: var(--currebt-asset-border) !important;
+  }
+
+  .el-loading-mask{
+    background-color: var(--current-loading);
+  }
+
+  .el-table, .el-table__expanded-cell{
+    background-color: transparent !important;
+  }
+
+  .all-flex input[type=text]:focus, select:focus{
+    outline: var(--current-input-border);
+  }
+
+   .home .h-block .hb-box:hover{
+     box-shadow: var(--current-border-hover) !important;
+   }
+
+
+
 
 
 
