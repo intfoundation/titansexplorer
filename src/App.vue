@@ -235,6 +235,7 @@ export default {
     --currebt-asset-border:var(--dark-asset-border);
     --current-card:var(--dark-card);
     --current-border-hover:var(--dark-border-hover);
+    --cuttemt-opacity: var(--dark-opacity);
       
   
     --dark-background-color:#132a47;
@@ -276,6 +277,7 @@ export default {
     --dark-asset-border: 1px solid #132a47;
     --dark-card: #132a47;
     --dark-border-hover: 0 0 8px 0 rgba(230,230,230,.5);
+    --dark-opacity: .6;
   }
 
   :root[data-theme=light]{
@@ -315,6 +317,7 @@ export default {
     --currebt-asset-border:var(--light-asset-border);
     --current-card:var(--light-card);
     --current-border-hover:var(--light-border-hover);
+    --cuttemt-opacity: var(--light-opacity);
 
 
     --light-background-color:#fff;
@@ -352,7 +355,8 @@ export default {
     --light-loading: #fff;
     --light-asset-border: 1px solid rgb(230,230,230);
     --light-card: #fff;
-    --light-border-hover:  0 0 8px 0 rgba(230,230,230,1)
+    --light-border-hover:  0 0 8px 0 rgba(230,230,230,1);
+    --light-opacity:1;
     
   }
 
@@ -635,6 +639,13 @@ export default {
 
    .home .h-block .hb-box:hover{
      box-shadow: var(--current-border-hover) !important;
+   }
+
+   .el-select-dropdown{
+     opacity: var(--cuttemt-opacity);
+
+     /* background-color: var(--current-table-background-color) !important; */
+     /* border: var(--current-nav-border); */
    }
 
 
