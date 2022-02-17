@@ -63,7 +63,7 @@
 
           <div class="hb-box">
               <div class="hb-t">🔥 <span>Total Fees Burned</span></div>
-            <div class="hb-num"><span>{{num}}</span></div>
+            <div class="hb-num"><span>{{balance}}</span></div>
           </div>
         </div>
         <div class="h-chart">
@@ -166,7 +166,7 @@
         maxYPrice: 0,
         minYPrice: 0,
         timer: '',
-        num:'',
+        balance:'',
         option: {
           title: {
             textAlign: 'center'
@@ -547,17 +547,13 @@
       },
 
       async getHomeBalance(){
-        return await ethereum.request({
-          method: 'eth_getBalance',
-          params: ["0x0000000000000000000000000000000000000001"],
-        }).then((result) => {
-          var balance = result/1000000000000000000;
-          this.num = parseFloat(balance.toString().slice(0,7)) ;
-          return result;
-        }).catch((error) => {
-            console.log('error', error)
-          }
-        )
+        this.$axios.get('/api/account/detail',{params:{address:'0x0000000000000000000000000000000000000001'}}).then(res => {
+          this.balance = res.data.balance;
+          var num = this.balance.toString().slice(0,7);
+          this.balance = num;
+        }).catch(err => {
+          console.log(err);
+        })
       }
     
     }
@@ -572,7 +568,7 @@
   .home .h-block {
     display: flex;
     justify-content: space-between;
-    padding: 32px 20px;
+    padding: 32px 16px;
     /*width: 100%;*/
     box-shadow:0 4px 8px 0 rgba(230,230,230,0.6);
     border-radius:4px;
