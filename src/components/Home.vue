@@ -60,6 +60,11 @@
               </el-tooltip>
             </div>
           </div>
+
+          <div class="hb-box">
+              <div class="hb-t">🔥 <span>Total Fees Burned</span></div>
+            <div class="hb-num"><span>{{num}}</span></div>
+          </div>
         </div>
         <div class="h-chart">
           <div class="h-l">
@@ -161,6 +166,7 @@
         maxYPrice: 0,
         minYPrice: 0,
         timer: '',
+        num:'',
         option: {
           title: {
             textAlign: 'center'
@@ -334,6 +340,8 @@
       this.getVoteStake();
       this.getAccountBond();
       this.blockListTimer();
+      this.getHomeBalance()
+      // this.fetchBalance()
     },
     mounted() {
       this.getTxHistory();
@@ -537,6 +545,21 @@
         this.getHeight();
         this.getVotingPower();
       },
+
+      async getHomeBalance(){
+        return await ethereum.request({
+          method: 'eth_getBalance',
+          params: ["0x0000000000000000000000000000000000000001"],
+        }).then((result) => {
+          var balance = result/1000000000000000000;
+          this.num = parseFloat(balance.toString().slice(0,7)) ;
+          return result;
+        }).catch((error) => {
+            console.log('error', error)
+          }
+        )
+      }
+    
     }
   }
 </script>
@@ -560,7 +583,7 @@
   .home .h-block .hb-box {
     padding-top: 15px;
     padding-left: 10px;
-    width: 145px;
+    width: 135px;
     height: 110px;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
@@ -607,9 +630,9 @@
 
   .hb-box .hb-t .hb-icon {
     display: inline-block;
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
     vertical-align: middle;
   }
 
