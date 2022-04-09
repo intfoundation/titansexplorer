@@ -19,7 +19,7 @@
     "echarts": "^4.4.0",
     "element-ui": "^2.12.0",
     "int4.js": "^4.0.33",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "underscore": "^1.13.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
