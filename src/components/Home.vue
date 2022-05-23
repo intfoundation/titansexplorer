@@ -440,9 +440,13 @@
           this.option.yAxis[0].max = max.maxy;
           this.option.yAxis[0].interval = max.maxy/5;
           this.$axios.get('/api/tx/getPriceTrend').then(res1 => {
+            let dateList = [];
             res1.data.forEach(item => {
               // this.option.xAxis.data.push(item.time);
-              this.option.series[1].data.push(item.price);
+              if (dateList.indexOf(item.time) === -1) {
+                this.option.series[1].data.push(item.price);
+                dateList.push(item.time)
+              }
             });
             let param = getMax(this.option.series[1].data,'price');
             this.option.yAxis[1].min = +param.miny;
